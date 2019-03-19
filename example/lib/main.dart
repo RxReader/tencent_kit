@@ -23,9 +23,9 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    FakeTencent tencent = FakeTencent();
+    Tencent tencent = Tencent();
     tencent.registerApp(appId: '222222');
-    return FakeTencentProvider(
+    return TencentProvider(
       tencent: tencent,
       child: MaterialApp(
         home: Home(tencent: tencent),
@@ -40,7 +40,7 @@ class Home extends StatefulWidget {
     @required this.tencent,
   }) : super(key: key);
 
-  final FakeTencent tencent;
+  final Tencent tencent;
 
   @override
   State<StatefulWidget> createState() {
@@ -49,9 +49,9 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  StreamSubscription<FakeTencentLoginResp> _login;
-  StreamSubscription<FakeTencentUserInfoResp> _userInfo;
-  StreamSubscription<FakeTencentShareResp> _share;
+  StreamSubscription<TencentLoginResp> _login;
+  StreamSubscription<TencentUserInfoResp> _userInfo;
+  StreamSubscription<TencentShareResp> _share;
 
   @override
   void initState() {
@@ -61,18 +61,18 @@ class _HomeState extends State<Home> {
     _share = widget.tencent.shareResp().listen(_listenShare);
   }
 
-  void _listenLogin(FakeTencentLoginResp resp) {
-    String content = 'login: ${resp.openId} - ${resp.accessToken}';
+  void _listenLogin(TencentLoginResp resp) {
+    String content = 'login: ${resp.openid} - ${resp.accessToken}';
     _showTips('登录', content);
   }
 
-  void _listenUserInfo(FakeTencentUserInfoResp resp) {
-    String content = 'user info: ${resp.nickName} - ${resp.gender}';
+  void _listenUserInfo(TencentUserInfoResp resp) {
+    String content = 'user info: ${resp.nickname} - ${resp.gender}';
     _showTips('用户', content);
   }
 
-  void _listenShare(FakeTencentShareResp resp) {
-    String content = 'share: ${resp.errorCode} - ${resp.errorMsg}';
+  void _listenShare(TencentShareResp resp) {
+    String content = 'share: ${resp.ret} - ${resp.msg}';
     _showTips('分享', content);
   }
 
@@ -110,7 +110,7 @@ class _HomeState extends State<Home> {
             title: const Text('登录'),
             onTap: () {
               widget.tencent.login(
-                scope: [FakeTencentScope.GET_SIMPLE_USERINFO],
+                scope: [TencentScope.GET_SIMPLE_USERINFO],
               );
             },
           ),
@@ -124,7 +124,7 @@ class _HomeState extends State<Home> {
             title: const Text('分享文字'),
             onTap: () {
               widget.tencent.shareMood(
-                scene: FakeTencentScene.SCENE_QZONE,
+                scene: TencentScene.SCENE_QZONE,
                 summary: '分享测试',
               );
             },
@@ -133,7 +133,7 @@ class _HomeState extends State<Home> {
             title: const Text('分享链接'),
             onTap: () {
               widget.tencent.shareWebpage(
-                scene: FakeTencentScene.SCENE_QQ,
+                scene: TencentScene.SCENE_QQ,
                 title: 'title',
                 targetUrl: 'https://www.baidu.com/',
               );

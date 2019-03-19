@@ -11,10 +11,14 @@ enum FakeTencentScene {
     SCENE_QZONE = 1,
 };
 
-enum FakeTencentErrorCode {
-    ERRORCODE_SUCCESS = 0,
-    ERRORCODE_COMMON = -1,
-    ERRORCODE_USERCANCEL = -2,
+enum FakeTencentRetCode {
+    // 网络请求成功发送至服务器，并且服务器返回数据格式正确
+    // 这里包括所请求业务操作失败的情况，例如没有授权等原因导致
+    RET_SUCCESS = 0,
+    // 网络异常，或服务器返回的数据格式不正确导致无法解析
+    RET_FAILED = 1,
+    RET_COMMON = -1,
+    RET_USERCANCEL = -2,
 };
 
 @implementation FakeTencentPlugin {
@@ -34,7 +38,6 @@ enum FakeTencentErrorCode {
 static NSString * const METHOD_REGISTERAPP = @"registerApp";
 static NSString * const METHOD_ISQQINSTALLED = @"isQQInstalled";
 static NSString * const METHOD_ISQQSUPPORTSSOLOGIN = @"isQQSupportSSOLogin";
-static NSString * const METHOD_SETACCESSTOKEN = @"setAccessToken";
 static NSString * const METHOD_LOGIN = @"login";
 static NSString * const METHOD_LOGOUT = @"logout";
 static NSString * const METHOD_GETUSERINFO = @"getUserInfo";
@@ -48,9 +51,6 @@ static NSString * const METHOD_ONGETUSERINFORESP = @"onGetUserInfoResp";
 static NSString * const METHOD_ONSHARERESP = @"onShareResp";
 
 static NSString * const ARGUMENT_KEY_APPID = @"appId";
-static NSString * const ARGUMENT_KEY_OPENID = @"openId";
-static NSString * const ARGUMENT_KEY_ACCESSTOKEN = @"accessToken";
-static NSString * const ARGUMENT_KEY_EXPIRATIONDATE = @"expirationDate";
 static NSString * const ARGUMENT_KEY_SCOPE = @"scope";
 static NSString * const ARGUMENT_KEY_SCENE = @"scene";
 static NSString * const ARGUMENT_KEY_TITLE = @"title";
@@ -63,11 +63,11 @@ static NSString * const ARGUMENT_KEY_TARGETURL = @"targetUrl";
 static NSString * const ARGUMENT_KEY_APPNAME = @"appName";
 static NSString * const ARGUMENT_KEY_EXTINT = @"extInt";
 
-static NSString * const ARGUMENT_KEY_RESULT_ERRORCODE = @"errorCode";
-static NSString * const ARGUMENT_KEY_RESULT_ERRORMSG = @"errorMsg";
-static NSString * const ARGUMENT_KEY_RESULT_OPENID = @"openId";
-static NSString * const ARGUMENT_KEY_RESULT_ACCESSTOKEN = @"accessToken";
-static NSString * const ARGUMENT_KEY_RESULT_EXPIRATIONDATE = @"expirationDate";
+static NSString * const ARGUMENT_KEY_RESULT_RET = @"ret";
+static NSString * const ARGUMENT_KEY_RESULT_MSG = @"msg";
+static NSString * const ARGUMENT_KEY_RESULT_OPENID = @"openid";
+static NSString * const ARGUMENT_KEY_RESULT_ACCESS_TOKEN = @"access_token";
+static NSString * const ARGUMENT_KEY_RESULT_EXPIRES_IN = @"expires_in";
 
 static NSString * const SCHEME_FILE = @"file";
 
@@ -88,8 +88,6 @@ static NSString * const SCHEME_FILE = @"file";
         result([NSNumber numberWithBool:[TencentOAuth iphoneQQInstalled]]);
     } else if ([METHOD_ISQQSUPPORTSSOLOGIN isEqualToString:call.method]) {
         result([NSNumber numberWithBool:[TencentOAuth iphoneQQSupportSSOLogin]]);
-    } else if ([METHOD_SETACCESSTOKEN isEqualToString:call.method]) {
-        [self setAccessToken:call result:result];
     } else if ([METHOD_LOGIN isEqualToString:call.method]) {
         [self login:call result:result];
     } else if ([METHOD_LOGOUT isEqualToString:call.method]) {
@@ -107,17 +105,6 @@ static NSString * const SCHEME_FILE = @"file";
     } else {
         result(FlutterMethodNotImplemented);
     }
-}
-
--(void)setAccessToken:(FlutterMethodCall*)call result:(FlutterResult)result {
-    NSString * openId = call.arguments[ARGUMENT_KEY_OPENID];
-    NSString * accessToken = call.arguments[ARGUMENT_KEY_ACCESSTOKEN];
-    NSNumber * expirationDate = call.arguments[ARGUMENT_KEY_EXPIRATIONDATE];
-    NSTimeInterval seconds = expirationDate.longLongValue / 1000.0;
-    [_oauth setOpenId:openId];
-    [_oauth setAccessToken:accessToken];
-    [_oauth setExpirationDate:[NSDate dateWithTimeIntervalSince1970:seconds]];
-    result(nil);
 }
 
 -(void)login:(FlutterMethodCall*)call result:(FlutterResult)result {
@@ -270,14 +257,14 @@ static NSString * const SCHEME_FILE = @"file";
     if (_oauth.accessToken != nil && _oauth.accessToken.length > 0) {
         NSString * openId = _oauth.openId;
         NSString * accessToken = _oauth.accessToken;
-        long long expirationDate = _oauth.expirationDate.timeIntervalSince1970 * 1000;
-        [dictionary setValue:[NSNumber numberWithInt:ERRORCODE_SUCCESS] forKey:ARGUMENT_KEY_RESULT_ERRORCODE];
+        long long expiresIn = _oauth.expirationDate.timeIntervalSinceNow * 1000.0 / 1000;
+        [dictionary setValue:[NSNumber numberWithInt:RET_SUCCESS] forKey:ARGUMENT_KEY_RESULT_RET];
         [dictionary setValue:openId forKey:ARGUMENT_KEY_RESULT_OPENID];
-        [dictionary setValue:accessToken forKey:ARGUMENT_KEY_RESULT_ACCESSTOKEN];
-        [dictionary setValue:[NSNumber numberWithLongLong:expirationDate] forKey:ARGUMENT_KEY_RESULT_EXPIRATIONDATE];
+        [dictionary setValue:accessToken forKey:ARGUMENT_KEY_RESULT_ACCESS_TOKEN];
+        [dictionary setValue:[NSNumber numberWithLongLong:expiresIn] forKey:ARGUMENT_KEY_RESULT_EXPIRES_IN];
     } else {
         // 登录失败
-        [dictionary setValue:[NSNumber numberWithInt:ERRORCODE_COMMON] forKey:ARGUMENT_KEY_RESULT_ERRORCODE];
+        [dictionary setValue:[NSNumber numberWithInt:RET_COMMON] forKey:ARGUMENT_KEY_RESULT_RET];
     }
     [_channel invokeMethod:METHOD_ONLOGINRESP arguments:dictionary];
 }
@@ -286,10 +273,10 @@ static NSString * const SCHEME_FILE = @"file";
     NSMutableDictionary * dictionary = [NSMutableDictionary dictionary];
     if (cancelled) {
         // 取消登录
-        [dictionary setValue:[NSNumber numberWithInt:ERRORCODE_USERCANCEL] forKey:ARGUMENT_KEY_RESULT_ERRORCODE];
+        [dictionary setValue:[NSNumber numberWithInt:RET_USERCANCEL] forKey:ARGUMENT_KEY_RESULT_RET];
     } else {
         // 登录失败
-        [dictionary setValue:[NSNumber numberWithInt:ERRORCODE_COMMON] forKey:ARGUMENT_KEY_RESULT_ERRORCODE];
+        [dictionary setValue:[NSNumber numberWithInt:RET_COMMON] forKey:ARGUMENT_KEY_RESULT_RET];
     }
     [_channel invokeMethod:METHOD_ONLOGINRESP arguments:dictionary];
 }
@@ -297,19 +284,19 @@ static NSString * const SCHEME_FILE = @"file";
 -(void)tencentDidNotNetWork {
     // 登录失败
     NSMutableDictionary * dictionary = [NSMutableDictionary dictionary];
-    [dictionary setValue:[NSNumber numberWithInt:ERRORCODE_COMMON] forKey:ARGUMENT_KEY_RESULT_ERRORCODE];
+    [dictionary setValue:[NSNumber numberWithInt:RET_COMMON] forKey:ARGUMENT_KEY_RESULT_RET];
     [_channel invokeMethod:METHOD_ONLOGINRESP arguments:dictionary];
 }
 
 -(void)getUserInfoResponse:(APIResponse *)response {
     NSMutableDictionary * dictionary = [NSMutableDictionary dictionary];
     if (response.retCode == URLREQUEST_SUCCEED) {
-        [dictionary setValue:[NSNumber numberWithInt:ERRORCODE_SUCCESS] forKey:ARGUMENT_KEY_RESULT_ERRORCODE];
+        [dictionary setValue:[NSNumber numberWithInt:RET_SUCCESS] forKey:ARGUMENT_KEY_RESULT_RET];
         NSDictionary * json = response.jsonResponse;
         [dictionary addEntriesFromDictionary:json];
     } else {
-        [dictionary setValue:[NSNumber numberWithInt:ERRORCODE_COMMON] forKey:ARGUMENT_KEY_RESULT_ERRORCODE];
-        [dictionary setValue:response.errorMsg forKey:ARGUMENT_KEY_RESULT_ERRORMSG];
+        [dictionary setValue:[NSNumber numberWithInt:RET_COMMON] forKey:ARGUMENT_KEY_RESULT_RET];
+        [dictionary setValue:response.errorMsg forKey:ARGUMENT_KEY_RESULT_MSG];
     }
     [_channel invokeMethod:METHOD_ONGETUSERINFORESP arguments:dictionary];
 }
@@ -326,16 +313,16 @@ static NSString * const SCHEME_FILE = @"file";
         switch (resp.result.intValue) {
             case 0:
                 // 分享成功
-                [dictionary setValue:[NSNumber numberWithInt:ERRORCODE_SUCCESS] forKey:ARGUMENT_KEY_RESULT_ERRORCODE];
+                [dictionary setValue:[NSNumber numberWithInt:RET_SUCCESS] forKey:ARGUMENT_KEY_RESULT_RET];
                 break;
             case -4:
                 // 用户取消
-                [dictionary setValue:[NSNumber numberWithInt:ERRORCODE_USERCANCEL] forKey:ARGUMENT_KEY_RESULT_ERRORCODE];
+                [dictionary setValue:[NSNumber numberWithInt:RET_USERCANCEL] forKey:ARGUMENT_KEY_RESULT_RET];
                 break;
             default:
-                [dictionary setValue:[NSNumber numberWithInt:ERRORCODE_COMMON] forKey:ARGUMENT_KEY_RESULT_ERRORCODE];
+                [dictionary setValue:[NSNumber numberWithInt:RET_COMMON] forKey:ARGUMENT_KEY_RESULT_RET];
                 NSString * errorMsg = [NSString stringWithFormat:@"result: %@, description: %@.", resp.result, resp.errorDescription];
-                [dictionary setValue:errorMsg forKey:ARGUMENT_KEY_RESULT_ERRORMSG];
+                [dictionary setValue:errorMsg forKey:ARGUMENT_KEY_RESULT_MSG];
                 break;
         }
         [_channel invokeMethod:METHOD_ONSHARERESP arguments:dictionary];

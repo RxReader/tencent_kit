@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -47,21 +46,24 @@ public class FakeTencentPlugin implements MethodCallHandler, PluginRegistry.Acti
         channel.setMethodCallHandler(plugin);
     }
 
-    private static class FakeTencentScene {
+    private static class TencentScene {
         public static final int SCENE_QQ = 0;
         public static final int SCENE_QZONE = 1;
     }
 
-    private static class FakeTencentErrorCode {
-        public static final int ERRORCODE_SUCCESS = 0;
-        public static final int ERRORCODE_COMMON = -1;
-        public static final int ERRORCODE_USERCANCEL = -2;
+    private static class TencentRetCode {
+        // 网络请求成功发送至服务器，并且服务器返回数据格式正确
+        // 这里包括所请求业务操作失败的情况，例如没有授权等原因导致
+        public static final int RET_SUCCESS = 0;
+        // 网络异常，或服务器返回的数据格式不正确导致无法解析
+        public static final int RET_FAILED = 1;
+        public static final int RET_COMMON = -1;
+        public static final int RET_USERCANCEL = -2;
     }
 
     private static final String METHOD_REGISTERAPP = "registerApp";
     private static final String METHOD_ISQQINSTALLED = "isQQInstalled";
     private static final String METHOD_ISQQSUPPORTSSOLOGIN = "isQQSupportSSOLogin";
-    private static final String METHOD_SETACCESSTOKEN = "setAccessToken";
     private static final String METHOD_LOGIN = "login";
     private static final String METHOD_LOGOUT = "logout";
     private static final String METHOD_GETUSERINFO = "getUserInfo";
@@ -75,9 +77,6 @@ public class FakeTencentPlugin implements MethodCallHandler, PluginRegistry.Acti
     private static final String METHOD_ONSHARERESP = "onShareResp";
 
     private static final String ARGUMENT_KEY_APPID = "appId";
-    private static final String ARGUMENT_KEY_OPENID = "openId";
-    private static final String ARGUMENT_KEY_ACCESSTOKEN = "accessToken";
-    private static final String ARGUMENT_KEY_EXPIRATIONDATE = "expirationDate";
     private static final String ARGUMENT_KEY_SCOPE = "scope";
     private static final String ARGUMENT_KEY_SCENE = "scene";
     private static final String ARGUMENT_KEY_TITLE = "title";
@@ -90,19 +89,11 @@ public class FakeTencentPlugin implements MethodCallHandler, PluginRegistry.Acti
     private static final String ARGUMENT_KEY_APPNAME = "appName";
     private static final String ARGUMENT_KEY_EXTINT = "extInt";
 
-    private static final String ARGUMENT_KEY_RESULT_ERRORCODE = "errorCode";
-    private static final String ARGUMENT_KEY_RESULT_ERRORMSG = "errorMsg";
-    private static final String ARGUMENT_KEY_RESULT_OPENID = "openId";
-    private static final String ARGUMENT_KEY_RESULT_ACCESSTOKEN = "accessToken";
-    private static final String ARGUMENT_KEY_RESULT_EXPIRATIONDATE = "expirationDate";
-
-    private static final String URLREQUEST_KEY_RET = "ret";
-    private static final String URLREQUEST_KEY_MSG = "msg";
-    // 网络请求成功发送至服务器，并且服务器返回数据格式正确
-    // 这里包括所请求业务操作失败的情况，例如没有授权等原因导致
-    private static final int URLREQUEST_SUCCEED = 0;
-    // 网络异常，或服务器返回的数据格式不正确导致无法解析
-    private static final int URLREQUEST_FAILED = 1;
+    private static final String ARGUMENT_KEY_RESULT_RET = "ret";
+    private static final String ARGUMENT_KEY_RESULT_MSG = "msg";
+    private static final String ARGUMENT_KEY_RESULT_OPENID = "openid";
+    private static final String ARGUMENT_KEY_RESULT_ACCESS_TOKEN = "access_token";
+    private static final String ARGUMENT_KEY_RESULT_EXPIRES_IN = "expires_in";
 
     private static final String SCHEME_FILE = "file";
 
@@ -133,8 +124,6 @@ public class FakeTencentPlugin implements MethodCallHandler, PluginRegistry.Acti
             result.success(isQQInstalled);
         } else if (METHOD_ISQQSUPPORTSSOLOGIN.equals(call.method)) {
             result.success(tencent.isSupportSSOLogin(registrar.activity()));
-        } else if (METHOD_SETACCESSTOKEN.equals(call.method)) {
-            setAccessToken(call, result);
         } else if (METHOD_LOGIN.equals(call.method)) {
             login(call, result);
         } else if (METHOD_LOGOUT.equals(call.method)) {
@@ -154,20 +143,6 @@ public class FakeTencentPlugin implements MethodCallHandler, PluginRegistry.Acti
         }
     }
 
-    private void setAccessToken(MethodCall call, Result result) {
-        if (tencent != null) {
-            String openId = call.argument(ARGUMENT_KEY_OPENID);
-            String accessToken = call.argument(ARGUMENT_KEY_ACCESSTOKEN);
-            long expirationDate = call.argument(ARGUMENT_KEY_EXPIRATIONDATE);
-            long expiresIn = TimeUnit.MILLISECONDS.toSeconds(expirationDate - System.currentTimeMillis());
-            if (expiresIn > 0) {
-                tencent.setOpenId(openId);
-                tencent.setAccessToken(accessToken, String.valueOf(expiresIn));
-            }
-        }
-        result.success(null);
-    }
-
     private void login(MethodCall call, Result result) {
         if (tencent != null) {
             String scope = call.argument(ARGUMENT_KEY_SCOPE);
@@ -177,9 +152,7 @@ public class FakeTencentPlugin implements MethodCallHandler, PluginRegistry.Acti
     }
 
     private IUiListener loginListener = new IUiListener() {
-        private static final String KEY_OPENID = "openid";
-        private static final String KEY_ACCESS_TOKEN = "access_token";
-        private static final String KEY_EXPIRES_IN = "expires_in";
+
 
         @Override
         public void onComplete(Object o) {
@@ -187,31 +160,31 @@ public class FakeTencentPlugin implements MethodCallHandler, PluginRegistry.Acti
             try {
                 if (o != null && o instanceof JSONObject) {
                     JSONObject object = (JSONObject) o;
-                    int ret = !object.isNull(URLREQUEST_KEY_RET) ? object.getInt(URLREQUEST_KEY_RET) : URLREQUEST_FAILED;
-                    String msg = !object.isNull(URLREQUEST_KEY_MSG) ? object.getString(URLREQUEST_KEY_MSG) : null;
-                    if (ret == URLREQUEST_SUCCEED) {
-                        String openId = !object.isNull(KEY_OPENID) ? object.getString(KEY_OPENID) : null;
-                        String accessToken = !object.isNull(KEY_ACCESS_TOKEN) ? object.getString(KEY_ACCESS_TOKEN) : null;
-                        final long expiresIn = !object.isNull(KEY_EXPIRES_IN) ? object.getLong(KEY_EXPIRES_IN) : 0;
+                    int ret = !object.isNull(ARGUMENT_KEY_RESULT_RET) ? object.getInt(ARGUMENT_KEY_RESULT_RET) : TencentRetCode.RET_FAILED;
+                    String msg = !object.isNull(ARGUMENT_KEY_RESULT_MSG) ? object.getString(ARGUMENT_KEY_RESULT_MSG) : null;
+                    if (ret == TencentRetCode.RET_SUCCESS) {
+                        String openId = !object.isNull(ARGUMENT_KEY_RESULT_OPENID) ? object.getString(ARGUMENT_KEY_RESULT_OPENID) : null;
+                        String accessToken = !object.isNull(ARGUMENT_KEY_RESULT_ACCESS_TOKEN) ? object.getString(ARGUMENT_KEY_RESULT_ACCESS_TOKEN) : null;
+                        long expiresIn = !object.isNull(ARGUMENT_KEY_RESULT_EXPIRES_IN) ? object.getLong(ARGUMENT_KEY_RESULT_EXPIRES_IN) : 0;
                         if (!TextUtils.isEmpty(openId) && !TextUtils.isEmpty(accessToken)) {
                             tencent.setOpenId(openId);
                             tencent.setAccessToken(accessToken, String.valueOf(expiresIn));
-                            map.put(ARGUMENT_KEY_RESULT_ERRORCODE, FakeTencentErrorCode.ERRORCODE_SUCCESS);
-                            map.put(ARGUMENT_KEY_RESULT_OPENID, tencent.getOpenId());
-                            map.put(ARGUMENT_KEY_RESULT_ACCESSTOKEN, tencent.getAccessToken());
-                            map.put(ARGUMENT_KEY_RESULT_EXPIRATIONDATE, tencent.getExpiresIn());
+                            map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_SUCCESS);
+                            map.put(ARGUMENT_KEY_RESULT_OPENID, openId);
+                            map.put(ARGUMENT_KEY_RESULT_ACCESS_TOKEN, accessToken);
+                            map.put(ARGUMENT_KEY_RESULT_EXPIRES_IN, expiresIn);
                         } else {
-                            map.put(ARGUMENT_KEY_RESULT_ERRORCODE, FakeTencentErrorCode.ERRORCODE_COMMON);
-                            map.put(ARGUMENT_KEY_RESULT_ERRORMSG, "openId or accessToken is null.");
+                            map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_COMMON);
+                            map.put(ARGUMENT_KEY_RESULT_MSG, "openId or accessToken is null.");
                         }
                     } else {
-                        map.put(ARGUMENT_KEY_RESULT_ERRORCODE, FakeTencentErrorCode.ERRORCODE_COMMON);
-                        map.put(ARGUMENT_KEY_RESULT_ERRORMSG, msg);
+                        map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_COMMON);
+                        map.put(ARGUMENT_KEY_RESULT_MSG, msg);
                     }
                 }
             } catch (JSONException e) {
-                map.put(ARGUMENT_KEY_RESULT_ERRORCODE, FakeTencentErrorCode.ERRORCODE_COMMON);
-                map.put(ARGUMENT_KEY_RESULT_ERRORMSG, e.getMessage());
+                map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_COMMON);
+                map.put(ARGUMENT_KEY_RESULT_MSG, e.getMessage());
             }
             channel.invokeMethod(METHOD_ONLOGINRESP, map);
         }
@@ -220,8 +193,8 @@ public class FakeTencentPlugin implements MethodCallHandler, PluginRegistry.Acti
         public void onError(UiError uiError) {
             // 登录失败
             Map<String, Object> map = new HashMap<>();
-            map.put(ARGUMENT_KEY_RESULT_ERRORCODE, FakeTencentErrorCode.ERRORCODE_COMMON);
-            map.put(ARGUMENT_KEY_RESULT_ERRORMSG, uiError.errorMessage);
+            map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_COMMON);
+            map.put(ARGUMENT_KEY_RESULT_MSG, uiError.errorMessage);
             channel.invokeMethod(METHOD_ONLOGINRESP, map);
         }
 
@@ -229,7 +202,7 @@ public class FakeTencentPlugin implements MethodCallHandler, PluginRegistry.Acti
         public void onCancel() {
             // 取消登录
             Map<String, Object> map = new HashMap<>();
-            map.put(ARGUMENT_KEY_RESULT_ERRORCODE, FakeTencentErrorCode.ERRORCODE_USERCANCEL);
+            map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_USERCANCEL);
             channel.invokeMethod(METHOD_ONLOGINRESP, map);
         }
     };
@@ -251,23 +224,23 @@ public class FakeTencentPlugin implements MethodCallHandler, PluginRegistry.Acti
                     try {
                         if (o != null && o instanceof JSONObject) {
                             JSONObject object = (JSONObject) o;
-                            int ret = !object.isNull(URLREQUEST_KEY_RET) ? object.getInt(URLREQUEST_KEY_RET) : URLREQUEST_FAILED;
-                            String msg = !object.isNull(URLREQUEST_KEY_MSG) ? object.getString(URLREQUEST_KEY_MSG) : null;
-                            if (ret == URLREQUEST_SUCCEED) {
-                                map.put(ARGUMENT_KEY_RESULT_ERRORCODE, FakeTencentErrorCode.ERRORCODE_SUCCESS);
+                            int ret = !object.isNull(ARGUMENT_KEY_RESULT_RET) ? object.getInt(ARGUMENT_KEY_RESULT_RET) : TencentRetCode.RET_FAILED;
+                            String msg = !object.isNull(ARGUMENT_KEY_RESULT_MSG) ? object.getString(ARGUMENT_KEY_RESULT_MSG) : null;
+                            if (ret == TencentRetCode.RET_SUCCESS) {
+                                map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_SUCCESS);
                                 Iterator<String> keys = object.keys();
                                 while (keys.hasNext()) {
                                     String key = keys.next();
                                     map.put(key, object.get(key));
                                 }
                             } else {
-                                map.put(ARGUMENT_KEY_RESULT_ERRORCODE, FakeTencentErrorCode.ERRORCODE_COMMON);
-                                map.put(ARGUMENT_KEY_RESULT_ERRORMSG, msg);
+                                map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_COMMON);
+                                map.put(ARGUMENT_KEY_RESULT_MSG, msg);
                             }
                         }
                     } catch (JSONException e) {
-                        map.put(ARGUMENT_KEY_RESULT_ERRORCODE, FakeTencentErrorCode.ERRORCODE_COMMON);
-                        map.put(ARGUMENT_KEY_RESULT_ERRORMSG, e.getMessage());
+                        map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_COMMON);
+                        map.put(ARGUMENT_KEY_RESULT_MSG, e.getMessage());
                     }
                     channel.invokeMethod(METHOD_ONGETUSERINFORESP, map);
                 }
@@ -275,8 +248,8 @@ public class FakeTencentPlugin implements MethodCallHandler, PluginRegistry.Acti
                 @Override
                 public void onError(UiError error) {
                     Map<String, Object> map = new HashMap<>();
-                    map.put(ARGUMENT_KEY_RESULT_ERRORCODE, FakeTencentErrorCode.ERRORCODE_COMMON);
-                    map.put(ARGUMENT_KEY_RESULT_ERRORMSG, error.errorMessage);
+                    map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_COMMON);
+                    map.put(ARGUMENT_KEY_RESULT_MSG, error.errorMessage);
                     channel.invokeMethod(METHOD_ONGETUSERINFORESP, map);
                 }
 
@@ -291,8 +264,8 @@ public class FakeTencentPlugin implements MethodCallHandler, PluginRegistry.Acti
 
     private void shareMood(MethodCall call, Result result) {
         if (tencent != null) {
-            final int scene = call.argument(ARGUMENT_KEY_SCENE);
-            if (scene == FakeTencentScene.SCENE_QZONE) {
+            int scene = call.argument(ARGUMENT_KEY_SCENE);
+            if (scene == TencentScene.SCENE_QZONE) {
                 String summary = call.argument(ARGUMENT_KEY_SUMMARY);
                 List<String> imageUris = call.argument(ARGUMENT_KEY_IMAGEURIS);
                 String videoUri = call.argument(ARGUMENT_KEY_VIDEOURI);
@@ -323,8 +296,8 @@ public class FakeTencentPlugin implements MethodCallHandler, PluginRegistry.Acti
 
     private void shareImage(MethodCall call, Result result) {
         if (tencent != null) {
-            final int scene = call.argument(ARGUMENT_KEY_SCENE);
-            if (scene == FakeTencentScene.SCENE_QQ) {
+            int scene = call.argument(ARGUMENT_KEY_SCENE);
+            if (scene == TencentScene.SCENE_QQ) {
                 String imageUri = call.argument(ARGUMENT_KEY_IMAGEURI);
                 String appName = call.argument(ARGUMENT_KEY_APPNAME);
                 int extInt = call.argument(ARGUMENT_KEY_EXTINT);
@@ -344,8 +317,8 @@ public class FakeTencentPlugin implements MethodCallHandler, PluginRegistry.Acti
 
     private void shareMusic(MethodCall call, Result result) {
         if (tencent != null) {
-            final int scene = call.argument(ARGUMENT_KEY_SCENE);
-            if (scene == FakeTencentScene.SCENE_QQ) {
+            int scene = call.argument(ARGUMENT_KEY_SCENE);
+            if (scene == TencentScene.SCENE_QQ) {
                 String title = call.argument(ARGUMENT_KEY_TITLE);
                 String summary = call.argument(ARGUMENT_KEY_SUMMARY);
                 String imageUri = call.argument(ARGUMENT_KEY_IMAGEURI);
@@ -382,7 +355,7 @@ public class FakeTencentPlugin implements MethodCallHandler, PluginRegistry.Acti
 
     private void shareWebpage(MethodCall call, Result result) {
         if (tencent != null) {
-            final int scene = call.argument(ARGUMENT_KEY_SCENE);
+            int scene = call.argument(ARGUMENT_KEY_SCENE);
             String title = call.argument(ARGUMENT_KEY_TITLE);
             String summary = call.argument(ARGUMENT_KEY_SUMMARY);
             String imageUri = call.argument(ARGUMENT_KEY_IMAGEURI);
@@ -392,7 +365,7 @@ public class FakeTencentPlugin implements MethodCallHandler, PluginRegistry.Acti
 
             Bundle params = new Bundle();
             switch (scene) {
-                case FakeTencentScene.SCENE_QQ:
+                case TencentScene.SCENE_QQ:
                     params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
                     params.putString(QQShare.SHARE_TO_QQ_TITLE, title);
                     if (!TextUtils.isEmpty(summary)) {
@@ -413,7 +386,7 @@ public class FakeTencentPlugin implements MethodCallHandler, PluginRegistry.Acti
                     params.putInt(QQShare.SHARE_TO_QQ_EXT_INT, extInt);
                     tencent.shareToQQ(registrar.activity(), params, shareListener);
                     break;
-                case FakeTencentScene.SCENE_QZONE:
+                case TencentScene.SCENE_QZONE:
                     params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, QzoneShare.SHARE_TO_QZONE_TYPE_IMAGE_TEXT);
                     params.putString(QzoneShare.SHARE_TO_QQ_TITLE, title);
                     if (!TextUtils.isEmpty(summary)) {
@@ -444,18 +417,18 @@ public class FakeTencentPlugin implements MethodCallHandler, PluginRegistry.Acti
             try {
                 if (o != null && o instanceof JSONObject) {
                     JSONObject object = (JSONObject) o;
-                    int ret = !object.isNull(URLREQUEST_KEY_RET) ? object.getInt(URLREQUEST_KEY_RET) : URLREQUEST_FAILED;
-                    String msg = !object.isNull(URLREQUEST_KEY_MSG) ? object.getString(URLREQUEST_KEY_MSG) : null;
-                    if (ret == URLREQUEST_SUCCEED) {
-                        map.put(ARGUMENT_KEY_RESULT_ERRORCODE, FakeTencentErrorCode.ERRORCODE_SUCCESS);
+                    int ret = !object.isNull(ARGUMENT_KEY_RESULT_RET) ? object.getInt(ARGUMENT_KEY_RESULT_RET) : TencentRetCode.RET_FAILED;
+                    String msg = !object.isNull(ARGUMENT_KEY_RESULT_MSG) ? object.getString(ARGUMENT_KEY_RESULT_MSG) : null;
+                    if (ret == TencentRetCode.RET_SUCCESS) {
+                        map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_SUCCESS);
                     } else {
-                        map.put(ARGUMENT_KEY_RESULT_ERRORCODE, FakeTencentErrorCode.ERRORCODE_COMMON);
-                        map.put(ARGUMENT_KEY_RESULT_ERRORMSG, msg);
+                        map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_COMMON);
+                        map.put(ARGUMENT_KEY_RESULT_MSG, msg);
                     }
                 }
             } catch (JSONException e) {
-                map.put(ARGUMENT_KEY_RESULT_ERRORCODE, FakeTencentErrorCode.ERRORCODE_COMMON);
-                map.put(ARGUMENT_KEY_RESULT_ERRORMSG, e.getMessage());
+                map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_COMMON);
+                map.put(ARGUMENT_KEY_RESULT_MSG, e.getMessage());
             }
             channel.invokeMethod(METHOD_ONSHARERESP, map);
         }
@@ -463,15 +436,15 @@ public class FakeTencentPlugin implements MethodCallHandler, PluginRegistry.Acti
         @Override
         public void onError(UiError error) {
             Map<String, Object> map = new HashMap<>();
-            map.put(ARGUMENT_KEY_RESULT_ERRORCODE, FakeTencentErrorCode.ERRORCODE_COMMON);
-            map.put(ARGUMENT_KEY_RESULT_ERRORMSG, error.errorMessage);
+            map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_COMMON);
+            map.put(ARGUMENT_KEY_RESULT_MSG, error.errorMessage);
             channel.invokeMethod(METHOD_ONSHARERESP, map);
         }
 
         @Override
         public void onCancel() {
             Map<String, Object> map = new HashMap<>();
-            map.put(ARGUMENT_KEY_RESULT_ERRORCODE, FakeTencentErrorCode.ERRORCODE_USERCANCEL);
+            map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_USERCANCEL);
             channel.invokeMethod(METHOD_ONSHARERESP, map);
         }
     };
