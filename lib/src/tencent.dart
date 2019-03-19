@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:fake_tencent/src/domain/tencent_login_resp.dart';
 import 'package:fake_tencent/src/domain/tencent_share_resp.dart';
