@@ -27,7 +27,7 @@ void main() {
             'http://thirdqq.qlogo.cn/g?b=oidb&k=aicFesDxFa5P0dImvuYicSGw&s=40'));
 
     TencentShareResp shareResp = TencentShareRespSerializer()
-        .fromMap(json.decode('{"ret":0}') as Map<dynamic, dynamic>);
+        .fromMap(json.decode('{"msg":""}') as Map<dynamic, dynamic>);
     expect(shareResp.ret, equals(0));
   });
 }

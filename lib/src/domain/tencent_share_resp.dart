@@ -1,6 +1,5 @@
 import 'package:jaguar_serializer/jaguar_serializer.dart';
-import 'package:fake_tencent/src/domain/tencent_base_resp.dart';
-import 'package:meta/meta.dart';
+import 'package:fake_tencent/src/domain/tencent_resp.dart';
 
 part 'tencent_share_resp.jser.dart';
 
@@ -8,9 +7,9 @@ part 'tencent_share_resp.jser.dart';
 class TencentShareRespSerializer extends Serializer<TencentShareResp>
     with _$TencentShareRespSerializer {}
 
-class TencentShareResp extends TencentBaseResp {
+class TencentShareResp extends TencentResp {
   TencentShareResp({
-    @required int ret,
-    @required String msg,
+    int ret,
+    String msg,
   }) : super(ret: ret, msg: msg);
 }

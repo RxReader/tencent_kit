@@ -1,6 +1,5 @@
-import 'package:fake_tencent/src/domain/tencent_base_resp.dart';
+import 'package:fake_tencent/src/domain/tencent_resp.dart';
 import 'package:jaguar_serializer/jaguar_serializer.dart';
-import 'package:meta/meta.dart';
 
 part 'tencent_user_info_resp.jser.dart';
 
@@ -8,10 +7,10 @@ part 'tencent_user_info_resp.jser.dart';
 class TencentUserInfoRespSerializer extends Serializer<TencentUserInfoResp>
     with _$TencentUserInfoRespSerializer {}
 
-class TencentUserInfoResp extends TencentBaseResp {
+class TencentUserInfoResp extends TencentResp {
   TencentUserInfoResp({
-    @required int ret,
-    @required String msg,
+    int ret,
+    String msg,
     this.nickname,
     this.gender,
     this.figureurlQq1,

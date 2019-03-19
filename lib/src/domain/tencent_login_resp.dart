@@ -1,6 +1,5 @@
 import 'package:jaguar_serializer/jaguar_serializer.dart';
-import 'package:fake_tencent/src/domain/tencent_base_resp.dart';
-import 'package:meta/meta.dart';
+import 'package:fake_tencent/src/domain/tencent_resp.dart';
 
 part 'tencent_login_resp.jser.dart';
 
@@ -8,10 +7,10 @@ part 'tencent_login_resp.jser.dart';
 class TencentLoginRespSerializer extends Serializer<TencentLoginResp>
     with _$TencentLoginRespSerializer {}
 
-class TencentLoginResp extends TencentBaseResp {
+class TencentLoginResp extends TencentResp {
   TencentLoginResp({
-    @required int ret,
-    @required String msg,
+    int ret,
+    String msg,
     this.openid,
     this.accessToken,
     this.expiresIn,
