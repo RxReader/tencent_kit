@@ -66,7 +66,6 @@ class Tencent {
   }
 
   Future<dynamic> _handleMethod(MethodCall call) async {
-    print('${json.encode(call.arguments)}');
     switch (call.method) {
       case _METHOD_ONLOGINRESP:
         _loginRespStreamController.add(TencentLoginRespSerializer()
