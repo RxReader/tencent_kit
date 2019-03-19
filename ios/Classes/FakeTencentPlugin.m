@@ -257,7 +257,7 @@ static NSString * const SCHEME_FILE = @"file";
     if (_oauth.accessToken != nil && _oauth.accessToken.length > 0) {
         NSString * openId = _oauth.openId;
         NSString * accessToken = _oauth.accessToken;
-        long long expiresIn = _oauth.expirationDate.timeIntervalSinceNow * 1000.0 / 1000;
+        long long expiresIn = ceil(_oauth.expirationDate.timeIntervalSinceNow);// 向上取整
         [dictionary setValue:[NSNumber numberWithInt:RET_SUCCESS] forKey:ARGUMENT_KEY_RESULT_RET];
         [dictionary setValue:openId forKey:ARGUMENT_KEY_RESULT_OPENID];
         [dictionary setValue:accessToken forKey:ARGUMENT_KEY_RESULT_ACCESS_TOKEN];
