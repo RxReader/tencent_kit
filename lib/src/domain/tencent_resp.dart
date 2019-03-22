@@ -2,7 +2,7 @@ abstract class TencentResp {
   TencentResp({
     int ret,
     this.msg,
-  })  : ret = ret ?? RET_SUCCESS;
+  }) : ret = ret ?? RET_SUCCESS;
 
   /// 网络请求成功发送至服务器，并且服务器返回数据格式正确
   /// 这里包括所请求业务操作失败的情况，例如没有授权等原因导致
