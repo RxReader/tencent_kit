@@ -54,7 +54,6 @@ class _HomeState extends State<Home> {
   StreamSubscription<TencentShareResp> _share;
 
   TencentLoginResp _loginResp;
-  DateTime _loginDate;
 
   @override
   void initState() {
@@ -65,7 +64,6 @@ class _HomeState extends State<Home> {
   }
 
   void _listenLogin(TencentLoginResp resp) {
-    _loginDate = DateTime.now();
     _loginResp = resp;
     String content = 'login: ${resp.openid} - ${resp.accessToken}';
     _showTips('登录', content);
@@ -122,8 +120,7 @@ class _HomeState extends State<Home> {
           ListTile(
             title: const Text('获取用户信息'),
             onTap: () {
-              if (_loginDate != null &&
-                  _loginResp != null &&
+              if (_loginResp != null &&
                   _loginResp.ret == TencentResp.RET_SUCCESS) {
                 if (DateTime.now().millisecondsSinceEpoch -
                         _loginResp.createAt <
