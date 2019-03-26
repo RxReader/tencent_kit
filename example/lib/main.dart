@@ -122,9 +122,12 @@ class _HomeState extends State<Home> {
           ListTile(
             title: const Text('获取用户信息'),
             onTap: () {
-              if (_loginDate != null && _loginResp != null &&
+              if (_loginDate != null &&
+                  _loginResp != null &&
                   _loginResp.ret == TencentResp.RET_SUCCESS) {
-                if (DateTime.now().millisecondsSinceEpoch - _loginResp.createAt < _loginResp.expiresIn * 1000) {
+                if (DateTime.now().millisecondsSinceEpoch -
+                        _loginResp.createAt <
+                    _loginResp.expiresIn * 1000) {
                   widget.tencent.getUserInfo(
                     openId: _loginResp.openid,
                     accessToken: _loginResp.accessToken,
