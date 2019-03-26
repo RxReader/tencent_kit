@@ -82,7 +82,7 @@ dependencies:
 
 ### release
 ````
-latestVersion = 0.1.0+1
+latestVersion = 0.2.0
 ````
 
 ````
