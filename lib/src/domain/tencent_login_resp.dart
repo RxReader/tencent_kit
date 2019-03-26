@@ -14,9 +14,11 @@ class TencentLoginResp extends TencentResp {
     this.openid,
     this.accessToken,
     this.expiresIn,
+    this.createAt,
   }) : super(ret: ret, msg: msg);
 
   final String openid;
   final String accessToken;
   final int expiresIn;
+  final int createAt;
 }

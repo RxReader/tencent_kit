@@ -78,6 +78,10 @@ public class FakeTencentPlugin implements MethodCallHandler, PluginRegistry.Acti
 
     private static final String ARGUMENT_KEY_APPID = "appId";
     private static final String ARGUMENT_KEY_SCOPE = "scope";
+    private static final String ARGUMENT_KEY_OPENID = "openId";
+    private static final String ARGUMENT_KEY_ACCESSTOKEN = "accessToken";
+    private static final String ARGUMENT_KEY_EXPIRESIN = "expiresIn";
+    private static final String ARGUMENT_KEY_CREATEAT = "createAt";
     private static final String ARGUMENT_KEY_SCENE = "scene";
     private static final String ARGUMENT_KEY_TITLE = "title";
     private static final String ARGUMENT_KEY_SUMMARY = "summary";
@@ -94,6 +98,7 @@ public class FakeTencentPlugin implements MethodCallHandler, PluginRegistry.Acti
     private static final String ARGUMENT_KEY_RESULT_OPENID = "openid";
     private static final String ARGUMENT_KEY_RESULT_ACCESS_TOKEN = "access_token";
     private static final String ARGUMENT_KEY_RESULT_EXPIRES_IN = "expires_in";
+    private static final String ARGUMENT_KEY_RESULT_CREATE_AT = "create_at";
 
     private static final String SCHEME_FILE = "file";
 
@@ -152,8 +157,6 @@ public class FakeTencentPlugin implements MethodCallHandler, PluginRegistry.Acti
     }
 
     private IUiListener loginListener = new IUiListener() {
-
-
         @Override
         public void onComplete(Object o) {
             Map<String, Object> map = new HashMap<>();
@@ -165,14 +168,14 @@ public class FakeTencentPlugin implements MethodCallHandler, PluginRegistry.Acti
                     if (ret == TencentRetCode.RET_SUCCESS) {
                         String openId = !object.isNull(ARGUMENT_KEY_RESULT_OPENID) ? object.getString(ARGUMENT_KEY_RESULT_OPENID) : null;
                         String accessToken = !object.isNull(ARGUMENT_KEY_RESULT_ACCESS_TOKEN) ? object.getString(ARGUMENT_KEY_RESULT_ACCESS_TOKEN) : null;
-                        long expiresIn = !object.isNull(ARGUMENT_KEY_RESULT_EXPIRES_IN) ? object.getLong(ARGUMENT_KEY_RESULT_EXPIRES_IN) : 0;
+                        int expiresIn = !object.isNull(ARGUMENT_KEY_RESULT_EXPIRES_IN) ? object.getInt(ARGUMENT_KEY_RESULT_EXPIRES_IN) : 0;
+                        long createAt = System.currentTimeMillis();
                         if (!TextUtils.isEmpty(openId) && !TextUtils.isEmpty(accessToken)) {
-                            tencent.setOpenId(openId);
-                            tencent.setAccessToken(accessToken, String.valueOf(expiresIn));
                             map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_SUCCESS);
                             map.put(ARGUMENT_KEY_RESULT_OPENID, openId);
                             map.put(ARGUMENT_KEY_RESULT_ACCESS_TOKEN, accessToken);
                             map.put(ARGUMENT_KEY_RESULT_EXPIRES_IN, expiresIn);
+                            map.put(ARGUMENT_KEY_RESULT_CREATE_AT, createAt);
                         } else {
                             map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_COMMON);
                             map.put(ARGUMENT_KEY_RESULT_MSG, "openId or accessToken is null.");
@@ -216,51 +219,59 @@ public class FakeTencentPlugin implements MethodCallHandler, PluginRegistry.Acti
 
     private void getUserInfo(MethodCall call, Result result) {
         if (tencent != null) {
+            String openId = call.argument(ARGUMENT_KEY_OPENID);
+            tencent.setOpenId(openId);
+            String accessToken = call.argument(ARGUMENT_KEY_ACCESSTOKEN);
+            int expiresIn = call.argument(ARGUMENT_KEY_EXPIRESIN);
+            long createAt = call.argument(ARGUMENT_KEY_CREATEAT);
+            tencent.setAccessToken(accessToken, String.valueOf(expiresIn - (System.currentTimeMillis() - createAt) / 1000));
             UserInfo info = new UserInfo(registrar.context().getApplicationContext(), tencent.getQQToken());
-            info.getUserInfo(new IUiListener() {
-                @Override
-                public void onComplete(Object o) {
-                    Map<String, Object> map = new HashMap<>();
-                    try {
-                        if (o != null && o instanceof JSONObject) {
-                            JSONObject object = (JSONObject) o;
-                            int ret = !object.isNull(ARGUMENT_KEY_RESULT_RET) ? object.getInt(ARGUMENT_KEY_RESULT_RET) : TencentRetCode.RET_FAILED;
-                            String msg = !object.isNull(ARGUMENT_KEY_RESULT_MSG) ? object.getString(ARGUMENT_KEY_RESULT_MSG) : null;
-                            if (ret == TencentRetCode.RET_SUCCESS) {
-                                map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_SUCCESS);
-                                Iterator<String> keys = object.keys();
-                                while (keys.hasNext()) {
-                                    String key = keys.next();
-                                    map.put(key, object.get(key));
-                                }
-                            } else {
-                                map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_COMMON);
-                                map.put(ARGUMENT_KEY_RESULT_MSG, msg);
-                            }
-                        }
-                    } catch (JSONException e) {
-                        map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_COMMON);
-                        map.put(ARGUMENT_KEY_RESULT_MSG, e.getMessage());
-                    }
-                    channel.invokeMethod(METHOD_ONGETUSERINFORESP, map);
-                }
-
-                @Override
-                public void onError(UiError error) {
-                    Map<String, Object> map = new HashMap<>();
-                    map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_COMMON);
-                    map.put(ARGUMENT_KEY_RESULT_MSG, error.errorMessage);
-                    channel.invokeMethod(METHOD_ONGETUSERINFORESP, map);
-                }
-
-                @Override
-                public void onCancel() {
-                    // do nothing
-                }
-            });
+            info.getUserInfo(userInfoListener);
         }
         result.success(null);
     }
+
+    private IUiListener userInfoListener = new IUiListener() {
+        @Override
+        public void onComplete(Object o) {
+            Map<String, Object> map = new HashMap<>();
+            try {
+                if (o != null && o instanceof JSONObject) {
+                    JSONObject object = (JSONObject) o;
+                    int ret = !object.isNull(ARGUMENT_KEY_RESULT_RET) ? object.getInt(ARGUMENT_KEY_RESULT_RET) : TencentRetCode.RET_FAILED;
+                    String msg = !object.isNull(ARGUMENT_KEY_RESULT_MSG) ? object.getString(ARGUMENT_KEY_RESULT_MSG) : null;
+                    if (ret == TencentRetCode.RET_SUCCESS) {
+                        map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_SUCCESS);
+                        Iterator<String> keys = object.keys();
+                        while (keys.hasNext()) {
+                            String key = keys.next();
+                            map.put(key, object.get(key));
+                        }
+                    } else {
+                        map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_COMMON);
+                        map.put(ARGUMENT_KEY_RESULT_MSG, msg);
+                    }
+                }
+            } catch (JSONException e) {
+                map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_COMMON);
+                map.put(ARGUMENT_KEY_RESULT_MSG, e.getMessage());
+            }
+            channel.invokeMethod(METHOD_ONGETUSERINFORESP, map);
+        }
+
+        @Override
+        public void onError(UiError error) {
+            Map<String, Object> map = new HashMap<>();
+            map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_COMMON);
+            map.put(ARGUMENT_KEY_RESULT_MSG, error.errorMessage);
+            channel.invokeMethod(METHOD_ONGETUSERINFORESP, map);
+        }
+
+        @Override
+        public void onCancel() {
+            // do nothing
+        }
+    };
 
     private void shareMood(MethodCall call, Result result) {
         if (tencent != null) {

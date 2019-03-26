@@ -53,6 +53,9 @@ class _HomeState extends State<Home> {
   StreamSubscription<TencentUserInfoResp> _userInfo;
   StreamSubscription<TencentShareResp> _share;
 
+  TencentLoginResp _loginResp;
+  DateTime _loginDate;
+
   @override
   void initState() {
     super.initState();
@@ -62,6 +65,8 @@ class _HomeState extends State<Home> {
   }
 
   void _listenLogin(TencentLoginResp resp) {
+    _loginDate = DateTime.now();
+    _loginResp = resp;
     String content = 'login: ${resp.openid} - ${resp.accessToken}';
     _showTips('登录', content);
   }
@@ -117,7 +122,17 @@ class _HomeState extends State<Home> {
           ListTile(
             title: const Text('获取用户信息'),
             onTap: () {
-              widget.tencent.getUserInfo();
+              if (_loginDate != null && _loginResp != null &&
+                  _loginResp.ret == TencentResp.RET_SUCCESS) {
+                if (DateTime.now().millisecondsSinceEpoch - _loginResp.createAt < _loginResp.expiresIn * 1000) {
+                  widget.tencent.getUserInfo(
+                    openId: _loginResp.openid,
+                    accessToken: _loginResp.accessToken,
+                    expiresIn: _loginResp.expiresIn,
+                    createAt: _loginResp.createAt,
+                  );
+                }
+              }
             },
           ),
           ListTile(

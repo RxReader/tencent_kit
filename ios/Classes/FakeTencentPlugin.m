@@ -52,6 +52,10 @@ static NSString * const METHOD_ONSHARERESP = @"onShareResp";
 
 static NSString * const ARGUMENT_KEY_APPID = @"appId";
 static NSString * const ARGUMENT_KEY_SCOPE = @"scope";
+static NSString * const ARGUMENT_KEY_OPENID = @"openId";
+static NSString * const ARGUMENT_KEY_ACCESSTOKEN = @"accessToken";
+static NSString * const ARGUMENT_KEY_EXPIRESIN = @"expiresIn";
+static NSString * const ARGUMENT_KEY_CREATEAT = @"createAt";
 static NSString * const ARGUMENT_KEY_SCENE = @"scene";
 static NSString * const ARGUMENT_KEY_TITLE = @"title";
 static NSString * const ARGUMENT_KEY_SUMMARY = @"summary";
@@ -68,6 +72,7 @@ static NSString * const ARGUMENT_KEY_RESULT_MSG = @"msg";
 static NSString * const ARGUMENT_KEY_RESULT_OPENID = @"openid";
 static NSString * const ARGUMENT_KEY_RESULT_ACCESS_TOKEN = @"access_token";
 static NSString * const ARGUMENT_KEY_RESULT_EXPIRES_IN = @"expires_in";
+static NSString * const ARGUMENT_KEY_RESULT_CREATE_AT = @"create_at";
 
 static NSString * const SCHEME_FILE = @"file";
 
@@ -120,6 +125,14 @@ static NSString * const SCHEME_FILE = @"file";
 }
 
 -(void)getUserInfo:(FlutterMethodCall*)call result:(FlutterResult)result {
+    NSString * openId = call.arguments[ARGUMENT_KEY_OPENID];
+    NSString * accessToken = call.arguments[ARGUMENT_KEY_ACCESSTOKEN];
+    NSNumber * expiresIn = call.arguments[ARGUMENT_KEY_EXPIRESIN];
+    NSNumber * createAt = call.arguments[ARGUMENT_KEY_CREATEAT];
+    NSTimeInterval secs = createAt.longLongValue / 1000.0 + expiresIn.longLongValue;
+    [_oauth setOpenId:openId];
+    [_oauth setAccessToken:accessToken];
+    [_oauth setExpirationDate:[NSDate dateWithTimeIntervalSince1970:secs]];
     [_oauth getUserInfo];
     result(nil);
 }
@@ -258,10 +271,12 @@ static NSString * const SCHEME_FILE = @"file";
         NSString * openId = _oauth.openId;
         NSString * accessToken = _oauth.accessToken;
         long long expiresIn = ceil(_oauth.expirationDate.timeIntervalSinceNow);// 向上取整
+        long long createAt = [[NSDate date] timeIntervalSince1970] * 1000.0;
         [dictionary setValue:[NSNumber numberWithInt:RET_SUCCESS] forKey:ARGUMENT_KEY_RESULT_RET];
         [dictionary setValue:openId forKey:ARGUMENT_KEY_RESULT_OPENID];
         [dictionary setValue:accessToken forKey:ARGUMENT_KEY_RESULT_ACCESS_TOKEN];
         [dictionary setValue:[NSNumber numberWithLongLong:expiresIn] forKey:ARGUMENT_KEY_RESULT_EXPIRES_IN];
+        [dictionary setValue:[NSNumber numberWithLongLong:createAt] forKey:ARGUMENT_KEY_RESULT_CREATE_AT];
     } else {
         // 登录失败
         [dictionary setValue:[NSNumber numberWithInt:RET_COMMON] forKey:ARGUMENT_KEY_RESULT_RET];

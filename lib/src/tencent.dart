@@ -26,6 +26,10 @@ class Tencent {
 
   static const String _ARGUMENT_KEY_APPID = 'appId';
   static const String _ARGUMENT_KEY_SCOPE = 'scope';
+  static const String _ARGUMENT_KEY_OPENID = 'openId';
+  static const String _ARGUMENT_KEY_ACCESSTOKEN = 'accessToken';
+  static const String _ARGUMENT_KEY_EXPIRESIN = 'expiresIn';
+  static const String _ARGUMENT_KEY_CREATEAT = 'createAt';
   static const String _ARGUMENT_KEY_SCENE = 'scene';
   static const String _ARGUMENT_KEY_TITLE = 'title';
   static const String _ARGUMENT_KEY_SUMMARY = 'summary';
@@ -117,8 +121,24 @@ class Tencent {
     return _channel.invokeMethod(_METHOD_LOGOUT);
   }
 
-  Future<void> getUserInfo() {
-    return _channel.invokeMethod(_METHOD_GETUSERINFO);
+  Future<void> getUserInfo({
+    @required String openId,
+    @required String accessToken,
+    @required int expiresIn,
+    @required int createAt,
+  }) {
+    assert(openId != null && openId.isNotEmpty);
+    assert(accessToken != null && accessToken.isNotEmpty);
+    assert(expiresIn != null && expiresIn > 0);
+    return _channel.invokeMethod(
+      _METHOD_GETUSERINFO,
+      <String, dynamic>{
+        _ARGUMENT_KEY_OPENID: openId,
+        _ARGUMENT_KEY_ACCESSTOKEN: accessToken,
+        _ARGUMENT_KEY_EXPIRESIN: expiresIn,
+        _ARGUMENT_KEY_CREATEAT: createAt,
+      },
+    );
   }
 
   Future<void> shareMood({
