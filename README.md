@@ -13,8 +13,10 @@ flutter版腾讯(QQ)SDK
 3. [flutter版腾讯(QQ)SDK](https://github.com/v7lin/fake_tencent)
 4. [flutter版新浪微博SDK](https://github.com/v7lin/fake_weibo)
 5. [flutter版支付宝SDK](https://github.com/v7lin/fake_alipay)
+6. [flutter版腾讯(信鸽)推送SDK](https://github.com/v7lin/fake_push)
 
 ## dart/flutter 私服
+
 [simple_pub_server](https://github.com/v7lin/simple_pub_server)
 
 ## android
