@@ -148,11 +148,8 @@ static NSString * const SCHEME_FILE = @"file";
             NSMutableArray * imageDatas = [NSMutableArray array];
             if (imageUris != nil && imageUris.count > 0) {
                 for (NSString * imageUri in imageUris) {
-                    UIImage *image = [UIImage imageWithContentsOfFile:[NSURL URLWithString:imageUri].path];
-                    NSData * imageData = UIImagePNGRepresentation(image);
-                    if (imageData == nil) {
-                        imageData = UIImageJPEGRepresentation(image, 1);
-                    }
+                    NSURL * imageUrl = [NSURL URLWithString:imageUri];
+                    NSData * imageData = [NSData dataWithContentsOfFile:imageUrl.path];
                     [imageDatas addObject:imageData];
                 }
             }
@@ -175,16 +172,9 @@ static NSString * const SCHEME_FILE = @"file";
 //        NSString * appName = call.arguments[ARGUMENT_KEY_APPNAME];
 //        NSNumber * extInt = call.arguments[ARGUMENT_KEY_EXTINT];
         
-        UIImage *image = [UIImage imageWithContentsOfFile:[NSURL URLWithString:imageUri].path];
-        NSData * imageData = UIImagePNGRepresentation(image);
-        NSData * thumbData = nil;
-        if (imageData == nil) {
-            imageData = UIImageJPEGRepresentation(image, 1);
-            thumbData = UIImageJPEGRepresentation(image, 0.2);
-        } else {
-            thumbData = imageData;
-        }
-        QQApiImageObject * object = [QQApiImageObject objectWithData:imageData previewImageData:thumbData title:nil description:nil];
+        NSURL * imageUrl = [NSURL URLWithString:imageUri];
+        NSData * imageData = [NSData dataWithContentsOfFile:imageUrl.path];
+        QQApiImageObject * object = [QQApiImageObject objectWithData:imageData previewImageData:nil title:nil description:nil];
         SendMessageToQQReq * req = [SendMessageToQQReq reqWithContent: object];
         [QQApiInterface sendReq:req];
     }
@@ -202,17 +192,14 @@ static NSString * const SCHEME_FILE = @"file";
 //    NSNumber * extInt = call.arguments[ARGUMENT_KEY_EXTINT];
     if (scene.intValue == SCENE_QQ) {
         QQApiAudioObject * object = nil;
-        NSURL * uri = [NSURL URLWithString:imageUri];
-        if ([SCHEME_FILE isEqualToString:uri.scheme]) {
-            UIImage *image = [UIImage imageWithContentsOfFile:uri.path];
-            NSData * imageData = UIImagePNGRepresentation(image);
-            if (imageData == nil) {
-                imageData = UIImageJPEGRepresentation(image, 1);
-            }
+        NSURL * imageUrl = [NSURL URLWithString:imageUri];
+        if ([SCHEME_FILE isEqualToString:imageUrl.scheme]) {
+            NSData * imageData = [NSData dataWithContentsOfFile:imageUrl.path];
             object = [QQApiAudioObject objectWithURL:[NSURL URLWithString:targetUrl] title:title description:summary previewImageData:imageData];
         } else {
-            object = [QQApiAudioObject objectWithURL:[NSURL URLWithString:targetUrl] title:title description:summary previewImageURL:[NSURL URLWithString:musicUrl]];
+            object = [QQApiAudioObject objectWithURL:[NSURL URLWithString:targetUrl] title:title description:summary previewImageURL:imageUrl];
         }
+        object.flashURL = [NSURL URLWithString:musicUrl];
         SendMessageToQQReq * req = [SendMessageToQQReq reqWithContent: object];
         [QQApiInterface sendReq:req];
     }
@@ -229,16 +216,12 @@ static NSString * const SCHEME_FILE = @"file";
 //    NSNumber * extInt = call.arguments[ARGUMENT_KEY_EXTINT];
     
     QQApiNewsObject * object = nil;
-    NSURL * uri = [NSURL URLWithString:imageUri];
-    if ([SCHEME_FILE isEqualToString:uri.scheme]) {
-        UIImage *image = [UIImage imageWithContentsOfFile:uri.path];
-        NSData * imageData = UIImagePNGRepresentation(image);
-        if (imageData == nil) {
-            imageData = UIImageJPEGRepresentation(image, 1);
-        }
+    NSURL * imageUrl = [NSURL URLWithString:imageUri];
+    if ([SCHEME_FILE isEqualToString:imageUrl.scheme]) {
+        NSData * imageData = [NSData dataWithContentsOfFile:imageUrl.path];
         object = [QQApiNewsObject objectWithURL:[NSURL URLWithString:targetUrl] title:title description:summary previewImageData:imageData];
     } else {
-        object = [QQApiNewsObject objectWithURL:[NSURL URLWithString:targetUrl] title:title description:summary previewImageURL:[NSURL URLWithString:imageUri]];
+        object = [QQApiNewsObject objectWithURL:[NSURL URLWithString:targetUrl] title:title description:summary previewImageURL:imageUrl];
     }
     SendMessageToQQReq * req = [SendMessageToQQReq reqWithContent: object];
     if (scene.intValue == SCENE_QQ) {

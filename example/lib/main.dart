@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fake_path_provider/fake_path_provider.dart';
 import 'package:fake_tencent/fake_tencent.dart';
 
 void main() {
@@ -141,6 +143,28 @@ class _HomeState extends State<Home> {
               widget.tencent.shareMood(
                 scene: TencentScene.SCENE_QZONE,
                 summary: '分享测试',
+              );
+            },
+          ),
+          ListTile(
+            title: const Text('图片分享'),
+            onTap: () async {
+              AssetImage image = const AssetImage('images/icon/timg.gif');
+              AssetBundleImageKey key =
+                  await image.obtainKey(createLocalImageConfiguration(context));
+              ByteData imageData = await key.bundle.load(key.name);
+              Directory saveDir = await PathProvider.getDocumentsDirectory();
+              File saveFile = File(
+                  '${saveDir.path}${path.separator}timg.gif');
+              if (!saveFile.existsSync()) {
+                saveFile.createSync(recursive: true);
+              }
+              saveFile.writeAsBytesSync(imageData.buffer.asUint8List(),
+                  flush: true);
+              Uri imageUri = Uri.file(saveFile.path);
+              await widget.tencent.shareImage(
+                scene: TencentScene.SCENE_QQ,
+                imageUri: imageUri,
               );
             },
           ),
