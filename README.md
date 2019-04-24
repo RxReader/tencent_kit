@@ -83,13 +83,10 @@ dependencies:
 ````
 
 ### release
-````
-latestVersion = 0.2.0
-````
 
 ````
 dependencies:
-  fake_tencent: ^${latestVersion}
+  fake_tencent: ^${latestTag}
 ````
 
 ### example
