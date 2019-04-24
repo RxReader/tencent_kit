@@ -154,8 +154,7 @@ class _HomeState extends State<Home> {
                   await image.obtainKey(createLocalImageConfiguration(context));
               ByteData imageData = await key.bundle.load(key.name);
               Directory saveDir = await PathProvider.getDocumentsDirectory();
-              File saveFile = File(
-                  '${saveDir.path}${path.separator}timg.gif');
+              File saveFile = File('${saveDir.path}${path.separator}timg.gif');
               if (!saveFile.existsSync()) {
                 saveFile.createSync(recursive: true);
               }
