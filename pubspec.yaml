@@ -1,6 +1,6 @@
 name: fake_tencent
 description: A powerful tencent plugin for Flutter.
-version: 0.2.0
+version: 0.2.0+1
 author: v7lin <v7lin@qq.com>
 homepage: https://github.com/v7lin/fake_tencent
 
@@ -20,6 +20,9 @@ dev_dependencies:
     sdk: flutter
 
   pedantic: '>=1.4.0 <3.0.0'
+
+  path: ^1.6.2
+  fake_path_provider: ^0.0.1
 
   build_runner: ^1.2.3
   jaguar_serializer_cli: ^2.2.5
