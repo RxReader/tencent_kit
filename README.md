@@ -74,7 +74,8 @@ iOS 9系统策略更新，限制了http协议的访问，此外应用需要在�
 |QQ|不支持|支持|支持|不支持|支持|
 |QZone|支持|不支持|不支持|不支持|支持|
 
-### snapshot
+* snapshot
+
 ````
 dependencies:
   fake_tencent:
@@ -82,14 +83,15 @@ dependencies:
       url: https://github.com/v7lin/fake_tencent.git
 ````
 
-### release
+* release
 
 ````
 dependencies:
   fake_tencent: ^${latestTag}
 ````
 
-### example
+* example
+
 [示例](./example/lib/main.dart)
 
 ## Getting Started
