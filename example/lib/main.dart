@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fake_path_provider/fake_path_provider.dart';
 import 'package:fake_tencent/fake_tencent.dart';
+import 'package:path/path.dart' as path;
 
 void main() {
   runZoned(() {
@@ -157,13 +157,12 @@ class _HomeState extends State<Home> {
               File saveFile = File('${saveDir.path}${path.separator}timg.gif');
               if (!saveFile.existsSync()) {
                 saveFile.createSync(recursive: true);
+                saveFile.writeAsBytesSync(imageData.buffer.asUint8List(),
+                    flush: true);
               }
-              saveFile.writeAsBytesSync(imageData.buffer.asUint8List(),
-                  flush: true);
-              Uri imageUri = Uri.file(saveFile.path);
               await widget.tencent.shareImage(
                 scene: TencentScene.SCENE_QQ,
-                imageUri: imageUri,
+                imageUri: Uri.file(saveFile.path),
               );
             },
           ),
