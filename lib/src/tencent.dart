@@ -43,8 +43,8 @@ class Tencent {
 
   static const String _SCHEME_FILE = 'file';
 
-  static const MethodChannel _channel =
-      MethodChannel('v7lin.github.io/fake_tencent');
+  final MethodChannel _channel =
+      const MethodChannel('v7lin.github.io/fake_tencent');
 
   final StreamController<TencentLoginResp> _loginRespStreamController =
       StreamController<TencentLoginResp>.broadcast();

@@ -25,25 +25,13 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Tencent tencent = Tencent();
-    tencent.registerApp(appId: '222222');
-    return TencentProvider(
-      tencent: tencent,
-      child: MaterialApp(
-        home: Home(tencent: tencent),
-      ),
+    return MaterialApp(
+      home: Home(),
     );
   }
 }
 
 class Home extends StatefulWidget {
-  Home({
-    Key key,
-    @required this.tencent,
-  }) : super(key: key);
-
-  final Tencent tencent;
-
   @override
   State<StatefulWidget> createState() {
     return _HomeState();
@@ -51,6 +39,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  Tencent _tencent;
+
   StreamSubscription<TencentLoginResp> _login;
   StreamSubscription<TencentUserInfoResp> _userInfo;
   StreamSubscription<TencentShareResp> _share;
@@ -60,9 +50,11 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    _login = widget.tencent.loginResp().listen(_listenLogin);
-    _userInfo = widget.tencent.userInfoResp().listen(_listenUserInfo);
-    _share = widget.tencent.shareResp().listen(_listenShare);
+    _tencent = Tencent();
+    _tencent.registerApp(appId: '222222');
+    _login = _tencent.loginResp().listen(_listenLogin);
+    _userInfo = _tencent.userInfoResp().listen(_listenUserInfo);
+    _share = _tencent.shareResp().listen(_listenShare);
   }
 
   void _listenLogin(TencentLoginResp resp) {
@@ -107,14 +99,14 @@ class _HomeState extends State<Home> {
             title: const Text('环境检查'),
             onTap: () async {
               String content =
-                  'tencent: ${await widget.tencent.isQQInstalled()} - ${await widget.tencent.isQQSupportSSOLogin()}';
+                  'tencent: ${await _tencent.isQQInstalled()} - ${await _tencent.isQQSupportSSOLogin()}';
               _showTips('环境检查', content);
             },
           ),
           ListTile(
             title: const Text('登录'),
             onTap: () {
-              widget.tencent.login(
+              _tencent.login(
                 scope: [TencentScope.GET_SIMPLE_USERINFO],
               );
             },
@@ -127,7 +119,7 @@ class _HomeState extends State<Home> {
                 if (DateTime.now().millisecondsSinceEpoch -
                         _loginResp.createAt <
                     _loginResp.expiresIn * 1000) {
-                  widget.tencent.getUserInfo(
+                  _tencent.getUserInfo(
                     openId: _loginResp.openid,
                     accessToken: _loginResp.accessToken,
                     expiresIn: _loginResp.expiresIn,
@@ -140,7 +132,7 @@ class _HomeState extends State<Home> {
           ListTile(
             title: const Text('分享文字'),
             onTap: () {
-              widget.tencent.shareMood(
+              _tencent.shareMood(
                 scene: TencentScene.SCENE_QZONE,
                 summary: '分享测试',
               );
@@ -160,7 +152,7 @@ class _HomeState extends State<Home> {
                 saveFile.writeAsBytesSync(imageData.buffer.asUint8List(),
                     flush: true);
               }
-              await widget.tencent.shareImage(
+              await _tencent.shareImage(
                 scene: TencentScene.SCENE_QQ,
                 imageUri: Uri.file(saveFile.path),
               );
@@ -169,7 +161,7 @@ class _HomeState extends State<Home> {
           ListTile(
             title: const Text('分享链接'),
             onTap: () {
-              widget.tencent.shareWebpage(
+              _tencent.shareWebpage(
                 scene: TencentScene.SCENE_QQ,
                 title: 'title',
                 targetUrl: 'https://www.baidu.com/',
