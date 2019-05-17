@@ -68,6 +68,9 @@ steps:
     path: /opt/flutter/.pub-cache
   commands:
   - flutter packages pub publish --dry-run
+  when:
+    event:
+    - tag
 
 volumes:
 - name: pub-cache
