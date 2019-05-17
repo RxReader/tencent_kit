@@ -39,6 +39,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  static const String TENCENT_APPID = '222222';
+
   Tencent _tencent = Tencent();
 
   StreamSubscription<TencentLoginResp> _login;
@@ -50,7 +52,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    _tencent.registerApp(appId: '222222');
+    _tencent.registerApp(appId: TENCENT_APPID);
     _login = _tencent.loginResp().listen(_listenLogin);
     _userInfo = _tencent.userInfoResp().listen(_listenUserInfo);
     _share = _tencent.shareResp().listen(_listenShare);
