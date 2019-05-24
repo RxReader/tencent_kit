@@ -85,14 +85,17 @@ class Tencent {
     }
   }
 
+  /// 登录
   Stream<TencentLoginResp> loginResp() {
     return _loginRespStreamController.stream;
   }
 
+  /// 用户信息
   Stream<TencentUserInfoResp> userInfoResp() {
     return _userInfoRespStreamController.stream;
   }
 
+  /// 分享
   Stream<TencentShareResp> shareResp() {
     return _shareRespStreamController.stream;
   }
@@ -105,6 +108,7 @@ class Tencent {
     return (await _channel.invokeMethod(_METHOD_ISQQSUPPORTSSOLOGIN)) as bool;
   }
 
+  /// 登录
   Future<void> login({
     @required List<String> scope,
   }) {
@@ -117,10 +121,12 @@ class Tencent {
     );
   }
 
+  /// 登出
   Future<void> logout() {
     return _channel.invokeMethod(_METHOD_LOGOUT);
   }
 
+  /// 用户信息
   Future<void> getUserInfo({
     @required String openId,
     @required String accessToken,
@@ -141,6 +147,7 @@ class Tencent {
     );
   }
 
+  /// 分享 - 说说
   Future<void> shareMood({
     @required int scene,
     String summary,
@@ -182,6 +189,7 @@ class Tencent {
     return _channel.invokeMethod(_METHOD_SHAREMOOD, map);
   }
 
+  /// 分享 - 图片
   Future<void> shareImage({
     @required int scene,
     @required Uri imageUri,
@@ -204,6 +212,7 @@ class Tencent {
     return _channel.invokeMethod(_METHOD_SHAREIMAGE, map);
   }
 
+  /// 分享 - 音乐
   Future<void> shareMusic({
     @required int scene,
     @required String title,
@@ -242,6 +251,7 @@ class Tencent {
     return _channel.invokeMethod(_METHOD_SHAREMUSIC, map);
   }
 
+  /// 分享 - 网页
   Future<void> shareWebpage({
     @required int scene,
     @required String title,
