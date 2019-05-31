@@ -20,6 +20,11 @@ flutter版腾讯(QQ)SDK
 
 * [simple_pub_server](https://github.com/v7lin/simple_pub_server)
 
+## docs
+
+* [腾讯开放平台](https://open.tencent.com/)
+* [QQ互联](http://wiki.connect.qq.com/)
+
 ## android
 
 ````
