@@ -274,8 +274,8 @@ class Tencent {
     };
 
     /// 兼容 iOS 空安全 -> NSNull
-    if (appName != null && appName.isNotEmpty) {
-      map.putIfAbsent(_ARGUMENT_KEY_APPNAME, () => appName);
+    if (summary != null && summary.isNotEmpty) {
+      map.putIfAbsent(_ARGUMENT_KEY_SUMMARY, () => summary);
     }
     if (imageUri != null) {
       map.putIfAbsent(_ARGUMENT_KEY_IMAGEURI, () => imageUri.toString());
