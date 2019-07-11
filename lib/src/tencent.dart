@@ -9,6 +9,10 @@ import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
 
 class Tencent {
+  Tencent() {
+    _channel.setMethodCallHandler(_handleMethod);
+  }
+
   static const String _METHOD_REGISTERAPP = 'registerApp';
   static const String _METHOD_ISQQINSTALLED = 'isQQInstalled';
   static const String _METHOD_ISQQSUPPORTSSOLOGIN = 'isQQSupportSSOLogin';
@@ -59,7 +63,6 @@ class Tencent {
     @required String appId,
   }) {
     assert(appId != null && appId.isNotEmpty);
-    _channel.setMethodCallHandler(_handleMethod);
     return _channel.invokeMethod(
       _METHOD_REGISTERAPP,
       <String, dynamic>{
