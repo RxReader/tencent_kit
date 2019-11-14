@@ -2,25 +2,12 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:fake_path_provider/fake_path_provider.dart';
-import 'package:fake_tencent/fake_tencent.dart';
 import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart' as path_provider;
+import 'package:tencent_kit/tencent_kit.dart';
+import 'package:okhttp_kit/okhttp_kit.dart';
 
-void main() {
-  runZoned(() {
-    runApp(MyApp());
-  }, onError: (Object error, StackTrace stack) {
-    print(error);
-    print(stack);
-  });
-
-  if (Platform.isAndroid) {
-    SystemUiOverlayStyle systemUiOverlayStyle =
-        SystemUiOverlayStyle(statusBarColor: Colors.transparent);
-    SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
-  }
-}
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
@@ -44,7 +31,6 @@ class _HomeState extends State<Home> {
   Tencent _tencent = Tencent()..registerApp(appId: _TENCENT_APPID);
 
   StreamSubscription<TencentLoginResp> _login;
-  StreamSubscription<TencentUserInfoResp> _userInfo;
   StreamSubscription<TencentShareResp> _share;
 
   TencentLoginResp _loginResp;
@@ -53,7 +39,6 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     _login = _tencent.loginResp().listen(_listenLogin);
-    _userInfo = _tencent.userInfoResp().listen(_listenUserInfo);
     _share = _tencent.shareResp().listen(_listenShare);
   }
 
@@ -61,11 +46,6 @@ class _HomeState extends State<Home> {
     _loginResp = resp;
     String content = 'login: ${resp.openid} - ${resp.accessToken}';
     _showTips('登录', content);
-  }
-
-  void _listenUserInfo(TencentUserInfoResp resp) {
-    String content = 'user info: ${resp.nickname} - ${resp.gender}';
-    _showTips('用户', content);
   }
 
   void _listenShare(TencentShareResp resp) {
@@ -78,9 +58,6 @@ class _HomeState extends State<Home> {
     if (_login != null) {
       _login.cancel();
     }
-    if (_userInfo != null) {
-      _userInfo.cancel();
-    }
     if (_share != null) {
       _share.cancel();
     }
@@ -91,15 +68,14 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Fake Tencent Demo'),
+        title: const Text('TencentKit Demo'),
       ),
       body: ListView(
         children: <Widget>[
           ListTile(
             title: const Text('环境检查'),
             onTap: () async {
-              String content =
-                  'tencent: ${await _tencent.isQQInstalled()} - ${await _tencent.isQQSupportSSOLogin()}';
+              String content = 'tencent: ${await _tencent.isInstalled()}';
               _showTips('环境检查', content);
             },
           ),
@@ -113,18 +89,39 @@ class _HomeState extends State<Home> {
           ),
           ListTile(
             title: const Text('获取用户信息'),
-            onTap: () {
+            onTap: () async {
               if (_loginResp != null &&
-                  _loginResp.ret == TencentResp.RET_SUCCESS) {
-                if (DateTime.now().millisecondsSinceEpoch -
-                        _loginResp.createAt <
-                    _loginResp.expiresIn * 1000) {
-                  _tencent.getUserInfo(
-                    openId: _loginResp.openid,
-                    accessToken: _loginResp.accessToken,
-                    expiresIn: _loginResp.expiresIn,
-                    createAt: _loginResp.createAt,
-                  );
+                  _loginResp.isSuccessful() &&
+                  !_loginResp.isExpired()) {
+                TencentUserInfoResp userInfo = await _tencent.getUserInfo(
+                  appId: _TENCENT_APPID,
+                  openid: _loginResp.openid,
+                  accessToken: _loginResp.accessToken,
+                );
+                if (userInfo.isSuccessful()) {
+                  _showTips('用户信息',
+                      '${userInfo.nickname} - ${userInfo.gender} - ${userInfo.genderType}');
+                } else {
+                  _showTips('用户信息', '${userInfo.ret} - ${userInfo.msg}');
+                }
+              }
+            },
+          ),
+          ListTile(
+            title: const Text('获取UnionID'),
+            onTap: () async {
+              if (_loginResp != null &&
+                  _loginResp.isSuccessful() &&
+                  !_loginResp.isExpired()) {
+                TencentUnionidResp unionid = await _tencent.getUnionId(
+                  accessToken: _loginResp.accessToken,
+                );
+                if (unionid.isSuccessful()) {
+                  _showTips('UnionID',
+                      '${unionid.clientId} - ${unionid.openid} - ${unionid.unionid}');
+                } else {
+                  _showTips('UnionID',
+                      '${unionid.error} - ${unionid.errorDescription}');
                 }
               }
             },
@@ -141,21 +138,31 @@ class _HomeState extends State<Home> {
           ListTile(
             title: const Text('图片分享'),
             onTap: () async {
-              AssetImage image = const AssetImage('images/icon/timg.gif');
-              AssetBundleImageKey key =
-                  await image.obtainKey(createLocalImageConfiguration(context));
-              ByteData imageData = await key.bundle.load(key.name);
-              Directory saveDir = await PathProvider.getDocumentsDirectory();
-              File saveFile = File('${saveDir.path}${path.separator}timg.gif');
-              if (!saveFile.existsSync()) {
-                saveFile.createSync(recursive: true);
-                saveFile.writeAsBytesSync(imageData.buffer.asUint8List(),
-                    flush: true);
+              OkHttpClient client = OkHttpClientBuilder().build();
+              Response resp = await client
+                  .newCall(RequestBuilder()
+                      .get()
+                      .url(HttpUrl.parse(
+                          'https://www.baidu.com/img/bd_logo1.png?where=super'))
+                      .build())
+                  .enqueue();
+              if (resp.isSuccessful()) {
+                Directory saveDir = Platform.isIOS
+                    ? await path_provider.getApplicationDocumentsDirectory()
+                    : await path_provider.getExternalStorageDirectory();
+                File saveFile = File(path.join(saveDir.path, 'timg.gif'));
+                if (!saveFile.existsSync()) {
+                  saveFile.createSync(recursive: true);
+                  saveFile.writeAsBytesSync(
+                    await resp.body().bytes(),
+                    flush: true,
+                  );
+                }
+                await _tencent.shareImage(
+                  scene: TencentScene.SCENE_QQ,
+                  imageUri: Uri.file(saveFile.path),
+                );
               }
-              await _tencent.shareImage(
-                scene: TencentScene.SCENE_QQ,
-                imageUri: Uri.file(saveFile.path),
-              );
             },
           ),
           ListTile(

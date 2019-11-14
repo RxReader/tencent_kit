@@ -1,3 +1,11 @@
+## 1.0.0 - 2019.11.14
+
+* 更名 tencent_kit
+* 升级 Android/iOS SDK
+* 添加 Android 代码静态检查
+* 获取用户信息改走API接口
+* 新增获取UnionId功能
+
 ## 0.3.4 - 2019.9.10
 
 * gradle兼容

@@ -1,5 +1,5 @@
-group 'io.github.v7lin.faketencent'
-version '1.0-SNAPSHOT'
+group 'io.github.v7lin.tencent_kit'
+version '1.0.0'
 
 buildscript {
     repositories {
@@ -8,7 +8,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath 'com.android.tools.build:gradle:3.5.2'
     }
 }
 
@@ -20,13 +20,18 @@ rootProject.allprojects {
 }
 
 apply plugin: 'com.android.library'
+apply from: './quality.gradle'
 
 android {
     compileSdkVersion 28
 
     defaultConfig {
         minSdkVersion 16
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        // library 混淆 -> 随 library 引用，自动添加到 apk 打包混淆
+        consumerProguardFiles 'consumer-proguard-rules.pro'
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     lintOptions {
         disable 'InvalidPackage'
@@ -36,5 +41,5 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    implementation 'io.github.v7lin:tencent-android:3.3.3+3'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 }
