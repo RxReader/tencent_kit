@@ -4,10 +4,10 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:tencent_kit/src/model/api/tencent_unionid_resp.dart';
 import 'package:tencent_kit/src/model/api/tencent_user_info_resp.dart';
 import 'package:tencent_kit/src/model/sdk/tencent_login_resp.dart';
 import 'package:tencent_kit/src/model/sdk/tencent_share_resp.dart';
+import 'package:tencent_kit/src/model/unionid/tencent_unionid_resp.dart';
 import 'package:tencent_kit/src/tencent_constant.dart';
 
 ///
