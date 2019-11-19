@@ -150,7 +150,7 @@ class _HomeState extends State<Home> {
                 Directory saveDir = Platform.isIOS
                     ? await path_provider.getApplicationDocumentsDirectory()
                     : await path_provider.getExternalStorageDirectory();
-                File saveFile = File(path.join(saveDir.path, 'timg.gif'));
+                File saveFile = File(path.join(saveDir.path, 'timg.png'));
                 if (!saveFile.existsSync()) {
                   saveFile.createSync(recursive: true);
                   saveFile.writeAsBytesSync(
