@@ -73,16 +73,17 @@ class Tencent {
     String universalLink,
   }) {
     assert(appId != null && appId.isNotEmpty);
-    assert(universalLink == null || universalLink.isNotEmpty);
+    assert(
+        !Platform.isIOS || universalLink == null || universalLink.isNotEmpty);
     final Map<String, dynamic> map = <String, dynamic>{
       _ARGUMENT_KEY_APPID: appId,
 //      _ARGUMENT_KEY_UNIVERSALLINK: universalLink,
     };
+
+    /// 兼容 iOS 空安全 -> NSNull
     if (universalLink != null) {
       map[_ARGUMENT_KEY_UNIVERSALLINK] = universalLink;
     }
-
-    /// 兼容 iOS 空安全 -> NSNull
     return _channel.invokeMethod(
       _METHOD_REGISTERAPP,
       map,
