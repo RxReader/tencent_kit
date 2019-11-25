@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:quiver/strings.dart' as strings;
 import 'package:tencent_kit/src/model/api/tencent_api_resp.dart';
 
 part 'tencent_user_info_resp.g.dart';
@@ -80,16 +81,19 @@ class TencentUserInfoResp extends TencentApiResp {
   }
 
   String headImgUrl() {
-    if (figureurlQq2 != null && figureurlQq2.isNotEmpty) {
+    if (strings.isNotEmpty(figureurlQq)) {
+      return figureurlQq;
+    }
+    if (strings.isNotEmpty(figureurlQq2)) {
       return figureurlQq2;
     }
-    if (figureurlQq1 != null && figureurlQq1.isNotEmpty) {
+    if (strings.isNotEmpty(figureurlQq1)) {
       return figureurlQq1;
     }
-    if (figureurl2 != null && figureurl2.isNotEmpty) {
+    if (strings.isNotEmpty(figureurl2)) {
       return figureurl2;
     }
-    if (figureurl1 != null && figureurl1.isNotEmpty) {
+    if (strings.isNotEmpty(figureurl1)) {
       return figureurl1;
     }
     return figureurl;
