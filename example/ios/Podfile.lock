@@ -2,7 +2,7 @@ PODS:
   - Flutter (1.0.0)
   - path_provider (0.0.1):
     - Flutter
-  - tencent_kit (1.0.0):
+  - tencent_kit (1.0.2):
     - Flutter
 
 DEPENDENCIES:
@@ -21,8 +21,8 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   path_provider: fb74bd0465e96b594bb3b5088ee4a4e7bb1f2a9d
-  tencent_kit: ef18a7780c8d8503b448f7d8f25b48abd2706e11
+  tencent_kit: b057e0ae9d0c9b5d02c893b3e3ac602200cb733d
 
 PODFILE CHECKSUM: 7fb83752f59ead6285236625b82473f90b1cb932
 
-COCOAPODS: 1.8.0
+COCOAPODS: 1.8.4
