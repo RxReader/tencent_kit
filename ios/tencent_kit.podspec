@@ -3,7 +3,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'tencent_kit'
-  s.version          = '1.0.2'
+  s.version          = '1.0.3'
   s.summary          = 'A powerful Flutter plugin allowing developers to share with natvie android & iOS Tencent SDKs.'
   s.description      = <<-DESC
 A powerful Flutter plugin allowing developers to share with natvie android & iOS Tencent SDKs.
