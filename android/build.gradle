@@ -1,5 +1,5 @@
 group 'io.github.v7lin.tencent_kit'
-version '1.0.3'
+version '1.0.4'
 
 buildscript {
     repositories {
@@ -35,6 +35,7 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
     lintOptions {
         disable 'InvalidPackage'
     }

@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="io.github.v7lin.tencent_kit">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -7,7 +8,9 @@
     <!--<uses-permission android:name="android.permission.WRITE_APN_SETTINGS"/>-->
 
     <!-- 不建议使用 android:requestLegacyExternalStorage="true" 豁免 Android Q 的外部存储沙箱限制 -->
-    <application android:usesCleartextTraffic="true">
+    <application
+        android:usesCleartextTraffic="true"
+        tools:ignore="UnusedAttribute">
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
