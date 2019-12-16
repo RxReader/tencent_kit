@@ -47,6 +47,15 @@ android {
 # 混淆已打入 Library，随 Library 引用，自动添加到 apk 打包混淆
 ```
 
+```
+<!-- 腾讯有毒吧，文档都不写，SDK里居然写死 android:authorities 为 com.tencent.tauth.fileprovider，而非不同应用不同 android:authorities -->
+<manifest>
+    <!-- targetSdkVersion >= 29, 豁免 Android Q 的外部存储沙箱限制 -->
+    <application android:requestLegacyExternalStorage="true">
+    </application>
+</manifest>
+```
+
 ## ios
 
 ```

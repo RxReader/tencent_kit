@@ -93,7 +93,9 @@ static NSString *const SCHEME_FILE = @"file";
         }
         result(nil);
     } else if ([METHOD_ISINSTALLED isEqualToString:call.method]) {
-        result([NSNumber numberWithBool:[TencentOAuth iphoneQQInstalled]]);
+        // 普通大众版 > 办公简洁版
+        BOOL isInstalled = [TencentOAuth iphoneQQInstalled] || [TencentOAuth iphoneTIMInstalled];
+        result([NSNumber numberWithBool:isInstalled]);
     } else if ([METHOD_LOGIN isEqualToString:call.method]) {
         [self login:call result:result];
     } else if ([METHOD_LOGOUT isEqualToString:call.method]) {

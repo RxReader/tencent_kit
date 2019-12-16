@@ -114,14 +114,21 @@ public class TencentKitPlugin implements MethodCallHandler, PluginRegistry.Activ
             tencent = Tencent.createInstance(appId, registrar.context().getApplicationContext());
             result.success(null);
         } else if (METHOD_ISINSTALLED.equals(call.method)) {
-            boolean isQQInstalled = false;
-            try {
-                final PackageManager packageManager = registrar.context().getPackageManager();
-                PackageInfo info = packageManager.getPackageInfo("com.tencent.mobileqq", 0);
-                isQQInstalled = info != null;
-            } catch (PackageManager.NameNotFoundException ignore) {
+            boolean isInstalled = false;
+            PackageManager packageManager = registrar.context().getPackageManager();
+            List<PackageInfo> infos = packageManager.getInstalledPackages(0);
+            if (infos != null && !infos.isEmpty()) {
+                for (PackageInfo info : infos) {
+                    // 普通大众版 > 办公简洁版 > 急速轻聊版
+                    if ("com.tencent.mobileqq".equals(info.packageName)
+                            || "com.tencent.tim".equals(info.packageName)
+                            || "com.tencent.qqlite".equals(info.packageName)) {
+                        isInstalled = true;
+                        break;
+                    }
+                }
             }
-            result.success(isQQInstalled);
+            result.success(isInstalled);
         } else if (METHOD_LOGIN.equals(call.method)) {
             login(call, result);
         } else if (METHOD_LOGOUT.equals(call.method)) {

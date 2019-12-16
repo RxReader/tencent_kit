@@ -33,8 +33,8 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <!-- Android Q 的外部存储沙箱限制 -->
-        <!-- 腾讯有毒吧，文档都不写 -->
-        <provider
+        <!-- 腾讯有毒吧，文档都不写，SDK里居然写死 android:authorities 为 com.tencent.tauth.fileprovider，而非不同应用不同 android:authorities -->
+        <!-- <provider
             android:name=".content.TencentKitFileProvider"
             android:authorities="com.tencent.tauth.fileprovider"
             android:exported="false"
@@ -43,6 +43,6 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/tencent_kit_file_paths" />
-        </provider>
+        </provider> -->
     </application>
 </manifest>
