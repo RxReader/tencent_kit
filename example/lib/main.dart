@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show PlatformException;
 import 'package:okhttp_kit/okhttp_kit.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as path_provider;
@@ -75,7 +76,9 @@ class _HomeState extends State<Home> {
           ListTile(
             title: const Text('环境检查'),
             onTap: () async {
-              String content = 'tencent: ${await _tencent.isInstalled()}';
+              bool isInstalled = await _tencent.isInstalled();
+              bool isReady = await _tencent.isReady();
+              String content = 'isInstalled=$isInstalled, isReady=$isReady';
               _showTips('环境检查', content);
             },
           ),
@@ -90,6 +93,10 @@ class _HomeState extends State<Home> {
           ListTile(
             title: const Text('获取用户信息'),
             onTap: () async {
+              if (!await _tencent.isReady()) {
+                _showTips('Error', '请先登录');
+                return;
+              }
               if (_loginResp != null &&
                   _loginResp.isSuccessful() &&
                   !_loginResp.isExpired()) {
@@ -110,6 +117,10 @@ class _HomeState extends State<Home> {
           ListTile(
             title: const Text('获取UnionID'),
             onTap: () async {
+              if (!await _tencent.isReady()) {
+                _showTips('Error', '请先登录');
+                return;
+              }
               if (_loginResp != null &&
                   _loginResp.isSuccessful() &&
                   !_loginResp.isExpired()) {
@@ -173,6 +184,17 @@ class _HomeState extends State<Home> {
                 title: 'title',
                 targetUrl: 'https://www.baidu.com/',
               );
+            },
+          ),
+          ListTile(
+            title: const Text('拉起手Q会话窗口'),
+            onTap: () async {
+              try {
+                await _tencent.startConversation('1032694760');
+              } on PlatformException catch (e) {
+                //错误码参见QQ互联文档：https://wiki.connect.qq.com/%E8%81%8A%E5%A4%A9
+                _showTips('Error', '${e.code} - ${e.message}');
+              }
             },
           ),
         ],

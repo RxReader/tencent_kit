@@ -19,12 +19,14 @@ class Tencent {
 
   static const String _METHOD_REGISTERAPP = 'registerApp';
   static const String _METHOD_ISINSTALLED = 'isInstalled';
+  static const String _METHOD_ISREADY = 'isReady';
   static const String _METHOD_LOGIN = 'login';
   static const String _METHOD_LOGOUT = 'logout';
   static const String _METHOD_SHAREMOOD = 'shareMood';
   static const String _METHOD_SHAREIMAGE = 'shareImage';
   static const String _METHOD_SHAREMUSIC = 'shareMusic';
   static const String _METHOD_SHAREWEBPAGE = 'shareWebpage';
+  static const String _METHOD_STARTCONVERSATION = 'startConversation';
 
   static const String _METHOD_ONLOGINRESP = 'onLoginResp';
   static const String _METHOD_ONSHARERESP = "onShareResp";
@@ -42,6 +44,7 @@ class Tencent {
   static const String _ARGUMENT_KEY_TARGETURL = 'targetUrl';
   static const String _ARGUMENT_KEY_APPNAME = 'appName';
   static const String _ARGUMENT_KEY_EXTINT = 'extInt';
+  static const String _ARGUMENT_KEY_QQ = 'qq';
 
   static const String _SCHEME_FILE = 'file';
 
@@ -99,6 +102,11 @@ class Tencent {
   /// 检查QQ是否已安装
   Future<bool> isInstalled() async {
     return _channel.invokeMethod(_METHOD_ISINSTALLED);
+  }
+
+  /// 检查Session及OpenId是否有效
+  Future<bool> isReady() async {
+    return _channel.invokeMethod(_METHOD_ISREADY);
   }
 
   /// 登录
@@ -312,5 +320,21 @@ class Tencent {
       arguments[_ARGUMENT_KEY_APPNAME] = appName;
     }
     return _channel.invokeMethod(_METHOD_SHAREWEBPAGE, arguments);
+  }
+
+  /// 拉起手机QQ加好友聊天（仅支持Android）
+  Future<String> startConversation(String qq) {
+    assert(qq != null && qq.isNotEmpty);
+    if (!Platform.isAndroid) {
+      // iOS的支持需要自行封装这个协议：
+      // mqqapi://im/chat?chat_type=thirdparty2c&uin={QQ号}&version=1&src_type=app&open_id={OpenId的BASE64编码}&app_id={AppId的BASE64编码}&app_pkg_name={BundleId的BASE64编码}
+      throw UnsupportedError('Only supported on Android');
+    }
+    return _channel.invokeMethod(
+      _METHOD_STARTCONVERSATION,
+      <String, dynamic>{
+        _ARGUMENT_KEY_QQ: qq,
+      },
+    );
   }
 }

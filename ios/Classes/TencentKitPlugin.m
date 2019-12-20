@@ -38,6 +38,7 @@ enum TencentRetCode {
 
 static NSString *const METHOD_REGISTERAPP = @"registerApp";
 static NSString *const METHOD_ISINSTALLED = @"isInstalled";
+static NSString *const METHOD_ISREADY = @"isReady";
 static NSString *const METHOD_LOGIN = @"login";
 static NSString *const METHOD_LOGOUT = @"logout";
 static NSString *const METHOD_SHAREMOOD = @"shareMood";
@@ -96,6 +97,8 @@ static NSString *const SCHEME_FILE = @"file";
         // 普通大众版 > 办公简洁版
         BOOL isInstalled = [TencentOAuth iphoneQQInstalled] || [TencentOAuth iphoneTIMInstalled];
         result([NSNumber numberWithBool:isInstalled]);
+    } else if ([METHOD_ISREADY isEqualToString:call.method]) {
+        result(FlutterMethodNotImplemented);
     } else if ([METHOD_LOGIN isEqualToString:call.method]) {
         [self login:call result:result];
     } else if ([METHOD_LOGOUT isEqualToString:call.method]) {
