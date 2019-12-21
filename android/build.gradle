@@ -28,7 +28,7 @@ android {
     resourcePrefix 'tencent_kit'
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 16     
 
         // library 混淆 -> 随 library 引用，自动添加到 apk 打包混淆
         consumerProguardFiles 'consumer-proguard-rules.pro'

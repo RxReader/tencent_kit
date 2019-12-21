@@ -13,6 +13,7 @@ import com.tencent.connect.common.Constants;
 import com.tencent.connect.share.QQShare;
 import com.tencent.connect.share.QzonePublish;
 import com.tencent.connect.share.QzoneShare;
+import com.tencent.open.im.IM;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
@@ -63,12 +64,14 @@ public class TencentKitPlugin implements MethodCallHandler, PluginRegistry.Activ
 
     private static final String METHOD_REGISTERAPP = "registerApp";
     private static final String METHOD_ISINSTALLED = "isInstalled";
+    private static final String METHOD_ISREADY = "isReady";
     private static final String METHOD_LOGIN = "login";
     private static final String METHOD_LOGOUT = "logout";
     private static final String METHOD_SHAREMOOD = "shareMood";
     private static final String METHOD_SHAREIMAGE = "shareImage";
     private static final String METHOD_SHAREMUSIC = "shareMusic";
     private static final String METHOD_SHAREWEBPAGE = "shareWebpage";
+    private static final String START_CONVERSATION = "startConversation";
 
     private static final String METHOD_ONLOGINRESP = "onLoginResp";
     private static final String METHOD_ONSHARERESP = "onShareResp";
@@ -86,6 +89,7 @@ public class TencentKitPlugin implements MethodCallHandler, PluginRegistry.Activ
     private static final String ARGUMENT_KEY_TARGETURL = "targetUrl";
     private static final String ARGUMENT_KEY_APPNAME = "appName";
     private static final String ARGUMENT_KEY_EXTINT = "extInt";
+    private static final String ARGUMENT_KEY_QQ = "qq";
 
     private static final String ARGUMENT_KEY_RESULT_RET = "ret";
     private static final String ARGUMENT_KEY_RESULT_MSG = "msg";
@@ -107,7 +111,7 @@ public class TencentKitPlugin implements MethodCallHandler, PluginRegistry.Activ
     }
 
     @Override
-    public void onMethodCall(MethodCall call, @NonNull Result result) {
+    public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
         if (METHOD_REGISTERAPP.equals(call.method)) {
             final String appId = call.argument(ARGUMENT_KEY_APPID);
 //            final String universalLink = call.argument(ARGUMENT_KEY_UNIVERSALLINK);
@@ -129,6 +133,8 @@ public class TencentKitPlugin implements MethodCallHandler, PluginRegistry.Activ
                 }
             }
             result.success(isInstalled);
+        } else if (METHOD_ISREADY.equals(call.method)) {
+            result.success(tencent != null && tencent.isReady());
         } else if (METHOD_LOGIN.equals(call.method)) {
             login(call, result);
         } else if (METHOD_LOGOUT.equals(call.method)) {
@@ -141,6 +147,8 @@ public class TencentKitPlugin implements MethodCallHandler, PluginRegistry.Activ
             shareMusic(call, result);
         } else if (METHOD_SHAREWEBPAGE.equals(call.method)) {
             shareWebpage(call, result);
+        } else if (START_CONVERSATION.equals(call.method)) {
+            startConversation(call, result);
         } else {
             result.notImplemented();
         }
@@ -169,6 +177,8 @@ public class TencentKitPlugin implements MethodCallHandler, PluginRegistry.Activ
                         int expiresIn = !object.isNull(ARGUMENT_KEY_RESULT_EXPIRES_IN) ? object.getInt(ARGUMENT_KEY_RESULT_EXPIRES_IN) : 0;
                         long createAt = System.currentTimeMillis();
                         if (!TextUtils.isEmpty(openId) && !TextUtils.isEmpty(accessToken)) {
+                            tencent.setOpenId(openId);
+                            tencent.setAccessToken(accessToken, String.valueOf(expiresIn));
                             map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_SUCCESS);
                             map.put(ARGUMENT_KEY_RESULT_OPENID, openId);
                             map.put(ARGUMENT_KEY_RESULT_ACCESS_TOKEN, accessToken);
@@ -363,6 +373,41 @@ public class TencentKitPlugin implements MethodCallHandler, PluginRegistry.Activ
             }
         }
         result.success(null);
+    }
+
+    private void startConversation(MethodCall call, Result result) {
+        if (tencent == null) {
+            result.error(String.valueOf(IM.IM_UNKNOWN_TYPE), "Should register app at first", null);
+            return;
+        }
+        if (!tencent.isReady()) {
+            result.error(String.valueOf(IM.IM_UNKNOWN_TYPE), "Should login at first", null);
+            return;
+        }
+        String qq = call.argument(ARGUMENT_KEY_QQ);
+        android.app.Activity activity = registrar.activity();
+        String packageName = activity.getApplicationContext().getPackageName();
+        int ret = tencent.startIMAio(activity, qq, packageName);
+        if (ret == IM.IM_SUCCESS) {
+            result.success("0");
+            return;
+        }
+        String errorMsg;
+        switch (ret) {
+            case IM.IM_SHOULD_DOWNLOAD:
+                errorMsg = "Should download latest version of MobileQQ";
+                break;
+            case IM.IM_UIN_EMPTY:
+            case IM.IM_LENGTH_SHORT:
+            case IM.IM_UIN_NOT_DIGIT:
+                errorMsg = "QQ number is invalid";
+                break;
+            case IM.IM_UNKNOWN_TYPE:
+            default:
+                errorMsg = "Unknown type";
+                break;
+        }
+        result.error(String.valueOf(ret), errorMsg, null);
     }
 
     private IUiListener shareListener = new IUiListener() {
