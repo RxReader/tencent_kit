@@ -37,7 +37,9 @@ enum TencentRetCode {
 }
 
 static NSString *const METHOD_REGISTERAPP = @"registerApp";
-static NSString *const METHOD_ISINSTALLED = @"isInstalled";
+static NSString *const METHOD_ISQQINSTALLED = @"isQQInstalled";
+static NSString *const METHOD_ISTIMINSTALLED = @"isTIMInstalled";
+static NSString *const METHOD_ISQQLITEINSTALLED = @"isQQLiteInstalled";
 static NSString *const METHOD_LOGIN = @"login";
 static NSString *const METHOD_LOGOUT = @"logout";
 static NSString *const METHOD_SHAREMOOD = @"shareMood";
@@ -93,10 +95,12 @@ static NSString *const SCHEME_FILE = @"file";
             _oauth = [[TencentOAuth alloc] initWithAppId:appId andDelegate:self];
         }
         result(nil);
-    } else if ([METHOD_ISINSTALLED isEqualToString:call.method]) {
-        // 普通大众版 > 办公简洁版
-        BOOL isInstalled = [TencentOAuth iphoneQQInstalled] || [TencentOAuth iphoneTIMInstalled];
-        result([NSNumber numberWithBool:isInstalled]);
+    } else if ([METHOD_ISQQINSTALLED isEqualToString:call.method]) {
+        result([NSNumber numberWithBool:[TencentOAuth iphoneQQInstalled]]);
+    } else if ([METHOD_ISTIMINSTALLED isEqualToString:call.method]) {
+        result([NSNumber numberWithBool:[TencentOAuth iphoneTIMInstalled]]);
+    } else if ([METHOD_ISQQLITEINSTALLED isEqualToString:call.method]) {
+        result([NSNumber numberWithBool:NO]);
     } else if ([METHOD_LOGIN isEqualToString:call.method]) {
         [self login:call result:result];
     } else if ([METHOD_LOGOUT isEqualToString:call.method]) {
@@ -168,13 +172,11 @@ static NSString *const SCHEME_FILE = @"file";
 
 - (void)shareText:(FlutterMethodCall *)call result:(FlutterResult)result {
     NSNumber *scene = call.arguments[ARGUMENT_KEY_SCENE];
-    NSString *summary = call.arguments[ARGUMENT_KEY_SUMMARY];
-    QQApiTextObject *object = [QQApiTextObject objectWithText:summary];
-    SendMessageToQQReq *req = [SendMessageToQQReq reqWithContent:object];
     if (scene.intValue == SCENE_QQ) {
+        NSString *summary = call.arguments[ARGUMENT_KEY_SUMMARY];
+        QQApiTextObject *object = [QQApiTextObject objectWithText:summary];
+        SendMessageToQQReq *req = [SendMessageToQQReq reqWithContent:object];
         [QQApiInterface sendReq:req];
-    } else if (scene.intValue == SCENE_QZONE) {
-        [QQApiInterface SendReqToQZone:req];
     }
     result(nil);
 }
