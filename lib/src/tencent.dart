@@ -101,7 +101,9 @@ class Tencent {
 
   /// 检查QQ是否已安装
   Future<bool> isInstalled() async {
-    return (await isQQInstalled()) || (await isTIMInstalled()) || (await isQQLiteInstalled());
+    return (await isQQInstalled()) ||
+        (await isTIMInstalled()) ||
+        (await isQQLiteInstalled());
   }
 
   /// 检查QQ是否已安装
