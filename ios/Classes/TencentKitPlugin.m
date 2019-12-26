@@ -41,6 +41,7 @@ static NSString *const METHOD_ISINSTALLED = @"isInstalled";
 static NSString *const METHOD_LOGIN = @"login";
 static NSString *const METHOD_LOGOUT = @"logout";
 static NSString *const METHOD_SHAREMOOD = @"shareMood";
+static NSString *const METHOD_SHARETEXT = @"shareText";
 static NSString *const METHOD_SHAREIMAGE = @"shareImage";
 static NSString *const METHOD_SHAREMUSIC = @"shareMusic";
 static NSString *const METHOD_SHAREWEBPAGE = @"shareWebpage";
@@ -102,6 +103,8 @@ static NSString *const SCHEME_FILE = @"file";
         [self logout:call result:result];
     } else if ([METHOD_SHAREMOOD isEqualToString:call.method]) {
         [self shareMood:call result:result];
+    } else if ([METHOD_SHARETEXT isEqualToString:call.method]) {
+        [self shareText:call result:result];
     } else if ([METHOD_SHAREIMAGE isEqualToString:call.method]) {
         [self shareImage:call result:result];
     } else if ([METHOD_SHAREMUSIC isEqualToString:call.method]) {
@@ -159,6 +162,19 @@ static NSString *const SCHEME_FILE = @"file";
             SendMessageToQQReq *req = [SendMessageToQQReq reqWithContent:object];
             [QQApiInterface sendReq:req];
         }
+    }
+    result(nil);
+}
+
+- (void)shareText:(FlutterMethodCall *)call result:(FlutterResult)result {
+    NSNumber *scene = call.arguments[ARGUMENT_KEY_SCENE];
+    NSString *summary = call.arguments[ARGUMENT_KEY_SUMMARY];
+    QQApiTextObject *object = [QQApiTextObject objectWithText:summary];
+    SendMessageToQQReq *req = [SendMessageToQQReq reqWithContent:object];
+    if (scene.intValue == SCENE_QQ) {
+        [QQApiInterface sendReq:req];
+    } else if (scene.intValue == SCENE_QZONE) {
+        [QQApiInterface SendReqToQZone:req];
     }
     result(nil);
 }

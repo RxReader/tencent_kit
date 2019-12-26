@@ -127,9 +127,18 @@ class _HomeState extends State<Home> {
             },
           ),
           ListTile(
-            title: const Text('分享文字'),
+            title: const Text('分享说说'),
             onTap: () {
               _tencent.shareMood(
+                scene: TencentScene.SCENE_QZONE,
+                summary: '分享测试',
+              );
+            },
+          ),
+          ListTile(
+            title: const Text('文本分享'),
+            onTap: () {
+              _tencent.shareText(
                 scene: TencentScene.SCENE_QZONE,
                 summary: '分享测试',
               );
@@ -166,7 +175,7 @@ class _HomeState extends State<Home> {
             },
           ),
           ListTile(
-            title: const Text('分享链接'),
+            title: const Text('网页分享'),
             onTap: () {
               _tencent.shareWebpage(
                 scene: TencentScene.SCENE_QQ,

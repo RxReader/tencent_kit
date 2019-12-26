@@ -1,5 +1,6 @@
 name: tencent_kit_example
 description: Demonstrates how to use the tencent_kit plugin.
+version: 1.0.0+1000
 publish_to: 'none'
 
 environment:

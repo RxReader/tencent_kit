@@ -22,6 +22,7 @@ class Tencent {
   static const String _METHOD_LOGIN = 'login';
   static const String _METHOD_LOGOUT = 'logout';
   static const String _METHOD_SHAREMOOD = 'shareMood';
+  static const String _METHOD_SHARETEXT = 'shareText';
   static const String _METHOD_SHAREIMAGE = 'shareImage';
   static const String _METHOD_SHAREMUSIC = 'shareMusic';
   static const String _METHOD_SHAREWEBPAGE = 'shareWebpage';
@@ -214,6 +215,19 @@ class Tencent {
     if (videoUri != null) {
       arguments[_ARGUMENT_KEY_VIDEOURI] = videoUri.toString();
     }
+    return _channel.invokeMethod(_METHOD_SHAREMOOD, arguments);
+  }
+
+  /// 分享 - 文本
+  Future<void> shareText({
+    @required int scene,
+    @required String summary,
+  }) {
+    assert(summary != null && summary.isNotEmpty);
+    final Map<String, dynamic> arguments = <String, dynamic>{
+      _ARGUMENT_KEY_SCENE: scene,
+      _ARGUMENT_KEY_SUMMARY: summary,
+    };
     return _channel.invokeMethod(_METHOD_SHAREMOOD, arguments);
   }
 
