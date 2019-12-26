@@ -1,5 +1,7 @@
 package io.github.v7lin.tencent_kit;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -21,6 +23,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,10 +65,13 @@ public class TencentKitPlugin implements MethodCallHandler, PluginRegistry.Activ
     }
 
     private static final String METHOD_REGISTERAPP = "registerApp";
-    private static final String METHOD_ISINSTALLED = "isInstalled";
+    private static final String METHOD_ISQQINSTALLED = "isQQInstalled";
+    private static final String METHOD_ISTIMINSTALLED = "isTIMInstalled";
+    private static final String METHOD_ISQQLITEINSTALLED = "isQQLiteInstalled";
     private static final String METHOD_LOGIN = "login";
     private static final String METHOD_LOGOUT = "logout";
     private static final String METHOD_SHAREMOOD = "shareMood";
+    private static final String METHOD_SHARETEXT = "shareText";
     private static final String METHOD_SHAREIMAGE = "shareImage";
     private static final String METHOD_SHAREMUSIC = "shareMusic";
     private static final String METHOD_SHAREWEBPAGE = "shareWebpage";
@@ -113,28 +119,20 @@ public class TencentKitPlugin implements MethodCallHandler, PluginRegistry.Activ
 //            final String universalLink = call.argument(ARGUMENT_KEY_UNIVERSALLINK);
             tencent = Tencent.createInstance(appId, registrar.context().getApplicationContext());
             result.success(null);
-        } else if (METHOD_ISINSTALLED.equals(call.method)) {
-            boolean isInstalled = false;
-            PackageManager packageManager = registrar.context().getPackageManager();
-            List<PackageInfo> infos = packageManager.getInstalledPackages(0);
-            if (infos != null && !infos.isEmpty()) {
-                for (PackageInfo info : infos) {
-                    // 普通大众版 > 办公简洁版 > 急速轻聊版
-                    if ("com.tencent.mobileqq".equals(info.packageName)
-                            || "com.tencent.tim".equals(info.packageName)
-                            || "com.tencent.qqlite".equals(info.packageName)) {
-                        isInstalled = true;
-                        break;
-                    }
-                }
-            }
-            result.success(isInstalled);
+        } else if (METHOD_ISQQINSTALLED.equals(call.method)) {
+            result.success(isAppInstalled(registrar.context(), "com.tencent.mobileqq"));
+        } else if (METHOD_ISTIMINSTALLED.equals(call.method)) {
+            result.success(isAppInstalled(registrar.context(), "com.tencent.tim"));
+        } else if (METHOD_ISQQLITEINSTALLED.equals(call.method)) {
+            result.success(isAppInstalled(registrar.context(), "com.tencent.qqlite"));
         } else if (METHOD_LOGIN.equals(call.method)) {
             login(call, result);
         } else if (METHOD_LOGOUT.equals(call.method)) {
             logout(call, result);
         } else if (METHOD_SHAREMOOD.equals(call.method)) {
             shareMood(call, result);
+        } else if (METHOD_SHARETEXT.equals(call.method)) {
+            shareText(call, result);
         } else if (METHOD_SHAREIMAGE.equals(call.method)) {
             shareImage(call, result);
         } else if (METHOD_SHAREMUSIC.equals(call.method)) {
@@ -242,6 +240,35 @@ public class TencentKitPlugin implements MethodCallHandler, PluginRegistry.Activ
                     params.putInt(QzonePublish.PUBLISH_TO_QZONE_KEY_TYPE, QzonePublish.PUBLISH_TO_QZONE_TYPE_PUBLISHMOOD);
                 }
                 tencent.publishToQzone(registrar.activity(), params, shareListener);
+            }
+        }
+        result.success(null);
+    }
+
+    private void shareText(MethodCall call, Result result) {
+        int scene = call.argument(ARGUMENT_KEY_SCENE);
+        if (scene == TencentScene.SCENE_QQ) {
+            String summary = call.argument(ARGUMENT_KEY_SUMMARY);
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, summary);
+            sendIntent.setType("text/*");
+            // 普通大众版 > 办公简洁版 > 急速轻聊版
+            PackageManager packageManager = registrar.context().getPackageManager();
+            List<PackageInfo> infos = packageManager.getInstalledPackages(0);
+            if (infos != null && !infos.isEmpty()) {
+                for (String packageName : Arrays.asList("com.tencent.mobileqq", "com.tencent.tim", "com.tencent.qqlite")) {
+                    for (PackageInfo info : infos) {
+                        if (packageName.equals(info.packageName)) {
+                            sendIntent.setPackage(packageName);
+                            if (sendIntent.resolveActivity(registrar.context().getPackageManager()) != null) {
+                                sendIntent.setComponent(new ComponentName(packageName, "com.tencent.mobileqq.activity.JumpActivity"));
+                                registrar.activity().startActivity(sendIntent);
+                                break;
+                            }
+                        }
+                    }
+                }
             }
         }
         result.success(null);
@@ -418,5 +445,16 @@ public class TencentKitPlugin implements MethodCallHandler, PluginRegistry.Activ
                 break;
         }
         return false;
+    }
+
+    // ---
+
+    private static boolean isAppInstalled(Context context, String packageName) {
+        PackageInfo packageInfo = null;
+        try {
+            packageInfo = context.getPackageManager().getPackageInfo(packageName, 0);
+        } catch (PackageManager.NameNotFoundException e) {
+        }
+        return packageInfo != null;
     }
 }

@@ -18,7 +18,9 @@ class Tencent {
   }
 
   static const String _METHOD_REGISTERAPP = 'registerApp';
-  static const String _METHOD_ISINSTALLED = 'isInstalled';
+  static const String _METHOD_ISQQINSTALLED = 'isQQInstalled';
+  static const String _METHOD_ISTIMINSTALLED = 'isTIMInstalled';
+  static const String _METHOD_ISQQLITEINSTALLED = 'isQQLiteInstalled';
   static const String _METHOD_LOGIN = 'login';
   static const String _METHOD_LOGOUT = 'logout';
   static const String _METHOD_SHAREMOOD = 'shareMood';
@@ -99,7 +101,22 @@ class Tencent {
 
   /// 检查QQ是否已安装
   Future<bool> isInstalled() async {
-    return _channel.invokeMethod(_METHOD_ISINSTALLED);
+    return (await isQQInstalled()) || (await isTIMInstalled()) || (await isQQLiteInstalled());
+  }
+
+  /// 检查QQ是否已安装
+  Future<bool> isQQInstalled() {
+    return _channel.invokeMethod(_METHOD_ISQQINSTALLED);
+  }
+
+  /// 检查QQ是否已安装
+  Future<bool> isTIMInstalled() {
+    return _channel.invokeMethod(_METHOD_ISTIMINSTALLED);
+  }
+
+  /// 检查QQ是否已安装
+  Future<bool> isQQLiteInstalled() {
+    return _channel.invokeMethod(_METHOD_ISQQLITEINSTALLED);
   }
 
   /// 登录
@@ -218,17 +235,18 @@ class Tencent {
     return _channel.invokeMethod(_METHOD_SHAREMOOD, arguments);
   }
 
-  /// 分享 - 文本
+  /// 分享 - 文本（Android调用的是系统API，故而不会有回调）
   Future<void> shareText({
     @required int scene,
     @required String summary,
   }) {
+    assert(scene == TencentScene.SCENE_QQ);
     assert(summary != null && summary.isNotEmpty);
     final Map<String, dynamic> arguments = <String, dynamic>{
       _ARGUMENT_KEY_SCENE: scene,
       _ARGUMENT_KEY_SUMMARY: summary,
     };
-    return _channel.invokeMethod(_METHOD_SHAREMOOD, arguments);
+    return _channel.invokeMethod(_METHOD_SHARETEXT, arguments);
   }
 
   /// 分享 - 图片
