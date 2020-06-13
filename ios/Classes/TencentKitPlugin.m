@@ -39,7 +39,6 @@ enum TencentRetCode {
 static NSString *const METHOD_REGISTERAPP = @"registerApp";
 static NSString *const METHOD_ISQQINSTALLED = @"isQQInstalled";
 static NSString *const METHOD_ISTIMINSTALLED = @"isTIMInstalled";
-static NSString *const METHOD_ISQQLITEINSTALLED = @"isQQLiteInstalled";
 static NSString *const METHOD_LOGIN = @"login";
 static NSString *const METHOD_LOGOUT = @"logout";
 static NSString *const METHOD_SHAREMOOD = @"shareMood";
@@ -99,8 +98,6 @@ static NSString *const SCHEME_FILE = @"file";
         result([NSNumber numberWithBool:[TencentOAuth iphoneQQInstalled]]);
     } else if ([METHOD_ISTIMINSTALLED isEqualToString:call.method]) {
         result([NSNumber numberWithBool:[TencentOAuth iphoneTIMInstalled]]);
-    } else if ([METHOD_ISQQLITEINSTALLED isEqualToString:call.method]) {
-        result([NSNumber numberWithBool:NO]);
     } else if ([METHOD_LOGIN isEqualToString:call.method]) {
         [self login:call result:result];
     } else if ([METHOD_LOGOUT isEqualToString:call.method]) {

@@ -4,10 +4,9 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!--<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />-->
     <!--<uses-permission android:name="android.permission.WRITE_APN_SETTINGS"/>-->
 
-    <!-- 不建议使用 android:requestLegacyExternalStorage="true" 豁免 Android Q 的外部存储沙箱限制 -->
     <application
         android:usesCleartextTraffic="true"
         tools:ignore="UnusedAttribute">
@@ -36,16 +35,15 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <!-- Android Q 的外部存储沙箱限制 -->
-        <!-- 腾讯有毒吧，文档都不写，SDK里居然写死 android:authorities 为 com.tencent.tauth.fileprovider，而非不同应用不同 android:authorities -->
-        <!-- <provider
+        <provider
             android:name=".content.TencentKitFileProvider"
-            android:authorities="com.tencent.tauth.fileprovider"
+            android:authorities="${applicationId}.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
 
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/tencent_kit_file_paths" />
-        </provider> -->
+        </provider>
     </application>
 </manifest>

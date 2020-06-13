@@ -31,7 +31,7 @@ android {
         minSdkVersion 16
 
         // library 混淆 -> 随 library 引用，自动添加到 apk 打包混淆
-        consumerProguardFiles 'consumer-proguard-rules.pro'
+        consumerProguardFiles 'consumer-rules.pro'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

@@ -12,7 +12,6 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.arch.core.util.Function;
 
 import com.tencent.connect.common.Constants;
 import com.tencent.connect.share.QQShare;
@@ -58,7 +57,6 @@ public class TencentKit implements MethodChannel.MethodCallHandler, PluginRegist
     private static final String METHOD_REGISTERAPP = "registerApp";
     private static final String METHOD_ISQQINSTALLED = "isQQInstalled";
     private static final String METHOD_ISTIMINSTALLED = "isTIMInstalled";
-    private static final String METHOD_ISQQLITEINSTALLED = "isQQLiteInstalled";
     private static final String METHOD_LOGIN = "login";
     private static final String METHOD_LOGOUT = "logout";
     private static final String METHOD_SHAREMOOD = "shareMood";
@@ -71,7 +69,7 @@ public class TencentKit implements MethodChannel.MethodCallHandler, PluginRegist
     private static final String METHOD_ONSHARERESP = "onShareResp";
 
     private static final String ARGUMENT_KEY_APPID = "appId";
-    //    private static final String ARGUMENT_KEY_UNIVERSALLINK = "universalLink";
+//    private static final String ARGUMENT_KEY_UNIVERSALLINK = "universalLink";
     private static final String ARGUMENT_KEY_SCOPE = "scope";
     private static final String ARGUMENT_KEY_SCENE = "scene";
     private static final String ARGUMENT_KEY_TITLE = "title";
@@ -143,8 +141,6 @@ public class TencentKit implements MethodChannel.MethodCallHandler, PluginRegist
             result.success(isAppInstalled(applicationContext, "com.tencent.mobileqq"));
         } else if (METHOD_ISTIMINSTALLED.equals(call.method)) {
             result.success(isAppInstalled(applicationContext, "com.tencent.tim"));
-        } else if (METHOD_ISQQLITEINSTALLED.equals(call.method)) {
-            result.success(isAppInstalled(applicationContext, "com.tencent.qqlite"));
         } else if (METHOD_LOGIN.equals(call.method)) {
             login(call, result);
         } else if (METHOD_LOGOUT.equals(call.method)) {

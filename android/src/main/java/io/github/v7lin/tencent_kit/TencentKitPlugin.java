@@ -1,13 +1,11 @@
 package io.github.v7lin.tencent_kit;
 
 import androidx.annotation.NonNull;
-import androidx.arch.core.util.Function;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 import io.flutter.plugin.common.PluginRegistry;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
 
 /**
  * TencentKitPlugin
@@ -22,7 +20,7 @@ public class TencentKitPlugin implements FlutterPlugin, ActivityAware {
     // them functionally equivalent. Only one of onAttachedToEngine or registerWith will be called
     // depending on the user's project. onAttachedToEngine or registerWith must both be defined
     // in the same class.
-    public static void registerWith(Registrar registrar) {
+    public static void registerWith(PluginRegistry.Registrar registrar) {
         TencentKit tencentKit = new TencentKit(registrar.context(), registrar.activity());
         registrar.addActivityResultListener(tencentKit);
         tencentKit.startListening(registrar.messenger());
