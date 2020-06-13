@@ -20,7 +20,6 @@ class Tencent {
   static const String _METHOD_REGISTERAPP = 'registerApp';
   static const String _METHOD_ISQQINSTALLED = 'isQQInstalled';
   static const String _METHOD_ISTIMINSTALLED = 'isTIMInstalled';
-  static const String _METHOD_ISQQLITEINSTALLED = 'isQQLiteInstalled';
   static const String _METHOD_LOGIN = 'login';
   static const String _METHOD_LOGOUT = 'logout';
   static const String _METHOD_SHAREMOOD = 'shareMood';
@@ -77,16 +76,14 @@ class Tencent {
   }) {
     assert(appId != null && appId.isNotEmpty);
     assert(!Platform.isIOS || universalLink == null);
-    final Map<String, dynamic> arguments = <String, dynamic>{
-      _ARGUMENT_KEY_APPID: appId,
-//      _ARGUMENT_KEY_UNIVERSALLINK: universalLink,
-    };
-
-    /// 兼容 iOS 空安全 -> NSNull
-    if (universalLink != null) {
-      arguments[_ARGUMENT_KEY_UNIVERSALLINK] = universalLink;
-    }
-    return _channel.invokeMethod(_METHOD_REGISTERAPP, arguments);
+    return _channel.invokeMethod(
+      _METHOD_REGISTERAPP,
+      <String, dynamic>{
+        _ARGUMENT_KEY_APPID: appId,
+        if (universalLink?.isNotEmpty ?? false)
+          _ARGUMENT_KEY_UNIVERSALLINK: universalLink,
+      },
+    );
   }
 
   /// 登录
@@ -100,13 +97,6 @@ class Tencent {
   }
 
   /// 检查QQ是否已安装
-  Future<bool> isInstalled() async {
-    return (await isQQInstalled()) ||
-        (await isTIMInstalled()) ||
-        (await isQQLiteInstalled());
-  }
-
-  /// 检查QQ是否已安装
   Future<bool> isQQInstalled() {
     return _channel.invokeMethod(_METHOD_ISQQINSTALLED);
   }
@@ -114,11 +104,6 @@ class Tencent {
   /// 检查QQ是否已安装
   Future<bool> isTIMInstalled() {
     return _channel.invokeMethod(_METHOD_ISTIMINSTALLED);
-  }
-
-  /// 检查QQ是否已安装
-  Future<bool> isQQLiteInstalled() {
-    return _channel.invokeMethod(_METHOD_ISQQLITEINSTALLED);
   }
 
   /// 登录
@@ -214,27 +199,17 @@ class Tencent {
         assert(imageUri != null && imageUri.isScheme(_SCHEME_FILE));
       });
     }
-    final Map<String, dynamic> arguments = <String, dynamic>{
-      _ARGUMENT_KEY_SCENE: scene,
-//      _ARGUMENT_KEY_SUMMARY: summary,
-//      _ARGUMENT_KEY_IMAGEURIS: imageUris != null ? new List.generate(imageUris.length, (int index) {
-//        return imageUris[index].toString();
-//      }) : null,
-//      _ARGUMENT_KEY_VIDEOURI: videoUri != null ? videoUri.toString() : null,
-    };
-
-    /// 兼容 iOS 空安全 -> NSNull
-    if (summary != null && summary.isNotEmpty) {
-      arguments[_ARGUMENT_KEY_SUMMARY] = summary;
-    }
-    if (imageUris != null && imageUris.isNotEmpty) {
-      arguments[_ARGUMENT_KEY_IMAGEURIS] =
-          imageUris.map((Uri imageUri) => imageUri.toString()).toList();
-    }
-    if (videoUri != null) {
-      arguments[_ARGUMENT_KEY_VIDEOURI] = videoUri.toString();
-    }
-    return _channel.invokeMethod(_METHOD_SHAREMOOD, arguments);
+    return _channel.invokeMethod(
+      _METHOD_SHAREMOOD,
+      <String, dynamic>{
+        _ARGUMENT_KEY_SCENE: scene,
+        if (summary?.isNotEmpty ?? false) _ARGUMENT_KEY_SUMMARY: summary,
+        if (imageUris?.isNotEmpty ?? false)
+          _ARGUMENT_KEY_IMAGEURIS:
+              imageUris.map((Uri imageUri) => imageUri.toString()).toList(),
+        if (videoUri != null) _ARGUMENT_KEY_VIDEOURI: videoUri.toString(),
+      },
+    );
   }
 
   /// 分享 - 文本（Android调用的是系统API，故而不会有回调）
@@ -244,11 +219,13 @@ class Tencent {
   }) {
     assert(scene == TencentScene.SCENE_QQ);
     assert(summary != null && summary.isNotEmpty);
-    final Map<String, dynamic> arguments = <String, dynamic>{
-      _ARGUMENT_KEY_SCENE: scene,
-      _ARGUMENT_KEY_SUMMARY: summary,
-    };
-    return _channel.invokeMethod(_METHOD_SHARETEXT, arguments);
+    return _channel.invokeMethod(
+      _METHOD_SHARETEXT,
+      <String, dynamic>{
+        _ARGUMENT_KEY_SCENE: scene,
+        _ARGUMENT_KEY_SUMMARY: summary,
+      },
+    );
   }
 
   /// 分享 - 图片
@@ -260,18 +237,15 @@ class Tencent {
   }) {
     assert(scene == TencentScene.SCENE_QQ);
     assert(imageUri != null && imageUri.isScheme(_SCHEME_FILE));
-    final Map<String, dynamic> arguments = <String, dynamic>{
-      _ARGUMENT_KEY_SCENE: scene,
-      _ARGUMENT_KEY_IMAGEURI: imageUri.toString(),
-//      _ARGUMENT_KEY_APPNAME: appName,
-      _ARGUMENT_KEY_EXTINT: extInt,
-    };
-
-    /// 兼容 iOS 空安全 -> NSNull
-    if (appName != null && appName.isNotEmpty) {
-      arguments[_ARGUMENT_KEY_APPNAME] = appName;
-    }
-    return _channel.invokeMethod(_METHOD_SHAREIMAGE, arguments);
+    return _channel.invokeMethod(
+      _METHOD_SHAREIMAGE,
+      <String, dynamic>{
+        _ARGUMENT_KEY_SCENE: scene,
+        _ARGUMENT_KEY_IMAGEURI: imageUri.toString(),
+        if (appName?.isNotEmpty ?? false) _ARGUMENT_KEY_APPNAME: appName,
+        _ARGUMENT_KEY_EXTINT: extInt,
+      },
+    );
   }
 
   /// 分享 - 音乐
@@ -289,28 +263,19 @@ class Tencent {
     assert(title != null && title.isNotEmpty);
     assert(musicUrl != null && musicUrl.isNotEmpty);
     assert(targetUrl != null && targetUrl.isNotEmpty);
-    final Map<String, dynamic> arguments = <String, dynamic>{
-      _ARGUMENT_KEY_SCENE: scene,
-      _ARGUMENT_KEY_TITLE: title,
-//      _ARGUMENT_KEY_SUMMARY: summary,
-//      _ARGUMENT_KEY_IMAGEURI: imageUri != null ? imageUri.toString() : null,
-      _ARGUMENT_KEY_MUSICURL: musicUrl,
-      _ARGUMENT_KEY_TARGETURL: targetUrl,
-//      _ARGUMENT_KEY_APPNAME: appName,
-      _ARGUMENT_KEY_EXTINT: extInt,
-    };
-
-    /// 兼容 iOS 空安全 -> NSNull
-    if (summary != null && summary.isNotEmpty) {
-      arguments[_ARGUMENT_KEY_SUMMARY] = summary;
-    }
-    if (imageUri != null) {
-      arguments[_ARGUMENT_KEY_IMAGEURI] = imageUri.toString();
-    }
-    if (appName != null && appName.isNotEmpty) {
-      arguments[_ARGUMENT_KEY_APPNAME] = appName;
-    }
-    return _channel.invokeMethod(_METHOD_SHAREMUSIC, arguments);
+    return _channel.invokeMethod(
+      _METHOD_SHAREMUSIC,
+      <String, dynamic>{
+        _ARGUMENT_KEY_SCENE: scene,
+        _ARGUMENT_KEY_TITLE: title,
+        if (summary?.isNotEmpty ?? false) _ARGUMENT_KEY_SUMMARY: summary,
+        if (imageUri != null) _ARGUMENT_KEY_IMAGEURI: imageUri.toString(),
+        _ARGUMENT_KEY_MUSICURL: musicUrl,
+        _ARGUMENT_KEY_TARGETURL: targetUrl,
+        if (appName?.isNotEmpty ?? false) _ARGUMENT_KEY_APPNAME: appName,
+        _ARGUMENT_KEY_EXTINT: extInt,
+      },
+    );
   }
 
   /// 分享 - 网页
@@ -325,26 +290,17 @@ class Tencent {
   }) {
     assert(title != null && title.isNotEmpty);
     assert(targetUrl != null && targetUrl.isNotEmpty);
-    final Map<String, dynamic> arguments = <String, dynamic>{
-      _ARGUMENT_KEY_SCENE: scene,
-      _ARGUMENT_KEY_TITLE: title,
-//      _ARGUMENT_KEY_SUMMARY: summary,
-//      _ARGUMENT_KEY_IMAGEURI: imageUri != null ? imageUri.toString() : null,
-      _ARGUMENT_KEY_TARGETURL: targetUrl,
-//      _ARGUMENT_KEY_APPNAME: appName,
-      _ARGUMENT_KEY_EXTINT: extInt,
-    };
-
-    /// 兼容 iOS 空安全 -> NSNull
-    if (summary != null && summary.isNotEmpty) {
-      arguments[_ARGUMENT_KEY_SUMMARY] = summary;
-    }
-    if (imageUri != null) {
-      arguments[_ARGUMENT_KEY_IMAGEURI] = imageUri.toString();
-    }
-    if (appName != null && appName.isNotEmpty) {
-      arguments[_ARGUMENT_KEY_APPNAME] = appName;
-    }
-    return _channel.invokeMethod(_METHOD_SHAREWEBPAGE, arguments);
+    return _channel.invokeMethod(
+      _METHOD_SHAREWEBPAGE,
+      <String, dynamic>{
+        _ARGUMENT_KEY_SCENE: scene,
+        _ARGUMENT_KEY_TITLE: title,
+        if (summary?.isNotEmpty ?? false) _ARGUMENT_KEY_SUMMARY: summary,
+        if (imageUri != null) _ARGUMENT_KEY_IMAGEURI: imageUri.toString(),
+        _ARGUMENT_KEY_TARGETURL: targetUrl,
+        if (appName?.isNotEmpty ?? false) _ARGUMENT_KEY_APPNAME: appName,
+        _ARGUMENT_KEY_EXTINT: extInt,
+      },
+    );
   }
 }

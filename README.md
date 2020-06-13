@@ -48,7 +48,9 @@ android {
 ```
 
 ```
-<!-- 腾讯有毒吧，文档都不写，SDK里居然写死 android:authorities 为 com.tencent.tauth.fileprovider，而非不同应用不同 android:authorities -->
+<!-- 腾讯有毒吧，这特么是文档？ -->
+<!-- 继续吐槽个，尼玛简直就是坑 -->
+<!-- 知道怎么集成使用 FileProvider 有用？不知道怎么测试好吗？写个简单的测试分享图片，图片都无法分享好吗？不带这么坑爹的好吗？ -->
 <manifest>
     <!-- targetSdkVersion >= 29, 豁免 Android Q 的外部存储沙箱限制 -->
     <application android:requestLegacyExternalStorage="true">
