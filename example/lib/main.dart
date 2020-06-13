@@ -75,7 +75,8 @@ class _HomeState extends State<Home> {
           ListTile(
             title: const Text('环境检查'),
             onTap: () async {
-              String content = 'tencent: ${await _tencent.isInstalled()}';
+              String content =
+                  'QQ install: ${await _tencent.isQQInstalled()}\nTIM install: ${await _tencent.isTIMInstalled()}';
               _showTips('环境检查', content);
             },
           ),
@@ -139,7 +140,7 @@ class _HomeState extends State<Home> {
             title: const Text('文本分享'),
             onTap: () {
               _tencent.shareText(
-                scene: TencentScene.SCENE_QZONE,
+                scene: TencentScene.SCENE_QQ,
                 summary: '分享测试',
               );
             },
