@@ -37,7 +37,7 @@
         <!-- Android Q 的外部存储沙箱限制 -->
         <provider
             android:name=".content.TencentKitFileProvider"
-            android:authorities="${applicationId}.fileprovider"
+            android:authorities="${applicationId}.content.TencentKitFileProvider"
             android:exported="false"
             android:grantUriPermissions="true">
 

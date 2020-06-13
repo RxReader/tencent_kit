@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ProviderInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -34,6 +35,7 @@ import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.PluginRegistry;
+import io.github.v7lin.tencent_kit.content.TencentKitFileProvider;
 
 public class TencentKit implements MethodChannel.MethodCallHandler, PluginRegistry.ActivityResultListener {
 
@@ -69,7 +71,7 @@ public class TencentKit implements MethodChannel.MethodCallHandler, PluginRegist
     private static final String METHOD_ONSHARERESP = "onShareResp";
 
     private static final String ARGUMENT_KEY_APPID = "appId";
-//    private static final String ARGUMENT_KEY_UNIVERSALLINK = "universalLink";
+    //    private static final String ARGUMENT_KEY_UNIVERSALLINK = "universalLink";
     private static final String ARGUMENT_KEY_SCOPE = "scope";
     private static final String ARGUMENT_KEY_SCENE = "scene";
     private static final String ARGUMENT_KEY_TITLE = "title";
@@ -135,7 +137,17 @@ public class TencentKit implements MethodChannel.MethodCallHandler, PluginRegist
         if (METHOD_REGISTERAPP.equals(call.method)) {
             final String appId = call.argument(ARGUMENT_KEY_APPID);
 //            final String universalLink = call.argument(ARGUMENT_KEY_UNIVERSALLINK);
-            tencent = Tencent.createInstance(appId, applicationContext);
+            String authority = null;
+            try {
+                ProviderInfo providerInfo = applicationContext.getPackageManager().getProviderInfo(new ComponentName(applicationContext, TencentKitFileProvider.class), PackageManager.MATCH_DEFAULT_ONLY);
+                authority = providerInfo.authority;
+            } catch (PackageManager.NameNotFoundException e) {
+            }
+            if (!TextUtils.isEmpty(authority)) {
+                tencent = Tencent.createInstance(appId, applicationContext, authority);
+            } else {
+                tencent = Tencent.createInstance(appId, applicationContext);
+            }
             result.success(null);
         } else if (METHOD_ISQQINSTALLED.equals(call.method)) {
             result.success(isAppInstalled(applicationContext, "com.tencent.mobileqq"));
