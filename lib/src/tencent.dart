@@ -47,19 +47,24 @@ class Tencent {
 
   static const String _SCHEME_FILE = 'file';
 
-  final MethodChannel _channel = const MethodChannel('v7lin.github.io/tencent_kit');
+  final MethodChannel _channel =
+      const MethodChannel('v7lin.github.io/tencent_kit');
 
-  final StreamController<TencentLoginResp> _loginRespStreamController = StreamController<TencentLoginResp>.broadcast();
+  final StreamController<TencentLoginResp> _loginRespStreamController =
+      StreamController<TencentLoginResp>.broadcast();
 
-  final StreamController<TencentShareResp> _shareRespStreamController = StreamController<TencentShareResp>.broadcast();
+  final StreamController<TencentShareResp> _shareRespStreamController =
+      StreamController<TencentShareResp>.broadcast();
 
   Future<dynamic> _handleMethod(MethodCall call) async {
     switch (call.method) {
       case _METHOD_ONLOGINRESP:
-        _loginRespStreamController.add(TencentLoginResp.fromJson(call.arguments as Map<dynamic, dynamic>));
+        _loginRespStreamController.add(
+            TencentLoginResp.fromJson(call.arguments as Map<dynamic, dynamic>));
         break;
       case _METHOD_ONSHARERESP:
-        _shareRespStreamController.add(TencentShareResp.fromJson(call.arguments as Map<dynamic, dynamic>));
+        _shareRespStreamController.add(
+            TencentShareResp.fromJson(call.arguments as Map<dynamic, dynamic>));
         break;
     }
   }
@@ -75,7 +80,8 @@ class Tencent {
       _METHOD_REGISTERAPP,
       <String, dynamic>{
         _ARGUMENT_KEY_APPID: appId,
-        if (universalLink?.isNotEmpty ?? false) _ARGUMENT_KEY_UNIVERSALLINK: universalLink,
+        if (universalLink?.isNotEmpty ?? false)
+          _ARGUMENT_KEY_UNIVERSALLINK: universalLink,
       },
     );
   }
@@ -128,16 +134,21 @@ class Tencent {
     assert(appId?.isNotEmpty ?? false);
     assert(openid?.isNotEmpty ?? false);
     assert(accessToken?.isNotEmpty ?? false);
-    return HttpClient().getUrl(Uri.parse('https://graph.qq.com/user/get_user_info?access_token=$accessToken&oauth_consumer_key=$appId&openid=$openid')).then((HttpClientRequest request) {
+    return HttpClient()
+        .getUrl(Uri.parse(
+            'https://graph.qq.com/user/get_user_info?access_token=$accessToken&oauth_consumer_key=$appId&openid=$openid'))
+        .then((HttpClientRequest request) {
       return request.close();
     }).then((HttpClientResponse response) async {
       if (response.statusCode == HttpStatus.ok) {
         ContentType contentType = response.headers.contentType;
         Encoding encoding = Encoding.getByName(contentType?.charset) ?? utf8;
         String content = await encoding.decodeStream(response);
-        return TencentUserInfoResp.fromJson(json.decode(content) as Map<dynamic, dynamic>);
+        return TencentUserInfoResp.fromJson(
+            json.decode(content) as Map<dynamic, dynamic>);
       }
-      throw HttpException('HttpResponse statusCode: ${response.statusCode}, reasonPhrase: ${response.reasonPhrase}.');
+      throw HttpException(
+          'HttpResponse statusCode: ${response.statusCode}, reasonPhrase: ${response.reasonPhrase}.');
     });
   }
 
@@ -148,7 +159,10 @@ class Tencent {
     String unionid = '1',
   }) {
     assert(accessToken?.isNotEmpty ?? false);
-    return HttpClient().getUrl(Uri.parse('https://graph.qq.com/oauth2.0/me?access_token=$accessToken&unionid=$unionid')).then((HttpClientRequest request) {
+    return HttpClient()
+        .getUrl(Uri.parse(
+            'https://graph.qq.com/oauth2.0/me?access_token=$accessToken&unionid=$unionid'))
+        .then((HttpClientRequest request) {
       return request.close();
     }).then((HttpClientResponse response) async {
       if (response.statusCode == HttpStatus.ok) {
@@ -160,10 +174,12 @@ class Tencent {
         Match match = exp.firstMatch(callback);
         if (match.groupCount == 1) {
           String content = match.group(1);
-          return TencentUnionidResp.fromJson(json.decode(content) as Map<dynamic, dynamic>);
+          return TencentUnionidResp.fromJson(
+              json.decode(content) as Map<dynamic, dynamic>);
         }
       }
-      throw HttpException('HttpResponse statusCode: ${response.statusCode}, reasonPhrase: ${response.reasonPhrase}.');
+      throw HttpException(
+          'HttpResponse statusCode: ${response.statusCode}, reasonPhrase: ${response.reasonPhrase}.');
     });
   }
 
@@ -178,13 +194,17 @@ class Tencent {
     assert((summary?.isNotEmpty ?? false) ||
         (imageUris?.isNotEmpty ?? false) ||
         (videoUri != null && videoUri.isScheme(_SCHEME_FILE)) ||
-        ((imageUris?.isNotEmpty ?? false) && imageUris.every((Uri element) => element != null && element.isScheme(_SCHEME_FILE))));
+        ((imageUris?.isNotEmpty ?? false) &&
+            imageUris.every((Uri element) =>
+                element != null && element.isScheme(_SCHEME_FILE))));
     return _channel.invokeMethod<void>(
       _METHOD_SHAREMOOD,
       <String, dynamic>{
         _ARGUMENT_KEY_SCENE: scene,
         if (summary?.isNotEmpty ?? false) _ARGUMENT_KEY_SUMMARY: summary,
-        if (imageUris?.isNotEmpty ?? false) _ARGUMENT_KEY_IMAGEURIS: imageUris.map((Uri imageUri) => imageUri.toString()).toList(),
+        if (imageUris?.isNotEmpty ?? false)
+          _ARGUMENT_KEY_IMAGEURIS:
+              imageUris.map((Uri imageUri) => imageUri.toString()).toList(),
         if (videoUri != null) _ARGUMENT_KEY_VIDEOURI: videoUri.toString(),
       },
     );

@@ -24,7 +24,8 @@ void main() {
         case 'login':
           unawaited(channel.binaryMessenger.handlePlatformMessage(
             channel.name,
-            channel.codec.encodeMethodCall(MethodCall('onLoginResp', json.decode('{"ret":-2}'))),
+            channel.codec.encodeMethodCall(
+                MethodCall('onLoginResp', json.decode('{"ret":-2}'))),
             (ByteData data) {
               // mock success
             },
@@ -39,7 +40,8 @@ void main() {
         case 'shareWebpage':
           unawaited(channel.binaryMessenger.handlePlatformMessage(
             channel.name,
-            channel.codec.encodeMethodCall(MethodCall('onShareResp', json.decode('{"ret":0}'))),
+            channel.codec.encodeMethodCall(
+                MethodCall('onShareResp', json.decode('{"ret":0}'))),
             (ByteData data) {
               // mock success
             },
@@ -63,7 +65,8 @@ void main() {
   });
 
   test('login', () async {
-    StreamSubscription<TencentLoginResp> sub = tencent.loginResp().listen((TencentLoginResp resp) {
+    StreamSubscription<TencentLoginResp> sub =
+        tencent.loginResp().listen((TencentLoginResp resp) {
       expect(resp.ret, TencentSdkResp.RET_USERCANCEL);
     });
     await tencent.login(
@@ -73,7 +76,8 @@ void main() {
   });
 
   test('share', () async {
-    StreamSubscription<TencentShareResp> sub = tencent.shareResp().listen((TencentShareResp resp) {
+    StreamSubscription<TencentShareResp> sub =
+        tencent.shareResp().listen((TencentShareResp resp) {
       expect(resp.ret, TencentSdkResp.RET_SUCCESS);
     });
     await tencent.shareMood(
