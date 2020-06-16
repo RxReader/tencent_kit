@@ -191,7 +191,7 @@ class _HomeState extends State<Home> {
   }
 
   void _showTips(String title, String content) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
