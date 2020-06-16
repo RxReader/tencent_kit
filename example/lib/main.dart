@@ -68,7 +68,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('TencentKit Demo'),
+        title: const Text('Tencent Kit Demo'),
       ),
       body: ListView(
         children: <Widget>[
