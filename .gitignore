@@ -6,7 +6,6 @@
 
 build/
 
-*.iml
-
+# custom
 .idea/
-pubspec.lock
+*.iml

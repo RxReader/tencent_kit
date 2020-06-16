@@ -84,7 +84,7 @@ class _HomeState extends State<Home> {
             title: const Text('登录'),
             onTap: () {
               _tencent.login(
-                scope: [TencentScope.GET_SIMPLE_USERINFO],
+                scope: <String>[TencentScope.GET_SIMPLE_USERINFO],
               );
             },
           ),
