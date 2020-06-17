@@ -4,10 +4,10 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'tencent_kit'
-  s.version          = '0.0.1'
-  s.summary          = 'A new flutter plugin project.'
+  s.version          = '1.1.0'
+  s.summary          = 'A powerful Flutter plugin allowing developers to share or authorize with natvie android & iOS Tencent SDKs.'
   s.description      = <<-DESC
-A new flutter plugin project.
+A powerful Flutter plugin allowing developers to share or authorize with natvie android & iOS Tencent SDKs.
                        DESC
   s.homepage         = 'http://example.com'
   s.license          = { :file => '../LICENSE' }
