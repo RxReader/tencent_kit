@@ -26,7 +26,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  static const String _TENCENT_APPID = '222222';
+  static const String _TENCENT_APPID = 'your tencent appId';
 
   Tencent _tencent = Tencent()..registerApp(appId: _TENCENT_APPID);
 

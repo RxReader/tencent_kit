@@ -234,7 +234,7 @@ packages:
     source: hosted
     version: "1.0.5"
   tencent_kit:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       path: ".."
       relative: true
