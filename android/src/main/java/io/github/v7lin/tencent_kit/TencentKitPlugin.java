@@ -37,10 +37,10 @@ public class TencentKitPlugin implements FlutterPlugin, ActivityAware {
     }
 
     @Override
-    public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
-        tencentKit.setApplicationContext(flutterPluginBinding.getApplicationContext());
+    public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
+        tencentKit.setApplicationContext(binding.getApplicationContext());
         tencentKit.setActivity(null);
-        tencentKit.startListening(flutterPluginBinding.getBinaryMessenger());
+        tencentKit.startListening(binding.getBinaryMessenger());
     }
 
     @Override
