@@ -173,8 +173,8 @@ public class TencentKit implements MethodChannel.MethodCallHandler, PluginRegist
     }
 
     private void login(MethodCall call, MethodChannel.Result result) {
+        String scope = call.argument(ARGUMENT_KEY_SCOPE);
         if (tencent != null) {
-            String scope = call.argument(ARGUMENT_KEY_SCOPE);
             tencent.login(activity, scope, loginListener);
         }
         result.success(null);
@@ -213,7 +213,9 @@ public class TencentKit implements MethodChannel.MethodCallHandler, PluginRegist
                 map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_COMMON);
                 map.put(ARGUMENT_KEY_RESULT_MSG, e.getMessage());
             }
-            channel.invokeMethod(METHOD_ONLOGINRESP, map);
+            if (channel != null) {
+                channel.invokeMethod(METHOD_ONLOGINRESP, map);
+            }
         }
 
         @Override
@@ -222,7 +224,9 @@ public class TencentKit implements MethodChannel.MethodCallHandler, PluginRegist
             Map<String, Object> map = new HashMap<>();
             map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_COMMON);
             map.put(ARGUMENT_KEY_RESULT_MSG, uiError.errorMessage);
-            channel.invokeMethod(METHOD_ONLOGINRESP, map);
+            if (channel != null) {
+                channel.invokeMethod(METHOD_ONLOGINRESP, map);
+            }
         }
 
         @Override
@@ -230,43 +234,45 @@ public class TencentKit implements MethodChannel.MethodCallHandler, PluginRegist
             // 取消登录
             Map<String, Object> map = new HashMap<>();
             map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_USERCANCEL);
-            channel.invokeMethod(METHOD_ONLOGINRESP, map);
+            if (channel != null) {
+                channel.invokeMethod(METHOD_ONLOGINRESP, map);
+            }
         }
     };
 
     private void logout(MethodCall call, MethodChannel.Result result) {
         if (tencent != null) {
             tencent.logout(applicationContext);
-            result.success(null);
         }
+        result.success(null);
     }
 
     private void shareMood(MethodCall call, MethodChannel.Result result) {
-        if (tencent != null) {
-            int scene = call.argument(ARGUMENT_KEY_SCENE);
-            if (scene == TencentScene.SCENE_QZONE) {
-                String summary = call.argument(ARGUMENT_KEY_SUMMARY);
-                List<String> imageUris = call.argument(ARGUMENT_KEY_IMAGEURIS);
-                String videoUri = call.argument(ARGUMENT_KEY_VIDEOURI);
+        int scene = call.argument(ARGUMENT_KEY_SCENE);
+        if (scene == TencentScene.SCENE_QZONE) {
+            String summary = call.argument(ARGUMENT_KEY_SUMMARY);
+            List<String> imageUris = call.argument(ARGUMENT_KEY_IMAGEURIS);
+            String videoUri = call.argument(ARGUMENT_KEY_VIDEOURI);
 
-                Bundle params = new Bundle();
-                if (!TextUtils.isEmpty(summary)) {
-                    params.putString(QzonePublish.PUBLISH_TO_QZONE_SUMMARY, summary);
+            Bundle params = new Bundle();
+            if (!TextUtils.isEmpty(summary)) {
+                params.putString(QzonePublish.PUBLISH_TO_QZONE_SUMMARY, summary);
+            }
+            if (imageUris != null && !imageUris.isEmpty()) {
+                ArrayList<String> uris = new ArrayList<>();
+                for (String imageUri : imageUris) {
+                    uris.add(Uri.parse(imageUri).getPath());
                 }
-                if (imageUris != null && !imageUris.isEmpty()) {
-                    ArrayList<String> uris = new ArrayList<>();
-                    for (String imageUri : imageUris) {
-                        uris.add(Uri.parse(imageUri).getPath());
-                    }
-                    params.putStringArrayList(QzonePublish.PUBLISH_TO_QZONE_IMAGE_URL, uris);
-                }
-                if (!TextUtils.isEmpty(videoUri)) {
-                    String videoPath = Uri.parse(videoUri).getPath();
-                    params.putString(QzonePublish.PUBLISH_TO_QZONE_VIDEO_PATH, videoPath);
-                    params.putInt(QzonePublish.PUBLISH_TO_QZONE_KEY_TYPE, QzonePublish.PUBLISH_TO_QZONE_TYPE_PUBLISHVIDEO);
-                } else {
-                    params.putInt(QzonePublish.PUBLISH_TO_QZONE_KEY_TYPE, QzonePublish.PUBLISH_TO_QZONE_TYPE_PUBLISHMOOD);
-                }
+                params.putStringArrayList(QzonePublish.PUBLISH_TO_QZONE_IMAGE_URL, uris);
+            }
+            if (!TextUtils.isEmpty(videoUri)) {
+                String videoPath = Uri.parse(videoUri).getPath();
+                params.putString(QzonePublish.PUBLISH_TO_QZONE_VIDEO_PATH, videoPath);
+                params.putInt(QzonePublish.PUBLISH_TO_QZONE_KEY_TYPE, QzonePublish.PUBLISH_TO_QZONE_TYPE_PUBLISHVIDEO);
+            } else {
+                params.putInt(QzonePublish.PUBLISH_TO_QZONE_KEY_TYPE, QzonePublish.PUBLISH_TO_QZONE_TYPE_PUBLISHMOOD);
+            }
+            if (tencent != null) {
                 tencent.publishToQzone(activity, params, shareListener);
             }
         }
@@ -303,20 +309,20 @@ public class TencentKit implements MethodChannel.MethodCallHandler, PluginRegist
     }
 
     private void shareImage(MethodCall call, MethodChannel.Result result) {
-        if (tencent != null) {
-            int scene = call.argument(ARGUMENT_KEY_SCENE);
-            if (scene == TencentScene.SCENE_QQ) {
-                String imageUri = call.argument(ARGUMENT_KEY_IMAGEURI);
-                String appName = call.argument(ARGUMENT_KEY_APPNAME);
-                int extInt = call.argument(ARGUMENT_KEY_EXTINT);
+        int scene = call.argument(ARGUMENT_KEY_SCENE);
+        if (scene == TencentScene.SCENE_QQ) {
+            String imageUri = call.argument(ARGUMENT_KEY_IMAGEURI);
+            String appName = call.argument(ARGUMENT_KEY_APPNAME);
+            int extInt = call.argument(ARGUMENT_KEY_EXTINT);
 
-                Bundle params = new Bundle();
-                params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_IMAGE);
-                params.putString(QQShare.SHARE_TO_QQ_IMAGE_LOCAL_URL, Uri.parse(imageUri).getPath());
-                if (!TextUtils.isEmpty(appName)) {
-                    params.putString(QQShare.SHARE_TO_QQ_APP_NAME, appName);
-                }
-                params.putInt(QQShare.SHARE_TO_QQ_EXT_INT, extInt);
+            Bundle params = new Bundle();
+            params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_IMAGE);
+            params.putString(QQShare.SHARE_TO_QQ_IMAGE_LOCAL_URL, Uri.parse(imageUri).getPath());
+            if (!TextUtils.isEmpty(appName)) {
+                params.putString(QQShare.SHARE_TO_QQ_APP_NAME, appName);
+            }
+            params.putInt(QQShare.SHARE_TO_QQ_EXT_INT, extInt);
+            if (tencent != null) {
                 tencent.shareToQQ(activity, params, shareListener);
             }
         }
@@ -324,19 +330,56 @@ public class TencentKit implements MethodChannel.MethodCallHandler, PluginRegist
     }
 
     private void shareMusic(MethodCall call, MethodChannel.Result result) {
-        if (tencent != null) {
-            int scene = call.argument(ARGUMENT_KEY_SCENE);
-            if (scene == TencentScene.SCENE_QQ) {
-                String title = call.argument(ARGUMENT_KEY_TITLE);
-                String summary = call.argument(ARGUMENT_KEY_SUMMARY);
-                String imageUri = call.argument(ARGUMENT_KEY_IMAGEURI);
-                String musicUrl = call.argument(ARGUMENT_KEY_MUSICURL);
-                String targetUrl = call.argument(ARGUMENT_KEY_TARGETURL);
-                String appName = call.argument(ARGUMENT_KEY_APPNAME);
-                int extInt = call.argument(ARGUMENT_KEY_EXTINT);
+        int scene = call.argument(ARGUMENT_KEY_SCENE);
+        if (scene == TencentScene.SCENE_QQ) {
+            String title = call.argument(ARGUMENT_KEY_TITLE);
+            String summary = call.argument(ARGUMENT_KEY_SUMMARY);
+            String imageUri = call.argument(ARGUMENT_KEY_IMAGEURI);
+            String musicUrl = call.argument(ARGUMENT_KEY_MUSICURL);
+            String targetUrl = call.argument(ARGUMENT_KEY_TARGETURL);
+            String appName = call.argument(ARGUMENT_KEY_APPNAME);
+            int extInt = call.argument(ARGUMENT_KEY_EXTINT);
 
-                Bundle params = new Bundle();
-                params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_AUDIO);
+            Bundle params = new Bundle();
+            params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_AUDIO);
+            params.putString(QQShare.SHARE_TO_QQ_TITLE, title);
+            if (!TextUtils.isEmpty(summary)) {
+                params.putString(QQShare.SHARE_TO_QQ_SUMMARY, summary);
+            }
+            if (!TextUtils.isEmpty(imageUri)) {
+                Uri uri = Uri.parse(imageUri);
+                if (TextUtils.equals(SCHEME_FILE, uri.getScheme())) {
+                    params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, uri.getPath());
+                } else {
+                    params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, imageUri);
+                }
+            }
+            params.putString(QQShare.SHARE_TO_QQ_AUDIO_URL, musicUrl);
+            params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, targetUrl);
+            if (!TextUtils.isEmpty(appName)) {
+                params.putString(QQShare.SHARE_TO_QQ_APP_NAME, appName);
+            }
+            params.putInt(QQShare.SHARE_TO_QQ_EXT_INT, extInt);
+            if (tencent != null) {
+                tencent.shareToQQ(activity, params, shareListener);
+            }
+        }
+        result.success(null);
+    }
+
+    private void shareWebpage(MethodCall call, MethodChannel.Result result) {
+        int scene = call.argument(ARGUMENT_KEY_SCENE);
+        String title = call.argument(ARGUMENT_KEY_TITLE);
+        String summary = call.argument(ARGUMENT_KEY_SUMMARY);
+        String imageUri = call.argument(ARGUMENT_KEY_IMAGEURI);
+        String targetUrl = call.argument(ARGUMENT_KEY_TARGETURL);
+        String appName = call.argument(ARGUMENT_KEY_APPNAME);
+        int extInt = call.argument(ARGUMENT_KEY_EXTINT);
+
+        Bundle params = new Bundle();
+        switch (scene) {
+            case TencentScene.SCENE_QQ:
+                params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
                 params.putString(QQShare.SHARE_TO_QQ_TITLE, title);
                 if (!TextUtils.isEmpty(summary)) {
                     params.putString(QQShare.SHARE_TO_QQ_SUMMARY, summary);
@@ -349,73 +392,38 @@ public class TencentKit implements MethodChannel.MethodCallHandler, PluginRegist
                         params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, imageUri);
                     }
                 }
-                params.putString(QQShare.SHARE_TO_QQ_AUDIO_URL, musicUrl);
                 params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, targetUrl);
                 if (!TextUtils.isEmpty(appName)) {
                     params.putString(QQShare.SHARE_TO_QQ_APP_NAME, appName);
                 }
                 params.putInt(QQShare.SHARE_TO_QQ_EXT_INT, extInt);
-                tencent.shareToQQ(activity, params, shareListener);
-            }
-        }
-        result.success(null);
-    }
-
-    private void shareWebpage(MethodCall call, MethodChannel.Result result) {
-        if (tencent != null) {
-            int scene = call.argument(ARGUMENT_KEY_SCENE);
-            String title = call.argument(ARGUMENT_KEY_TITLE);
-            String summary = call.argument(ARGUMENT_KEY_SUMMARY);
-            String imageUri = call.argument(ARGUMENT_KEY_IMAGEURI);
-            String targetUrl = call.argument(ARGUMENT_KEY_TARGETURL);
-            String appName = call.argument(ARGUMENT_KEY_APPNAME);
-            int extInt = call.argument(ARGUMENT_KEY_EXTINT);
-
-            Bundle params = new Bundle();
-            switch (scene) {
-                case TencentScene.SCENE_QQ:
-                    params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
-                    params.putString(QQShare.SHARE_TO_QQ_TITLE, title);
-                    if (!TextUtils.isEmpty(summary)) {
-                        params.putString(QQShare.SHARE_TO_QQ_SUMMARY, summary);
-                    }
-                    if (!TextUtils.isEmpty(imageUri)) {
-                        Uri uri = Uri.parse(imageUri);
-                        if (TextUtils.equals(SCHEME_FILE, uri.getScheme())) {
-                            params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, uri.getPath());
-                        } else {
-                            params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, imageUri);
-                        }
-                    }
-                    params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, targetUrl);
-                    if (!TextUtils.isEmpty(appName)) {
-                        params.putString(QQShare.SHARE_TO_QQ_APP_NAME, appName);
-                    }
-                    params.putInt(QQShare.SHARE_TO_QQ_EXT_INT, extInt);
+                if (tencent != null) {
                     tencent.shareToQQ(activity, params, shareListener);
-                    break;
-                case TencentScene.SCENE_QZONE:
-                    params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, QzoneShare.SHARE_TO_QZONE_TYPE_IMAGE_TEXT);
-                    params.putString(QzoneShare.SHARE_TO_QQ_TITLE, title);
-                    if (!TextUtils.isEmpty(summary)) {
-                        params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY, summary);
+                }
+                break;
+            case TencentScene.SCENE_QZONE:
+                params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, QzoneShare.SHARE_TO_QZONE_TYPE_IMAGE_TEXT);
+                params.putString(QzoneShare.SHARE_TO_QQ_TITLE, title);
+                if (!TextUtils.isEmpty(summary)) {
+                    params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY, summary);
+                }
+                if (!TextUtils.isEmpty(imageUri)) {
+                    ArrayList<String> uris = new ArrayList<>();
+                    Uri uri = Uri.parse(imageUri);
+                    if (TextUtils.equals(SCHEME_FILE, uri.getScheme())) {
+                        uris.add(uri.getPath());
+                    } else {
+                        uris.add(imageUri);
                     }
-                    if (!TextUtils.isEmpty(imageUri)) {
-                        ArrayList<String> uris = new ArrayList<>();
-                        Uri uri = Uri.parse(imageUri);
-                        if (TextUtils.equals(SCHEME_FILE, uri.getScheme())) {
-                            uris.add(uri.getPath());
-                        } else {
-                            uris.add(imageUri);
-                        }
-                        params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, uris);
-                    }
-                    params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, targetUrl);
+                    params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, uris);
+                }
+                params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, targetUrl);
+                if (tencent != null) {
                     tencent.shareToQzone(activity, params, shareListener);
-                    break;
-                default:
-                    break;
-            }
+                }
+                break;
+            default:
+                break;
         }
         result.success(null);
     }
@@ -440,7 +448,9 @@ public class TencentKit implements MethodChannel.MethodCallHandler, PluginRegist
                 map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_COMMON);
                 map.put(ARGUMENT_KEY_RESULT_MSG, e.getMessage());
             }
-            channel.invokeMethod(METHOD_ONSHARERESP, map);
+            if (channel != null) {
+                channel.invokeMethod(METHOD_ONSHARERESP, map);
+            }
         }
 
         @Override
@@ -448,14 +458,18 @@ public class TencentKit implements MethodChannel.MethodCallHandler, PluginRegist
             Map<String, Object> map = new HashMap<>();
             map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_COMMON);
             map.put(ARGUMENT_KEY_RESULT_MSG, error.errorMessage);
-            channel.invokeMethod(METHOD_ONSHARERESP, map);
+            if (channel != null) {
+                channel.invokeMethod(METHOD_ONSHARERESP, map);
+            }
         }
 
         @Override
         public void onCancel() {
             Map<String, Object> map = new HashMap<>();
             map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_USERCANCEL);
-            channel.invokeMethod(METHOD_ONSHARERESP, map);
+            if (channel != null) {
+                channel.invokeMethod(METHOD_ONSHARERESP, map);
+            }
         }
     };
 
