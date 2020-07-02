@@ -58,7 +58,7 @@ steps:
   - name: pub-cache
     path: /opt/flutter/.pub-cache
   commands:
-  - flutter test
+  - flutter test --coverage
 #  - cd example/
 #  - flutter test
 
