@@ -45,9 +45,9 @@ public class TencentKitPlugin implements FlutterPlugin, ActivityAware {
 
     @Override
     public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-        tencentKit.setApplicationContext(null);
-        tencentKit.setActivity(null);
         tencentKit.stopListening();
+        tencentKit.setActivity(null);
+        tencentKit.setApplicationContext(null);
     }
 
     // --- ActivityAware
