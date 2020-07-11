@@ -55,12 +55,10 @@ class _HomeState extends State<Home> {
 
   @override
   void dispose() {
-    if (_login != null) {
-      _login.cancel();
-    }
-    if (_share != null) {
-      _share.cancel();
-    }
+    _login?.cancel();
+    _login = null;
+    _share?.cancel();
+    _share = null;
     super.dispose();
   }
 
