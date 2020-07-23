@@ -75,7 +75,6 @@ class Tencent {
     String universalLink,
   }) {
     assert(appId?.isNotEmpty ?? false);
-    assert(!Platform.isIOS || universalLink != null);
     return _channel.invokeMethod<void>(
       _METHOD_REGISTERAPP,
       <String, dynamic>{

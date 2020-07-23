@@ -1,3 +1,7 @@
+## 1.1.2
+
+* [#37](https://github.com/rxreader/tencent_kit/pull/37) fix ios register failed
+
 ## 1.1.1
 
 * 优化
