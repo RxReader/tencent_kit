@@ -3,12 +3,11 @@ import 'package:json_annotation/json_annotation.dart';
 part 'tencent_unionid_resp.g.dart';
 
 @JsonSerializable(
-  anyMap: true,
   explicitToJson: true,
   fieldRename: FieldRename.snake,
 )
 class TencentUnionidResp {
-  TencentUnionidResp({
+  const TencentUnionidResp({
     this.error,
     this.errorDescription,
     this.clientId,
@@ -16,7 +15,7 @@ class TencentUnionidResp {
     this.unionid,
   });
 
-  factory TencentUnionidResp.fromJson(Map<dynamic, dynamic> json) =>
+  factory TencentUnionidResp.fromJson(Map<String, dynamic> json) =>
       _$TencentUnionidRespFromJson(json);
 
   @JsonKey(
@@ -30,7 +29,7 @@ class TencentUnionidResp {
 
   static const int ERROR_SUCCESS = 0;
 
-  bool isSuccessful() => error == ERROR_SUCCESS;
+  bool get isSuccessful => error == ERROR_SUCCESS;
 
-  Map<dynamic, dynamic> toJson() => _$TencentUnionidRespToJson(this);
+  Map<String, dynamic> toJson() => _$TencentUnionidRespToJson(this);
 }

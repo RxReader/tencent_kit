@@ -60,11 +60,11 @@ class Tencent {
     switch (call.method) {
       case _METHOD_ONLOGINRESP:
         _loginRespStreamController.add(
-            TencentLoginResp.fromJson(call.arguments as Map<dynamic, dynamic>));
+            TencentLoginResp.fromJson((call.arguments as Map<dynamic, dynamic>).cast<String, dynamic>()));
         break;
       case _METHOD_ONSHARERESP:
         _shareRespStreamController.add(
-            TencentShareResp.fromJson(call.arguments as Map<dynamic, dynamic>));
+            TencentShareResp.fromJson((call.arguments as Map<dynamic, dynamic>).cast<String, dynamic>()));
         break;
     }
   }
@@ -144,7 +144,7 @@ class Tencent {
         Encoding encoding = Encoding.getByName(contentType?.charset) ?? utf8;
         String content = await encoding.decodeStream(response);
         return TencentUserInfoResp.fromJson(
-            json.decode(content) as Map<dynamic, dynamic>);
+            json.decode(content) as Map<String, dynamic>);
       }
       throw HttpException(
           'HttpResponse statusCode: ${response.statusCode}, reasonPhrase: ${response.reasonPhrase}.');
@@ -174,7 +174,7 @@ class Tencent {
         if (match.groupCount == 1) {
           String content = match.group(1);
           return TencentUnionidResp.fromJson(
-              json.decode(content) as Map<dynamic, dynamic>);
+              json.decode(content) as Map<String, dynamic>);
         }
       }
       throw HttpException(

@@ -6,7 +6,7 @@ part of 'tencent_user_info_resp.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-TencentUserInfoResp _$TencentUserInfoRespFromJson(Map json) {
+TencentUserInfoResp _$TencentUserInfoRespFromJson(Map<String, dynamic> json) {
   return TencentUserInfoResp(
     ret: json['ret'] as int ?? 0,
     msg: json['msg'] as String,

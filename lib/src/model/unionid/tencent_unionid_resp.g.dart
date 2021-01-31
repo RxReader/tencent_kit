@@ -6,7 +6,7 @@ part of 'tencent_unionid_resp.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-TencentUnionidResp _$TencentUnionidRespFromJson(Map json) {
+TencentUnionidResp _$TencentUnionidRespFromJson(Map<String, dynamic> json) {
   return TencentUnionidResp(
     error: json['error'] as int ?? 0,
     errorDescription: json['error_description'] as String,

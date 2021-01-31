@@ -4,12 +4,11 @@ import 'package:tencent_kit/src/model/api/tencent_api_resp.dart';
 part 'tencent_user_info_resp.g.dart';
 
 @JsonSerializable(
-  anyMap: true,
   explicitToJson: true,
   fieldRename: FieldRename.snake,
 )
 class TencentUserInfoResp extends TencentApiResp {
-  TencentUserInfoResp({
+  const TencentUserInfoResp({
     int ret,
     String msg,
     this.isLost,
@@ -34,7 +33,7 @@ class TencentUserInfoResp extends TencentApiResp {
     this.isYellowYearVip,
   }) : super(ret: ret, msg: msg);
 
-  factory TencentUserInfoResp.fromJson(Map<dynamic, dynamic> json) =>
+  factory TencentUserInfoResp.fromJson(Map<String, dynamic> json) =>
       _$TencentUserInfoRespFromJson(json);
 
   final int isLost;
@@ -71,15 +70,11 @@ class TencentUserInfoResp extends TencentApiResp {
   final String level;
   final String isYellowYearVip;
 
-  bool isMale() {
-    return gender == '男';
-  }
+  bool get isMale => gender == '男';
 
-  bool isFemale() {
-    return gender == '女';
-  }
+  bool get isFemale => gender == '女';
 
-  String headImgUrl() {
+  String get headImgUrl {
     if (figureurlQq != null && figureurlQq.isNotEmpty) {
       return figureurlQq;
     }
@@ -98,5 +93,5 @@ class TencentUserInfoResp extends TencentApiResp {
     return figureurl;
   }
 
-  Map<dynamic, dynamic> toJson() => _$TencentUserInfoRespToJson(this);
+  Map<String, dynamic> toJson() => _$TencentUserInfoRespToJson(this);
 }

@@ -4,18 +4,17 @@ import 'package:tencent_kit/src/model/sdk/tencent_sdk_resp.dart';
 part 'tencent_share_resp.g.dart';
 
 @JsonSerializable(
-  anyMap: true,
   explicitToJson: true,
   fieldRename: FieldRename.snake,
 )
 class TencentShareResp extends TencentSdkResp {
-  TencentShareResp({
+  const TencentShareResp({
     int ret,
     String msg,
   }) : super(ret: ret, msg: msg);
 
-  factory TencentShareResp.fromJson(Map<dynamic, dynamic> json) =>
+  factory TencentShareResp.fromJson(Map<String, dynamic> json) =>
       _$TencentShareRespFromJson(json);
 
-  Map<dynamic, dynamic> toJson() => _$TencentShareRespToJson(this);
+  Map<String, dynamic> toJson() => _$TencentShareRespToJson(this);
 }

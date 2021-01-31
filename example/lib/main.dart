@@ -90,14 +90,14 @@ class _HomeState extends State<Home> {
             title: const Text('获取用户信息'),
             onTap: () async {
               if (_loginResp != null &&
-                  _loginResp.isSuccessful() &&
-                  !_loginResp.isExpired()) {
+                  _loginResp.isSuccessful &&
+                  !_loginResp.isExpired) {
                 TencentUserInfoResp userInfo = await _tencent.getUserInfo(
                   appId: _TENCENT_APPID,
                   openid: _loginResp.openid,
                   accessToken: _loginResp.accessToken,
                 );
-                if (userInfo.isSuccessful()) {
+                if (userInfo.isSuccessful) {
                   _showTips('用户信息',
                       '${userInfo.nickname} - ${userInfo.gender} - ${userInfo.genderType}');
                 } else {
@@ -110,12 +110,12 @@ class _HomeState extends State<Home> {
             title: const Text('获取UnionID'),
             onTap: () async {
               if (_loginResp != null &&
-                  _loginResp.isSuccessful() &&
-                  !_loginResp.isExpired()) {
+                  _loginResp.isSuccessful &&
+                  !_loginResp.isExpired) {
                 TencentUnionidResp unionid = await _tencent.getUnionId(
                   accessToken: _loginResp.accessToken,
                 );
-                if (unionid.isSuccessful()) {
+                if (unionid.isSuccessful) {
                   _showTips('UnionID',
                       '${unionid.clientId} - ${unionid.openid} - ${unionid.unionid}');
                 } else {

@@ -6,7 +6,7 @@ part of 'tencent_login_resp.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-TencentLoginResp _$TencentLoginRespFromJson(Map json) {
+TencentLoginResp _$TencentLoginRespFromJson(Map<String, dynamic> json) {
   return TencentLoginResp(
     ret: json['ret'] as int ?? 0,
     msg: json['msg'] as String,

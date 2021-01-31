@@ -4,12 +4,11 @@ import 'package:tencent_kit/src/model/sdk/tencent_sdk_resp.dart';
 part 'tencent_login_resp.g.dart';
 
 @JsonSerializable(
-  anyMap: true,
   explicitToJson: true,
   fieldRename: FieldRename.snake,
 )
 class TencentLoginResp extends TencentSdkResp {
-  TencentLoginResp({
+  const TencentLoginResp({
     int ret,
     String msg,
     this.openid,
@@ -18,7 +17,7 @@ class TencentLoginResp extends TencentSdkResp {
     this.createAt,
   }) : super(ret: ret, msg: msg);
 
-  factory TencentLoginResp.fromJson(Map<dynamic, dynamic> json) =>
+  factory TencentLoginResp.fromJson(Map<String, dynamic> json) =>
       _$TencentLoginRespFromJson(json);
 
   final String openid;
@@ -26,9 +25,7 @@ class TencentLoginResp extends TencentSdkResp {
   final int expiresIn;
   final int createAt;
 
-  bool isExpired() {
-    return DateTime.now().millisecondsSinceEpoch - createAt >= expiresIn * 1000;
-  }
+  bool get isExpired => DateTime.now().millisecondsSinceEpoch - createAt >= expiresIn * 1000;
 
-  Map<dynamic, dynamic> toJson() => _$TencentLoginRespToJson(this);
+  Map<String, dynamic> toJson() => _$TencentLoginRespToJson(this);
 }
