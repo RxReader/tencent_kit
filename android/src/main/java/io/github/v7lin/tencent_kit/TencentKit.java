@@ -142,6 +142,7 @@ public class TencentKit implements MethodChannel.MethodCallHandler, PluginRegist
                 ProviderInfo providerInfo = applicationContext.getPackageManager().getProviderInfo(new ComponentName(applicationContext, TencentKitFileProvider.class), PackageManager.MATCH_DEFAULT_ONLY);
                 authority = providerInfo.authority;
             } catch (PackageManager.NameNotFoundException e) {
+                // ignore
             }
             if (!TextUtils.isEmpty(authority)) {
                 tencent = Tencent.createInstance(appId, applicationContext, authority);
@@ -237,6 +238,10 @@ public class TencentKit implements MethodChannel.MethodCallHandler, PluginRegist
             if (channel != null) {
                 channel.invokeMethod(METHOD_ONLOGINRESP, map);
             }
+        }
+
+        @Override
+        public void onWarning(int code) {
         }
     };
 
@@ -469,6 +474,13 @@ public class TencentKit implements MethodChannel.MethodCallHandler, PluginRegist
             map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_USERCANCEL);
             if (channel != null) {
                 channel.invokeMethod(METHOD_ONSHARERESP, map);
+            }
+        }
+
+        @Override
+        public void onWarning(int code) {
+            if (code == Constants.ERROR_NO_AUTHORITY) {
+                // 如果authorities为空，sdk会回调这个接口，提醒开发者适配FileProvider
             }
         }
     };

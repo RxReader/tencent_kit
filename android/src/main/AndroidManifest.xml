@@ -2,7 +2,6 @@
     package="io.github.v7lin.tencent_kit">
 
     <application>
-        <!-- Android Q 的外部存储沙箱限制 -->
         <provider
             android:name=".content.TencentKitFileProvider"
             android:authorities="${applicationId}.content.TencentKitFileProvider"

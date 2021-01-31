@@ -6,6 +6,15 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!--<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />-->
     <!--<uses-permission android:name="android.permission.WRITE_APN_SETTINGS"/>-->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <queries>
+        <!-- targetSdkVersion>=30 -> Android 11 软件包可见性 -->
+        <package android:name="com.tencent.mobileqq" />
+        <package android:name="com.tencent.tim" />
+        <package android:name="com.tencent.qqlite" />
+    </queries>
 
     <application
         android:usesCleartextTraffic="true"
