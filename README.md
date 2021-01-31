@@ -46,18 +46,11 @@ android {
 # 混淆已打入 Library，随 Library 引用，自动添加到 apk 打包混淆
 ```
 
-```
-<!-- 腾讯有毒吧，这特么是文档？ -->
-<!-- 继续吐槽个，尼玛简直就是坑 -->
-<!-- 知道怎么集成使用 FileProvider 有用？不知道怎么测试好吗？写个简单的测试分享图片，图片都无法分享好吗？不带这么坑爹的好吗？ -->
-<manifest>
-    <!-- targetSdkVersion >= 29, 豁免 Android Q 的外部存储沙箱限制 -->
-    <application android:requestLegacyExternalStorage="true">
-    </application>
-</manifest>
-```
-
 ## ios
+
+```
+腾讯有毒吗？module.modulemap 的内容都没提供完整，特么搞得我差了半天
+```
 
 ```
 在Xcode中，选择你的工程设置项，选中“TARGETS”一栏，在“info”标签栏的“URL type“添加“URL scheme”为你所注册的应用程序id

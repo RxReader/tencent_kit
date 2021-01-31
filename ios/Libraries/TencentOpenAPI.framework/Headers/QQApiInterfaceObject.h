@@ -45,7 +45,7 @@ typedef NS_ENUM(NSInteger,QQApiSendResultCode) {
 // QQApiObject control flags
 typedef NS_ENUM(NSUInteger,kQQAPICtrlFlag) {
     kQQAPICtrlFlagQZoneShareOnStart = 0x01,
-    kQQAPICtrlFlagQZoneShareForbid = 0x02,
+    kQQAPICtrlFlagQZoneShareForbid = 0x02, //屏蔽好友选择器上的空间入口
     kQQAPICtrlFlagQQShare = 0x04,
     kQQAPICtrlFlagQQShareFavorites = 0x08, //收藏
     kQQAPICtrlFlagQQShareDataline = 0x10,  //数据线
