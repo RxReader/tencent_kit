@@ -1,3 +1,8 @@
+## 2.0.0
+
+* 升级 Android/iOS 接口
+* Android 添加 FileProvider 支持
+
 ## 1.1.2
 
 * [#37](https://github.com/rxreader/tencent_kit/pull/37) fix ios register failed
