@@ -59,12 +59,12 @@ class Tencent {
   Future<dynamic> _handleMethod(MethodCall call) async {
     switch (call.method) {
       case _METHOD_ONLOGINRESP:
-        _loginRespStreamController.add(
-            TencentLoginResp.fromJson((call.arguments as Map<dynamic, dynamic>).cast<String, dynamic>()));
+        _loginRespStreamController.add(TencentLoginResp.fromJson(
+            (call.arguments as Map<dynamic, dynamic>).cast<String, dynamic>()));
         break;
       case _METHOD_ONSHARERESP:
-        _shareRespStreamController.add(
-            TencentShareResp.fromJson((call.arguments as Map<dynamic, dynamic>).cast<String, dynamic>()));
+        _shareRespStreamController.add(TencentShareResp.fromJson(
+            (call.arguments as Map<dynamic, dynamic>).cast<String, dynamic>()));
         break;
     }
   }

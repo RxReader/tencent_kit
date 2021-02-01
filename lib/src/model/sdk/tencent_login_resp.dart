@@ -25,7 +25,8 @@ class TencentLoginResp extends TencentSdkResp {
   final int expiresIn;
   final int createAt;
 
-  bool get isExpired => DateTime.now().millisecondsSinceEpoch - createAt >= expiresIn * 1000;
+  bool get isExpired =>
+      DateTime.now().millisecondsSinceEpoch - createAt >= expiresIn * 1000;
 
   Map<String, dynamic> toJson() => _$TencentLoginRespToJson(this);
 }
