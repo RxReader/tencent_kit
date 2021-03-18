@@ -20,8 +20,8 @@ abstract class TencentSdkResp {
   @JsonKey(
     defaultValue: RET_SUCCESS,
   )
-  final int ret;
-  final String msg;
+  final int? ret;
+  final String? msg;
 
   bool get isSuccessful => ret == RET_SUCCESS;
 
