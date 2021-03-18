@@ -8,11 +8,11 @@ part of 'tencent_unionid_resp.dart';
 
 TencentUnionidResp _$TencentUnionidRespFromJson(Map<String, dynamic> json) {
   return TencentUnionidResp(
-    error: json['error'] as int ?? 0,
-    errorDescription: json['error_description'] as String,
-    clientId: json['client_id'] as String,
-    openid: json['openid'] as String,
-    unionid: json['unionid'] as String,
+    error: json['error'] as int? ?? 0,
+    errorDescription: json['error_description'] as String?,
+    clientId: json['client_id'] as String?,
+    openid: json['openid'] as String?,
+    unionid: json['unionid'] as String?,
   );
 }
 
