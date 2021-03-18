@@ -9,8 +9,8 @@ part 'tencent_share_resp.g.dart';
 )
 class TencentShareResp extends TencentSdkResp {
   const TencentShareResp({
-    int ret,
-    String msg,
+    int? ret,
+    String? msg,
   }) : super(ret: ret, msg: msg);
 
   factory TencentShareResp.fromJson(Map<String, dynamic> json) =>

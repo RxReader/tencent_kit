@@ -8,11 +8,11 @@ part 'tencent_unionid_resp.g.dart';
 )
 class TencentUnionidResp {
   const TencentUnionidResp({
-    this.error,
-    this.errorDescription,
-    this.clientId,
-    this.openid,
-    this.unionid,
+    required this.error,
+    required this.errorDescription,
+    required this.clientId,
+    required this.openid,
+    required this.unionid,
   });
 
   factory TencentUnionidResp.fromJson(Map<String, dynamic> json) =>

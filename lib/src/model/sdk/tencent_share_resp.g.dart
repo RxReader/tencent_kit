@@ -8,8 +8,8 @@ part of 'tencent_share_resp.dart';
 
 TencentShareResp _$TencentShareRespFromJson(Map<String, dynamic> json) {
   return TencentShareResp(
-    ret: json['ret'] as int ?? 0,
-    msg: json['msg'] as String,
+    ret: json['ret'] as int? ?? 0,
+    msg: json['msg'] as String?,
   );
 }
 

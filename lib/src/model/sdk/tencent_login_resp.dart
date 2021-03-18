@@ -9,12 +9,12 @@ part 'tencent_login_resp.g.dart';
 )
 class TencentLoginResp extends TencentSdkResp {
   const TencentLoginResp({
-    int ret,
-    String msg,
-    this.openid,
-    this.accessToken,
-    this.expiresIn,
-    this.createAt,
+    int? ret,
+    String? msg,
+    required this.openid,
+    required this.accessToken,
+    required this.expiresIn,
+    required this.createAt,
   }) : super(ret: ret, msg: msg);
 
   factory TencentLoginResp.fromJson(Map<String, dynamic> json) =>

@@ -8,8 +8,8 @@ part of 'tencent_login_resp.dart';
 
 TencentLoginResp _$TencentLoginRespFromJson(Map<String, dynamic> json) {
   return TencentLoginResp(
-    ret: json['ret'] as int ?? 0,
-    msg: json['msg'] as String,
+    ret: json['ret'] as int? ?? 0,
+    msg: json['msg'] as String?,
     openid: json['openid'] as String,
     accessToken: json['access_token'] as String,
     expiresIn: json['expires_in'] as int,
