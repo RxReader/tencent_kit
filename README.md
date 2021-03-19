@@ -28,7 +28,16 @@ flutter版腾讯(QQ)SDK
 
 ## android
 
+```groovy
+buildscript {
+    dependencies {
+        // Android 11兼容，需升级Gradle到3.5.4/3.6.4/4.x.y
+        classpath 'com.android.tools.build:gradle:3.5.4'
+    }
+}
 ```
+
+```groovy
 ...
 android {
     ...
