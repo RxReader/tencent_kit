@@ -8,7 +8,7 @@ part 'tencent_unionid_resp.g.dart';
 )
 class TencentUnionidResp {
   const TencentUnionidResp({
-    this.error,
+    required this.error,
     this.errorDescription,
     this.clientId,
     this.openid,
@@ -22,10 +22,10 @@ class TencentUnionidResp {
     defaultValue: ERROR_SUCCESS,
   )
   final int error;
-  final String errorDescription;
-  final String clientId;
-  final String openid;
-  final String unionid;
+  final String? errorDescription;
+  final String? clientId;
+  final String? openid;
+  final String? unionid;
 
   static const int ERROR_SUCCESS = 0;
 

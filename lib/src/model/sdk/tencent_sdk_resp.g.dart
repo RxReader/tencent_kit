@@ -1,19 +1,19 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'tencent_share_resp.dart';
+part of 'tencent_sdk_resp.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-TencentShareResp _$TencentShareRespFromJson(Map<String, dynamic> json) {
-  return TencentShareResp(
-    ret: json['ret'] as int ?? 0,
-    msg: json['msg'] as String,
+TencentSdkResp _$TencentSdkRespFromJson(Map<String, dynamic> json) {
+  return TencentSdkResp(
+    ret: json['ret'] as int? ?? 0,
+    msg: json['msg'] as String?,
   );
 }
 
-Map<String, dynamic> _$TencentShareRespToJson(TencentShareResp instance) =>
+Map<String, dynamic> _$TencentSdkRespToJson(TencentSdkResp instance) =>
     <String, dynamic>{
       'ret': instance.ret,
       'msg': instance.msg,

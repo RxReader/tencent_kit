@@ -1,10 +1,19 @@
 import 'package:json_annotation/json_annotation.dart';
 
-abstract class TencentSdkResp {
+part 'tencent_sdk_resp.g.dart';
+
+@JsonSerializable(
+  explicitToJson: true,
+  fieldRename: FieldRename.snake,
+)
+class TencentSdkResp {
   const TencentSdkResp({
-    this.ret,
+    required this.ret,
     this.msg,
   });
+
+  factory TencentSdkResp.fromJson(Map<String, dynamic> json) =>
+      _$TencentSdkRespFromJson(json);
 
   /// 网络请求成功发送至服务器，并且服务器返回数据格式正确
   /// 这里包括所请求业务操作失败的情况，例如没有授权等原因导致
@@ -21,9 +30,11 @@ abstract class TencentSdkResp {
     defaultValue: RET_SUCCESS,
   )
   final int ret;
-  final String msg;
+  final String? msg;
 
   bool get isSuccessful => ret == RET_SUCCESS;
 
   bool get isCancelled => ret == RET_USERCANCEL;
+
+  Map<String, dynamic> toJson() => _$TencentSdkRespToJson(this);
 }

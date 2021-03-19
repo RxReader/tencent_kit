@@ -159,6 +159,9 @@ Capabilities -> Associated Domain -> Domain -> applinks:${your applinks}
 |QQ|不支持|不支持|支持|支持|不支持|支持|
 |QZone|支持|不支持|不支持|不支持|不支持|支持|
 
+* break change
+    * 2.1.0: nullsafety & 不再支持 Android embedding v1 & Tencent 单例
+
 * snapshot
 
 ```

@@ -10,7 +10,6 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   const MethodChannel channel = MethodChannel('v7lin.github.io/tencent_kit');
-  final Tencent tencent = Tencent();
 
   setUp(() {
     channel.setMockMethodCallHandler((MethodCall call) async {
@@ -26,7 +25,7 @@ void main() {
             channel.name,
             channel.codec.encodeMethodCall(
                 MethodCall('onLoginResp', json.decode('{"ret":-2}'))),
-            (ByteData data) {
+            (ByteData? data) {
               // mock success
             },
           ));
@@ -42,7 +41,7 @@ void main() {
             channel.name,
             channel.codec.encodeMethodCall(
                 MethodCall('onShareResp', json.decode('{"ret":0}'))),
-            (ByteData data) {
+            (ByteData? data) {
               // mock success
             },
           ));
@@ -57,30 +56,30 @@ void main() {
   });
 
   test('isQQInstalled', () async {
-    expect(await tencent.isQQInstalled(), true);
+    expect(await Tencent.instance.isQQInstalled(), true);
   });
 
   test('isTIMInstalled', () async {
-    expect(await tencent.isTIMInstalled(), true);
+    expect(await Tencent.instance.isTIMInstalled(), true);
   });
 
   test('login', () async {
-    StreamSubscription<TencentLoginResp> sub =
-        tencent.loginResp().listen((TencentLoginResp resp) {
+    final StreamSubscription<TencentLoginResp> sub =
+        Tencent.instance.loginResp().listen((TencentLoginResp resp) {
       expect(resp.ret, TencentSdkResp.RET_USERCANCEL);
     });
-    await tencent.login(
+    await Tencent.instance.login(
       scope: <String>[TencentScope.GET_SIMPLE_USERINFO],
     );
     await sub.cancel();
   });
 
   test('share', () async {
-    StreamSubscription<TencentShareResp> sub =
-        tencent.shareResp().listen((TencentShareResp resp) {
+    final StreamSubscription<TencentSdkResp> sub =
+        Tencent.instance.shareResp().listen((TencentSdkResp resp) {
       expect(resp.ret, TencentSdkResp.RET_SUCCESS);
     });
-    await tencent.shareMood(
+    await Tencent.instance.shareMood(
       scene: TencentScene.SCENE_QZONE,
       summary: 'share text',
     );

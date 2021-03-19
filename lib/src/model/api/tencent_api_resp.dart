@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 abstract class TencentApiResp {
   const TencentApiResp({
-    this.ret,
+    required this.ret,
     this.msg,
   });
 
@@ -14,7 +14,7 @@ abstract class TencentApiResp {
     defaultValue: RET_SUCCESS,
   )
   final int ret;
-  final String msg;
+  final String? msg;
 
   bool get isSuccessful => ret == RET_SUCCESS;
 }

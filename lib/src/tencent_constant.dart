@@ -1,5 +1,5 @@
 class TencentScope {
-  TencentScope._();
+  const TencentScope._();
 
   /// 发表一条说说到QQ空间(需要申请权限)
   static const String OPEN_PERMISSION_ADD_TOPIC = 'add_topic';
@@ -45,7 +45,7 @@ class TencentScope {
 }
 
 class TencentScene {
-  TencentScene._();
+  const TencentScene._();
 
   /// QQ
   static const int SCENE_QQ = 0;
@@ -55,7 +55,7 @@ class TencentScene {
 }
 
 class TencentQZoneFlag {
-  TencentQZoneFlag._();
+  const TencentQZoneFlag._();
 
   /// 默认是不隐藏分享到QZone按钮且不自动打开分享到QZone的对话框
   static const int DEFAULT = 0;

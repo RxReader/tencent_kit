@@ -1,3 +1,9 @@
+## 2.1.0
+
+* nullsafety
+* 不再支持 Android embedding v1
+* Tencent 单例
+
 ## 2.0.1
 
 * 优化
