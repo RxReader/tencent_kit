@@ -1,7 +1,5 @@
 # tencent_kit
 
-[![Build Status](https://cloud.drone.io/api/badges/rxreader/tencent_kit/status.svg)](https://cloud.drone.io/rxreader/tencent_kit)
-[![Codecov](https://codecov.io/gh/rxreader/tencent_kit/branch/master/graph/badge.svg)](https://codecov.io/gh/rxreader/tencent_kit)
 [![GitHub Tag](https://img.shields.io/github/tag/rxreader/tencent_kit.svg)](https://github.com/rxreader/tencent_kit/releases)
 [![Pub Package](https://img.shields.io/pub/v/tencent_kit.svg)](https://pub.dartlang.org/packages/tencent_kit)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/rxreader/tencent_kit/blob/master/LICENSE)
