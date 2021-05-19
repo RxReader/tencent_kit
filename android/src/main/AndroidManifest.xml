@@ -4,7 +4,7 @@
     <application>
         <provider
             android:name=".content.TencentKitFileProvider"
-            android:authorities="${applicationId}.content.TencentKitFileProvider"
+            android:authorities="${applicationId}.tencent_kit.TencentKitFileProvider"
             android:exported="false"
             android:grantUriPermissions="true">
 
