@@ -58,7 +58,19 @@ android {
 ## ios
 
 ```
-腾讯有毒吗？module.modulemap 的内容都没提供完整，特么搞得我差了半天
+出于插件的基本需求，将 SDK 的 module.modulemap 内容修改
+
+改前
+module TencentOpenApi{
+    umbrella header "TencentOpenApiUmbrellaHeader.h"
+    export *
+}
+
+改后
+framework module TencentOpenApi{
+    umbrella header "TencentOpenApiUmbrellaHeader.h"
+    export *
+}
 ```
 
 ```
@@ -99,60 +111,8 @@ iOS 9系统策略更新，限制了http协议的访问，此外应用需要在�
 		<string>mqqopensdklaunchminiapp</string>
 		<string>mqqopensdkproxylogin</string>
 		<string>mqqopensdknopasteboard</string>
+        <string>mqqopensdkcheckauth</string>
 	</array>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-		<key>NSExceptionDomains</key>
-		<dict>
-			<key>gtimg.cn</key>
-			<dict>
-				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
-				<key>NSExceptionRequiresForwardSecrecy</key>
-				<false/>
-				<key>NSIncludesSubdomains</key>
-				<true/>
-			</dict>
-			<key>idqqimg.com</key>
-			<dict>
-				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
-				<key>NSExceptionRequiresForwardSecrecy</key>
-				<string>NO</string>
-				<key>NSIncludesSubdomains</key>
-				<string>YES</string>
-			</dict>
-			<key>qlogo.cn</key>
-			<dict>
-				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
-				<key>NSExceptionRequiresForwardSecrecy</key>
-				<false/>
-				<key>NSIncludesSubdomains</key>
-				<true/>
-			</dict>
-			<key>qplus.com</key>
-			<dict>
-				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
-				<key>NSExceptionRequiresForwardSecrecy</key>
-				<false/>
-				<key>NSIncludesSubdomains</key>
-				<true/>
-			</dict>
-			<key>qq.com</key>
-			<dict>
-				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
-				<key>NSExceptionRequiresForwardSecrecy</key>
-				<false/>
-				<key>NSIncludesSubdomains</key>
-				<true/>
-			</dict>
-		</dict>
-	</dict>
 ```
 
 ```

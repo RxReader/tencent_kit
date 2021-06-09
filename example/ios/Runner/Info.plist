@@ -61,6 +61,7 @@
 		<string>mqqopensdklaunchminiapp</string>
 		<string>mqqopensdkproxylogin</string>
 		<string>mqqopensdknopasteboard</string>
+		<string>mqqopensdkcheckauth</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>

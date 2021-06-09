@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'tencent_kit'
-  s.version          = '2.1.0'
+  s.version          = '2.1.1'
   s.summary          = 'A powerful Flutter plugin allowing developers to auth/share with natvie Android & iOS Tencent SDKs.'
   s.description      = <<-DESC
 A powerful Flutter plugin allowing developers to auth/share with natvie Android & iOS Tencent SDKs.
@@ -18,7 +18,7 @@ A powerful Flutter plugin allowing developers to auth/share with natvie Android 
   s.dependency 'Flutter'
   s.platform = :ios, '8.0'
 
-  # v3.5.1
+  # v3.5.3
   s.subspec 'vendor' do |sp|
     sp.vendored_frameworks = 'Libraries/*.framework'
     sp.frameworks = 'Security', 'SystemConfiguration', 'CoreGraphics', 'CoreTelephony', 'WebKit'
@@ -26,6 +26,6 @@ A powerful Flutter plugin allowing developers to auth/share with natvie Android 
     sp.requires_arc = true
   end
   
-  # Flutter.framework does not contain a i386 slice. Only x86_64 simulators are supported.
-  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'VALID_ARCHS[sdk=iphonesimulator*]' => 'x86_64' }
+  # Flutter.framework does not contain a i386 slice.
+  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
 end
