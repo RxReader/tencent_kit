@@ -23,9 +23,11 @@
             android:name="org.apache.http.legacy"
             android:required="false" />
 
+        <!-- targetSdkVersion>=31 -> Android 12 android:exported -->
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
+            android:exported="true"
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
