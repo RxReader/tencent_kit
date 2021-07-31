@@ -80,7 +80,7 @@ class TencentUserInfoResp extends TencentApiResp {
     name: 'figureurl_qq_2',
   )
   final String?
-  figureurlQq2; // 大小为100×100像素的QQ头像URL。需要注意，不是所有的用户都拥有QQ的100x100的头像，但40x40像素则是一定会有。
+      figureurlQq2; // 大小为100×100像素的QQ头像URL。需要注意，不是所有的用户都拥有QQ的100x100的头像，但40x40像素则是一定会有。
   final String? figureurlType;
   final String? isYellowVip;
   final String? vip;
