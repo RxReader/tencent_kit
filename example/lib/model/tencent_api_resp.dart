@@ -1,7 +1,25 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:tencent_kit_example/model/api/tencent_api_resp.dart';
 
-part 'tencent_user_info_resp.g.dart';
+part 'tencent_api_resp.g.dart';
+
+abstract class TencentApiResp {
+  const TencentApiResp({
+    required this.ret,
+    this.msg,
+  });
+
+  /// 网络请求成功发送至服务器，并且服务器返回数据格式正确
+  /// 这里包括所请求业务操作失败的情况，例如没有授权等原因导致
+  static const int RET_SUCCESS = 0;
+
+  @JsonKey(
+    defaultValue: RET_SUCCESS,
+  )
+  final int ret;
+  final String? msg;
+
+  bool get isSuccessful => ret == RET_SUCCESS;
+}
 
 @JsonSerializable(
   explicitToJson: true,
@@ -62,7 +80,7 @@ class TencentUserInfoResp extends TencentApiResp {
     name: 'figureurl_qq_2',
   )
   final String?
-      figureurlQq2; // 大小为100×100像素的QQ头像URL。需要注意，不是所有的用户都拥有QQ的100x100的头像，但40x40像素则是一定会有。
+  figureurlQq2; // 大小为100×100像素的QQ头像URL。需要注意，不是所有的用户都拥有QQ的100x100的头像，但40x40像素则是一定会有。
   final String? figureurlType;
   final String? isYellowVip;
   final String? vip;

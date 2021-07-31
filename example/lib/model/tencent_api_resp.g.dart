@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'tencent_user_info_resp.dart';
+part of 'tencent_api_resp.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
