@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:json_annotation/json_annotation.dart';
 
 part 'tencent_unionid_resp.g.dart';
@@ -32,4 +34,7 @@ class TencentUnionidResp {
   bool get isSuccessful => error == ERROR_SUCCESS;
 
   Map<String, dynamic> toJson() => _$TencentUnionidRespToJson(this);
+
+  @override
+  String toString() => const JsonEncoder.withIndent('  ').convert(toJson());
 }

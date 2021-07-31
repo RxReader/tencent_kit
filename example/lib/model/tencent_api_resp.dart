@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:json_annotation/json_annotation.dart';
 
 part 'tencent_api_resp.g.dart';
@@ -19,6 +21,11 @@ abstract class TencentApiResp {
   final String? msg;
 
   bool get isSuccessful => ret == RET_SUCCESS;
+
+  Map<String, dynamic> toJson();
+
+  @override
+  String toString() => const JsonEncoder.withIndent('  ').convert(toJson());
 }
 
 @JsonSerializable(
@@ -111,5 +118,6 @@ class TencentUserInfoResp extends TencentApiResp {
     return figureurl;
   }
 
+  @override
   Map<String, dynamic> toJson() => _$TencentUserInfoRespToJson(this);
 }
