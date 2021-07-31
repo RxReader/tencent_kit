@@ -7,7 +7,6 @@ import 'package:tencent_kit_example/model/api/tencent_user_info_resp.dart';
 import 'package:tencent_kit_example/model/unionid/tencent_unionid_resp.dart';
 
 extension MixerTencent on Tencent {
-
   /// 用户信息
   /// https://wiki.connect.qq.com/get_user_info
   Future<TencentUserInfoResp> getUserInfo({
