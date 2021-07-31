@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:tencent_kit/src/model/api/tencent_api_resp.dart';
+import 'package:tencent_kit_example/model/api/tencent_api_resp.dart';
 
 part 'tencent_user_info_resp.g.dart';
 

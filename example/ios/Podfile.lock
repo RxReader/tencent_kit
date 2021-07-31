@@ -8,10 +8,10 @@ PODS:
   - sqflite (0.0.2):
     - Flutter
     - FMDB (>= 2.7.5)
-  - tencent_kit (2.1.1):
+  - tencent_kit (3.0.0):
     - Flutter
-    - tencent_kit/vendor (= 2.1.1)
-  - tencent_kit/vendor (2.1.1):
+    - tencent_kit/vendor (= 3.0.0)
+  - tencent_kit/vendor (3.0.0):
     - Flutter
 
 DEPENDENCIES:
@@ -39,7 +39,7 @@ SPEC CHECKSUMS:
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
-  tencent_kit: 72c1dbfff5c84fd6e68363dfe6208a36235ef3be
+  tencent_kit: 01deba7fcb491409961447556cafeab420a0c8ea
 
 PODFILE CHECKSUM: 8e679eca47255a8ca8067c4c67aab20e64cb974d
 

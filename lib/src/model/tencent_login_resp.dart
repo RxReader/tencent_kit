@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:tencent_kit/src/model/sdk/tencent_sdk_resp.dart';
+import 'package:tencent_kit/src/model/tencent_sdk_resp.dart';
 
 part 'tencent_login_resp.g.dart';
 

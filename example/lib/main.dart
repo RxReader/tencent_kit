@@ -4,6 +4,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:tencent_kit/tencent_kit.dart';
+import 'package:tencent_kit_example/model/api/tencent_user_info_resp.dart';
+import 'package:tencent_kit_example/model/unionid/tencent_unionid_resp.dart';
+import 'package:tencent_kit_example/tencent.dart';
 
 const String _TENCENT_APPID = 'your tencent appId';
 
