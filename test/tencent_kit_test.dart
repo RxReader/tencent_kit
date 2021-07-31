@@ -64,25 +64,31 @@ void main() {
   });
 
   test('login', () async {
-    final StreamSubscription<TencentLoginResp> sub =
-        Tencent.instance.loginResp().listen((TencentLoginResp resp) {
-      expect(resp.ret, TencentSdkResp.RET_USERCANCEL);
+    final StreamSubscription<BaseResp> subs =
+        Tencent.instance.respStream().listen((BaseResp resp) {
+      expect(resp.runtimeType, LoginResp);
+      expect(resp.ret, BaseResp.RET_USERCANCEL);
     });
     await Tencent.instance.login(
-      scope: <String>[TencentScope.GET_SIMPLE_USERINFO],
+      scope: <String>[
+        TencentScope.GET_SIMPLE_USERINFO,
+      ],
     );
-    await sub.cancel();
+    await Future<void>.delayed(const Duration(seconds: 1));
+    await subs.cancel();
   });
 
   test('share', () async {
-    final StreamSubscription<TencentSdkResp> sub =
-        Tencent.instance.shareResp().listen((TencentSdkResp resp) {
-      expect(resp.ret, TencentSdkResp.RET_SUCCESS);
+    final StreamSubscription<BaseResp> subs =
+        Tencent.instance.respStream().listen((BaseResp resp) {
+      expect(resp.runtimeType, ShareMsgResp);
+      expect(resp.ret, BaseResp.RET_SUCCESS);
     });
     await Tencent.instance.shareMood(
       scene: TencentScene.SCENE_QZONE,
       summary: 'share text',
     );
-    await sub.cancel();
+    await Future<void>.delayed(const Duration(seconds: 1));
+    await subs.cancel();
   });
 }

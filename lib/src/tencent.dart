@@ -1,8 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:tencent_kit/src/model/tencent_login_resp.dart';
-import 'package:tencent_kit/src/model/tencent_sdk_resp.dart';
+import 'package:tencent_kit/src/model/resp.dart';
 import 'package:tencent_kit/src/tencent_constant.dart';
 
 ///
@@ -48,20 +47,17 @@ class Tencent {
       const MethodChannel('v7lin.github.io/tencent_kit')
         ..setMethodCallHandler(_handleMethod);
 
-  final StreamController<TencentLoginResp> _loginRespStreamController =
-      StreamController<TencentLoginResp>.broadcast();
-
-  final StreamController<TencentSdkResp> _shareRespStreamController =
-      StreamController<TencentSdkResp>.broadcast();
+  final StreamController<BaseResp> _respStreamController =
+      StreamController<BaseResp>.broadcast();
 
   Future<dynamic> _handleMethod(MethodCall call) async {
     switch (call.method) {
       case _METHOD_ONLOGINRESP:
-        _loginRespStreamController.add(TencentLoginResp.fromJson(
+        _respStreamController.add(LoginResp.fromJson(
             (call.arguments as Map<dynamic, dynamic>).cast<String, dynamic>()));
         break;
       case _METHOD_ONSHARERESP:
-        _shareRespStreamController.add(TencentSdkResp.fromJson(
+        _respStreamController.add(ShareMsgResp.fromJson(
             (call.arguments as Map<dynamic, dynamic>).cast<String, dynamic>()));
         break;
     }
@@ -82,14 +78,9 @@ class Tencent {
     );
   }
 
-  /// 登录
-  Stream<TencentLoginResp> loginResp() {
-    return _loginRespStreamController.stream;
-  }
-
-  /// 分享
-  Stream<TencentSdkResp> shareResp() {
-    return _shareRespStreamController.stream;
+  ///
+  Stream<BaseResp> respStream() {
+    return _respStreamController.stream;
   }
 
   /// 检查QQ是否已安装

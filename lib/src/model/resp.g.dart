@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'tencent_login_resp.dart';
+part of 'resp.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-TencentLoginResp _$TencentLoginRespFromJson(Map<String, dynamic> json) {
-  return TencentLoginResp(
+LoginResp _$LoginRespFromJson(Map<String, dynamic> json) {
+  return LoginResp(
     ret: json['ret'] as int? ?? 0,
     msg: json['msg'] as String?,
     openid: json['openid'] as String?,
@@ -17,12 +17,24 @@ TencentLoginResp _$TencentLoginRespFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$TencentLoginRespToJson(TencentLoginResp instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$LoginRespToJson(LoginResp instance) => <String, dynamic>{
       'ret': instance.ret,
       'msg': instance.msg,
       'openid': instance.openid,
       'access_token': instance.accessToken,
       'expires_in': instance.expiresIn,
       'create_at': instance.createAt,
+    };
+
+ShareMsgResp _$ShareMsgRespFromJson(Map<String, dynamic> json) {
+  return ShareMsgResp(
+    ret: json['ret'] as int? ?? 0,
+    msg: json['msg'] as String?,
+  );
+}
+
+Map<String, dynamic> _$ShareMsgRespToJson(ShareMsgResp instance) =>
+    <String, dynamic>{
+      'ret': instance.ret,
+      'msg': instance.msg,
     };
