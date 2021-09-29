@@ -124,6 +124,21 @@ Capabilities -> Associated Domain -> Domain -> applinks:${your applinks}
     * 3.0.0: 重构
     * 2.1.0: nullsafety & 不再支持 Android embedding v1 & Tencent 单例
 
+* compat
+    * flutter 2.5 兼容问题 [issues/54](https://github.com/RxReader/tencent_kit/issues/54)
+    ```
+    post_install do |installer|
+      installer.pods_project.targets.each do |target|
+        flutter_additional_ios_build_settings(target)
+        # 兼容 Flutter 2.5
+        target.build_configurations.each do |config|
+    #       config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '9.0'
+          config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'i386 arm64'
+        end
+      end
+    end
+    ```
+
 * snapshot
 
 ```
