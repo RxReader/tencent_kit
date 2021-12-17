@@ -86,6 +86,8 @@ static NSString *const SCHEME_FILE = @"file";
     if ([METHOD_REGISTERAPP isEqualToString:call.method]) {
         NSString *appId = call.arguments[ARGUMENT_KEY_APPID];
         NSString *universalLink = call.arguments[ARGUMENT_KEY_UNIVERSALLINK];
+        [TencentOAuth setIsUserAgreedAuthorization:YES];
+
         if (universalLink != nil) {
             _oauth = [[TencentOAuth alloc] initWithAppId:appId
                                         andUniversalLink:universalLink
@@ -93,8 +95,6 @@ static NSString *const SCHEME_FILE = @"file";
         } else {
             _oauth = [[TencentOAuth alloc] initWithAppId:appId andDelegate:self];
         }
-        [TencentOAuth setIsUserAgreedAuthorization:YES];
-
         result(nil);
     } else if ([METHOD_ISQQINSTALLED isEqualToString:call.method]) {
         result([NSNumber numberWithBool:[TencentOAuth iphoneQQInstalled]]);
