@@ -95,6 +95,7 @@ static NSString *const SCHEME_FILE = @"file";
         } else {
             _oauth = [[TencentOAuth alloc] initWithAppId:appId andDelegate:self];
         }
+
         result(nil);
     } else if ([METHOD_ISQQINSTALLED isEqualToString:call.method]) {
         result([NSNumber numberWithBool:[TencentOAuth iphoneQQInstalled]]);
