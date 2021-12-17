@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--suppress AndroidDomInspection -->
 <paths xmlns:android="http://schemas.android.com/apk/res/android">
     <root-path name="root" path="" />
     <files-path name="files" path="" />
@@ -8,4 +7,6 @@
     <external-files-path name="external_files" path="" />
     <external-cache-path name="external_cache" path="" />
     <external-media-path name="external_media" path="" />
+    <external-files-path name="opensdk_external" path="Images/tmp"/>
+    <root-path name="opensdk_root" path=""/>
 </paths>

@@ -12,5 +12,16 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/tencent_kit_file_paths" />
         </provider>
+         <activity
+       android:name="com.tencent.tauth.AuthActivity"
+       android:noHistory="true"
+       android:launchMode="singleTask" >
+        <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="tencent1111104422" />
+        </intent-filter>
+        </activity>
     </application>
 </manifest>
