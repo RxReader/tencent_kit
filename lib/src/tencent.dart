@@ -78,6 +78,20 @@ class Tencent {
     );
   }
 
+  /// 设置是否已授权获取设备信息
+  Future<void> setIsPermissionGranted({
+    required bool granted,
+    String? buildModel,
+  }) {
+    return _channel.invokeMethod(
+      'setIsPermissionGranted',
+      <String, dynamic>{
+        'granted': granted,
+        if (buildModel?.isNotEmpty ?? false) 'build_model': buildModel,
+      },
+    );
+  }
+
   ///
   Stream<BaseResp> respStream() {
     return _respStreamController.stream;

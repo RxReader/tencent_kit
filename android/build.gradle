@@ -22,7 +22,9 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 31
+
+//    useLibrary 'org.apache.http.legacy'
 
     resourcePrefix 'tencent_kit'
 

@@ -183,6 +183,15 @@ public class TencentKitPlugin implements FlutterPlugin, ActivityAware, ActivityR
                 tencent = Tencent.createInstance(appId, applicationContext);
             }
             result.success(null);
+        } else if ("setIsPermissionGranted".equals(call.method)) {
+            final boolean granted = call.argument("granted");
+            final String buildModel = call.argument("build_model");
+            if (!TextUtils.isEmpty(buildModel)) {
+                Tencent.setIsPermissionGranted(granted, buildModel);
+            } else {
+                Tencent.setIsPermissionGranted(granted);
+            }
+            result.success(null);
         } else if (METHOD_ISQQINSTALLED.equals(call.method)) {
             result.success(isAppInstalled(applicationContext, "com.tencent.mobileqq"));
         } else if (METHOD_ISTIMINSTALLED.equals(call.method)) {
