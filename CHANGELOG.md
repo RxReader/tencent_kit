@@ -1,3 +1,8 @@
+## 3.1.0
+
+* 升级 Android/iOS SDK
+* 新增 setIsPermissionGranted 函数
+
 ## 3.0.0
 
 * 重构

@@ -83,7 +83,11 @@ static NSString *const SCHEME_FILE = @"file";
 
 - (void)handleMethodCall:(FlutterMethodCall *)call
                   result:(FlutterResult)result {
-    if ([METHOD_REGISTERAPP isEqualToString:call.method]) {
+    if ([@"setIsPermissionGranted" isEqualToString:call.method]) {
+        NSNumber *granted = call.arguments[@"granted"];
+        [TencentOAuth setIsUserAgreedAuthorization: [granted boolValue]];
+        result(nil);
+    } else if ([METHOD_REGISTERAPP isEqualToString:call.method]) {
         NSString *appId = call.arguments[ARGUMENT_KEY_APPID];
         NSString *universalLink = call.arguments[ARGUMENT_KEY_UNIVERSALLINK];
         if (universalLink != nil) {

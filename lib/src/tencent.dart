@@ -43,24 +43,33 @@ class Tencent {
 
   static const String _SCHEME_FILE = 'file';
 
-  late final MethodChannel _channel =
-      const MethodChannel('v7lin.github.io/tencent_kit')
-        ..setMethodCallHandler(_handleMethod);
+  late final MethodChannel _channel = const MethodChannel('v7lin.github.io/tencent_kit')..setMethodCallHandler(_handleMethod);
 
-  final StreamController<BaseResp> _respStreamController =
-      StreamController<BaseResp>.broadcast();
+  final StreamController<BaseResp> _respStreamController = StreamController<BaseResp>.broadcast();
 
   Future<dynamic> _handleMethod(MethodCall call) async {
     switch (call.method) {
       case _METHOD_ONLOGINRESP:
-        _respStreamController.add(LoginResp.fromJson(
-            (call.arguments as Map<dynamic, dynamic>).cast<String, dynamic>()));
+        _respStreamController.add(LoginResp.fromJson((call.arguments as Map<dynamic, dynamic>).cast<String, dynamic>()));
         break;
       case _METHOD_ONSHARERESP:
-        _respStreamController.add(ShareMsgResp.fromJson(
-            (call.arguments as Map<dynamic, dynamic>).cast<String, dynamic>()));
+        _respStreamController.add(ShareMsgResp.fromJson((call.arguments as Map<dynamic, dynamic>).cast<String, dynamic>()));
         break;
     }
+  }
+
+  /// 设置是否已授权获取设备信息/是否同意隐私协议
+  Future<void> setIsPermissionGranted({
+    required bool granted,
+    String? buildModel /* android.os.Build.MODEL */,
+  }) {
+    return _channel.invokeMethod(
+      'setIsPermissionGranted',
+      <String, dynamic>{
+        'granted': granted,
+        if (buildModel?.isNotEmpty ?? false) 'build_model': buildModel,
+      },
+    );
   }
 
   /// 向 Open_SDK 注册
@@ -72,22 +81,7 @@ class Tencent {
       _METHOD_REGISTERAPP,
       <String, dynamic>{
         _ARGUMENT_KEY_APPID: appId,
-        if (universalLink?.isNotEmpty ?? false)
-          _ARGUMENT_KEY_UNIVERSALLINK: universalLink,
-      },
-    );
-  }
-
-  /// 设置是否已授权获取设备信息
-  Future<void> setIsPermissionGranted({
-    required bool granted,
-    String? buildModel,
-  }) {
-    return _channel.invokeMethod(
-      'setIsPermissionGranted',
-      <String, dynamic>{
-        'granted': granted,
-        if (buildModel?.isNotEmpty ?? false) 'build_model': buildModel,
+        if (universalLink?.isNotEmpty ?? false) _ARGUMENT_KEY_UNIVERSALLINK: universalLink,
       },
     );
   }
@@ -133,18 +127,14 @@ class Tencent {
   }) {
     assert(scene == TencentScene.SCENE_QZONE);
     assert((summary?.isNotEmpty ?? false) ||
-        ((imageUris?.isNotEmpty ?? false) &&
-            imageUris!
-                .every((Uri element) => element.isScheme(_SCHEME_FILE))) ||
+        ((imageUris?.isNotEmpty ?? false) && imageUris!.every((Uri element) => element.isScheme(_SCHEME_FILE))) ||
         (videoUri != null && videoUri.isScheme(_SCHEME_FILE)));
     return _channel.invokeMethod<void>(
       _METHOD_SHAREMOOD,
       <String, dynamic>{
         _ARGUMENT_KEY_SCENE: scene,
         if (summary?.isNotEmpty ?? false) _ARGUMENT_KEY_SUMMARY: summary,
-        if (imageUris?.isNotEmpty ?? false)
-          _ARGUMENT_KEY_IMAGEURIS:
-              imageUris!.map((Uri imageUri) => imageUri.toString()).toList(),
+        if (imageUris?.isNotEmpty ?? false) _ARGUMENT_KEY_IMAGEURIS: imageUris!.map((Uri imageUri) => imageUri.toString()).toList(),
         if (videoUri != null) _ARGUMENT_KEY_VIDEOURI: videoUri.toString(),
       },
     );

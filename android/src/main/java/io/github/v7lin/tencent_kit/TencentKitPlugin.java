@@ -167,7 +167,16 @@ public class TencentKitPlugin implements FlutterPlugin, ActivityAware, ActivityR
 
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
-        if (METHOD_REGISTERAPP.equals(call.method)) {
+        if ("setIsPermissionGranted".equals(call.method)) {
+            final boolean granted = call.argument("granted");
+            final String buildModel = call.argument("build_model");
+            if (!TextUtils.isEmpty(buildModel)) {
+                Tencent.setIsPermissionGranted(granted, buildModel);
+            } else {
+                Tencent.setIsPermissionGranted(granted);
+            }
+            result.success(null);
+        } else if (METHOD_REGISTERAPP.equals(call.method)) {
             final String appId = call.argument(ARGUMENT_KEY_APPID);
 //            final String universalLink = call.argument(ARGUMENT_KEY_UNIVERSALLINK);
             String authority = null;
@@ -181,15 +190,6 @@ public class TencentKitPlugin implements FlutterPlugin, ActivityAware, ActivityR
                 tencent = Tencent.createInstance(appId, applicationContext, authority);
             } else {
                 tencent = Tencent.createInstance(appId, applicationContext);
-            }
-            result.success(null);
-        } else if ("setIsPermissionGranted".equals(call.method)) {
-            final boolean granted = call.argument("granted");
-            final String buildModel = call.argument("build_model");
-            if (!TextUtils.isEmpty(buildModel)) {
-                Tencent.setIsPermissionGranted(granted, buildModel);
-            } else {
-                Tencent.setIsPermissionGranted(granted);
             }
             result.success(null);
         } else if (METHOD_ISQQINSTALLED.equals(call.method)) {

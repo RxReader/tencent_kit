@@ -18,7 +18,7 @@ A powerful Flutter plugin allowing developers to auth/share with natvie Android 
   s.dependency 'Flutter'
   s.platform = :ios, '8.0'
 
-  # v3.5.3
+  # v3.5.10
   s.subspec 'vendor' do |sp|
     sp.vendored_frameworks = 'Libraries/*.framework'
     sp.frameworks = 'Security', 'SystemConfiguration', 'CoreGraphics', 'CoreTelephony', 'WebKit'
