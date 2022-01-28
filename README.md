@@ -121,6 +121,7 @@ Capabilities -> Associated Domain -> Domain -> applinks:${your applinks}
 |QZone|支持|不支持|不支持|不支持|不支持|支持|
 
 * break change
+    * 3.1.0: 新增 setIsPermissionGranted 函数，设置是否已授权获取设备信息/是否同意隐私协议
     * 3.0.0: 重构
     * 2.1.0: nullsafety & 不再支持 Android embedding v1 & Tencent 单例
 
