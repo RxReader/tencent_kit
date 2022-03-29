@@ -33,14 +33,14 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  late final StreamSubscription<BaseResp> _respSubs =
-      Tencent.instance.respStream().listen(_listenLogin);
+  late final StreamSubscription<BaseResp> _respSubs;
 
   LoginResp? _loginResp;
 
   @override
   void initState() {
     super.initState();
+    _respSubs = Tencent.instance.respStream().listen(_listenLogin);
   }
 
   void _listenLogin(BaseResp resp) {
