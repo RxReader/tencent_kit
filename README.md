@@ -103,7 +103,7 @@ iOS 9系统策略更新，限制了http协议的访问，此外应用需要在�
 		<string>mqqopensdklaunchminiapp</string>
 		<string>mqqopensdkproxylogin</string>
 		<string>mqqopensdknopasteboard</string>
-        <string>mqqopensdkcheckauth</string>
+		<string>mqqopensdkcheckauth</string>
 	</array>
 ```
 
