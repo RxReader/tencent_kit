@@ -12,6 +12,8 @@ const String _TENCENT_APPID = 'your tencent appId';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  // 3.1.0 之后的版本请先获取权限
+  await Tencent.instance.setIsPermissionGranted(granted: true);
   Tencent.instance.registerApp(appId: _TENCENT_APPID);
   runApp(MyApp());
 }
