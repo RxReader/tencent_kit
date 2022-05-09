@@ -12,8 +12,6 @@ const String _TENCENT_APPID = 'your tencent appId';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  // 3.1.0 之后的版本请先获取权限
-  await Tencent.instance.setIsPermissionGranted(granted: true);
   Tencent.instance.registerApp(appId: _TENCENT_APPID);
   runApp(MyApp());
 }
@@ -76,6 +74,13 @@ class _HomeState extends State<Home> {
               final String content =
                   'QQ install: ${await Tencent.instance.isQQInstalled()}\nTIM install: ${await Tencent.instance.isTIMInstalled()}';
               _showTips('环境检查', content);
+            },
+          ),
+          ListTile(
+            title: const Text('3.1.0 之后的版本请先获取权限'),
+            onTap: () async {
+              await Tencent.instance.setIsPermissionGranted(granted: true);
+              _showTips('授权', '已授权获取设备信息/同意隐私协议');
             },
           ),
           ListTile(
