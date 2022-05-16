@@ -27,15 +27,6 @@ flutter版腾讯(QQ)SDK
 ## android
 
 ```groovy
-buildscript {
-    dependencies {
-        // Android 11兼容，需升级Gradle到3.5.4/3.6.4/4.x.y
-        classpath 'com.android.tools.build:gradle:3.5.4'
-    }
-}
-```
-
-```groovy
 android {
     defaultConfig{
         manifestPlaceholders = [TENCENT_APP_ID: "${appId}"]
@@ -121,24 +112,25 @@ Capabilities -> Associated Domain -> Domain -> applinks:${your applinks}
 |QZone|支持|不支持|不支持|不支持|不支持|支持|
 
 * break change
-    * 3.1.0: 新增 setIsPermissionGranted 函数，设置是否已授权获取设备信息/是否同意隐私协议
-    * 3.0.0: 重构
-    * 2.1.0: nullsafety & 不再支持 Android embedding v1 & Tencent 单例
+  * 4.0.0: 按标准插件书写重构
+  * 3.1.0: 新增 setIsPermissionGranted 函数，设置是否已授权获取设备信息/是否同意隐私协议
+  * 3.0.0: 重构
+  * 2.1.0: nullsafety & 不再支持 Android embedding v1 & Tencent 单例
 
 * compat
-    * flutter 2.5 兼容问题 [issues/54](https://github.com/RxReader/tencent_kit/issues/54)
-    ```
-    post_install do |installer|
-      installer.pods_project.targets.each do |target|
-        flutter_additional_ios_build_settings(target)
-        # 兼容 Flutter 2.5
-        target.build_configurations.each do |config|
-    #       config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '9.0'
-          config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'i386 arm64'
-        end
+  * flutter 2.5 兼容问题 [issues/54](https://github.com/RxReader/tencent_kit/issues/54)
+  ```
+  post_install do |installer|
+    installer.pods_project.targets.each do |target|
+      flutter_additional_ios_build_settings(target)
+      # 兼容 Flutter 2.5
+      target.build_configurations.each do |config|
+  #       config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '9.0'
+        config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'i386 arm64'
       end
     end
-    ```
+  end
+  ```
 
 * snapshot
 

@@ -3,20 +3,20 @@ PODS:
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
-  - path_provider (0.0.1):
+  - path_provider_ios (0.0.1):
     - Flutter
   - sqflite (0.0.2):
     - Flutter
     - FMDB (>= 2.7.5)
-  - tencent_kit (3.1.0):
+  - tencent_kit (4.0.0):
     - Flutter
-    - tencent_kit/vendor (= 3.1.0)
-  - tencent_kit/vendor (3.1.0):
+    - tencent_kit/vendor (= 4.0.0)
+  - tencent_kit/vendor (4.0.0):
     - Flutter
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
-  - path_provider (from `.symlinks/plugins/path_provider/ios`)
+  - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
   - tencent_kit (from `.symlinks/plugins/tencent_kit/ios`)
 
@@ -27,8 +27,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
-  path_provider:
-    :path: ".symlinks/plugins/path_provider/ios"
+  path_provider_ios:
+    :path: ".symlinks/plugins/path_provider_ios/ios"
   sqflite:
     :path: ".symlinks/plugins/sqflite/ios"
   tencent_kit:
@@ -37,9 +37,9 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
-  path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
+  path_provider_ios: 14f3d2fd28c4fdb42f44e0f751d12861c43cee02
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
-  tencent_kit: 430a6d2980a5c07fef3ce4671025f92e0c575d29
+  tencent_kit: 9db7aefcc6dd501bfa258b3d385cf4422701b9cd
 
 PODFILE CHECKSUM: 8e679eca47255a8ca8067c4c67aab20e64cb974d
 

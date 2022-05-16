@@ -1,10 +1,10 @@
 #
 # To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html.
-# Run `pod lib lint tencent_kit.podspec' to validate before publishing.
+# Run `pod lib lint tencent_kit.podspec` to validate before publishing.
 #
 Pod::Spec.new do |s|
   s.name             = 'tencent_kit'
-  s.version          = '3.1.0'
+  s.version          = '4.0.0'
   s.summary          = 'A powerful Flutter plugin allowing developers to auth/share with natvie Android & iOS Tencent SDKs.'
   s.description      = <<-DESC
 A powerful Flutter plugin allowing developers to auth/share with natvie Android & iOS Tencent SDKs.
@@ -16,16 +16,16 @@ A powerful Flutter plugin allowing developers to auth/share with natvie Android 
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.platform = :ios, '8.0'
+  s.platform = :ios, '9.0'
 
-  # v3.5.10
+  # v3.5.11
   s.subspec 'vendor' do |sp|
     sp.vendored_frameworks = 'Libraries/*.framework'
     sp.frameworks = 'Security', 'SystemConfiguration', 'CoreGraphics', 'CoreTelephony', 'WebKit'
     sp.libraries = 'iconv', 'sqlite3', 'stdc++', 'z'
     sp.requires_arc = true
   end
-  
+
   # Flutter.framework does not contain a i386 slice.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
 end

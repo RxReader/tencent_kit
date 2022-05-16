@@ -36,43 +36,6 @@ enum TencentRetCode {
     [registrar addMethodCallDelegate:instance channel:channel];
 }
 
-static NSString *const METHOD_REGISTERAPP = @"registerApp";
-static NSString *const METHOD_ISQQINSTALLED = @"isQQInstalled";
-static NSString *const METHOD_ISTIMINSTALLED = @"isTIMInstalled";
-static NSString *const METHOD_LOGIN = @"login";
-static NSString *const METHOD_LOGOUT = @"logout";
-static NSString *const METHOD_SHAREMOOD = @"shareMood";
-static NSString *const METHOD_SHARETEXT = @"shareText";
-static NSString *const METHOD_SHAREIMAGE = @"shareImage";
-static NSString *const METHOD_SHAREMUSIC = @"shareMusic";
-static NSString *const METHOD_SHAREWEBPAGE = @"shareWebpage";
-
-static NSString *const METHOD_ONLOGINRESP = @"onLoginResp";
-static NSString *const METHOD_ONSHARERESP = @"onShareResp";
-
-static NSString *const ARGUMENT_KEY_APPID = @"appId";
-static NSString *const ARGUMENT_KEY_UNIVERSALLINK = @"universalLink";
-static NSString *const ARGUMENT_KEY_SCOPE = @"scope";
-static NSString *const ARGUMENT_KEY_SCENE = @"scene";
-static NSString *const ARGUMENT_KEY_TITLE = @"title";
-static NSString *const ARGUMENT_KEY_SUMMARY = @"summary";
-static NSString *const ARGUMENT_KEY_IMAGEURI = @"imageUri";
-static NSString *const ARGUMENT_KEY_IMAGEURIS = @"imageUris";
-static NSString *const ARGUMENT_KEY_VIDEOURI = @"videoUri";
-static NSString *const ARGUMENT_KEY_MUSICURL = @"musicUrl";
-static NSString *const ARGUMENT_KEY_TARGETURL = @"targetUrl";
-static NSString *const ARGUMENT_KEY_APPNAME = @"appName";
-static NSString *const ARGUMENT_KEY_EXTINT = @"extInt";
-
-static NSString *const ARGUMENT_KEY_RESULT_RET = @"ret";
-static NSString *const ARGUMENT_KEY_RESULT_MSG = @"msg";
-static NSString *const ARGUMENT_KEY_RESULT_OPENID = @"openid";
-static NSString *const ARGUMENT_KEY_RESULT_ACCESS_TOKEN = @"access_token";
-static NSString *const ARGUMENT_KEY_RESULT_EXPIRES_IN = @"expires_in";
-static NSString *const ARGUMENT_KEY_RESULT_CREATE_AT = @"create_at";
-
-static NSString *const SCHEME_FILE = @"file";
-
 - (instancetype)initWithChannel:(FlutterMethodChannel *)channel {
     self = [super init];
     if (self) {
@@ -87,9 +50,9 @@ static NSString *const SCHEME_FILE = @"file";
         NSNumber *granted = call.arguments[@"granted"];
         [TencentOAuth setIsUserAgreedAuthorization: [granted boolValue]];
         result(nil);
-    } else if ([METHOD_REGISTERAPP isEqualToString:call.method]) {
-        NSString *appId = call.arguments[ARGUMENT_KEY_APPID];
-        NSString *universalLink = call.arguments[ARGUMENT_KEY_UNIVERSALLINK];
+    } else if ([@"registerApp" isEqualToString:call.method]) {
+        NSString *appId = call.arguments[@"appId"];
+        NSString *universalLink = call.arguments[@"universalLink"];
         if (universalLink != nil) {
             _oauth = [[TencentOAuth alloc] initWithAppId:appId
                                         andUniversalLink:universalLink
@@ -98,23 +61,23 @@ static NSString *const SCHEME_FILE = @"file";
             _oauth = [[TencentOAuth alloc] initWithAppId:appId andDelegate:self];
         }
         result(nil);
-    } else if ([METHOD_ISQQINSTALLED isEqualToString:call.method]) {
+    } else if ([@"isQQInstalled" isEqualToString:call.method]) {
         result([NSNumber numberWithBool:[TencentOAuth iphoneQQInstalled]]);
-    } else if ([METHOD_ISTIMINSTALLED isEqualToString:call.method]) {
+    } else if ([@"isTIMInstalled" isEqualToString:call.method]) {
         result([NSNumber numberWithBool:[TencentOAuth iphoneTIMInstalled]]);
-    } else if ([METHOD_LOGIN isEqualToString:call.method]) {
+    } else if ([@"login" isEqualToString:call.method]) {
         [self login:call result:result];
-    } else if ([METHOD_LOGOUT isEqualToString:call.method]) {
+    } else if ([@"logout" isEqualToString:call.method]) {
         [self logout:call result:result];
-    } else if ([METHOD_SHAREMOOD isEqualToString:call.method]) {
+    } else if ([@"shareMood" isEqualToString:call.method]) {
         [self shareMood:call result:result];
-    } else if ([METHOD_SHARETEXT isEqualToString:call.method]) {
+    } else if ([@"shareText" isEqualToString:call.method]) {
         [self shareText:call result:result];
-    } else if ([METHOD_SHAREIMAGE isEqualToString:call.method]) {
+    } else if ([@"shareImage" isEqualToString:call.method]) {
         [self shareImage:call result:result];
-    } else if ([METHOD_SHAREMUSIC isEqualToString:call.method]) {
+    } else if ([@"shareMusic" isEqualToString:call.method]) {
         [self shareMusic:call result:result];
-    } else if ([METHOD_SHAREWEBPAGE isEqualToString:call.method]) {
+    } else if ([@"shareWebpage" isEqualToString:call.method]) {
         [self shareWebpage:call result:result];
     } else {
         result(FlutterMethodNotImplemented);
@@ -123,7 +86,7 @@ static NSString *const SCHEME_FILE = @"file";
 
 - (void)login:(FlutterMethodCall *)call result:(FlutterResult)result {
     if (_oauth != nil) {
-        NSString *scope = call.arguments[ARGUMENT_KEY_SCOPE];
+        NSString *scope = call.arguments[@"scope"];
         NSArray *permissions = [scope componentsSeparatedByString:@","];
         [_oauth authorize:permissions];
     }
@@ -138,11 +101,11 @@ static NSString *const SCHEME_FILE = @"file";
 }
 
 - (void)shareMood:(FlutterMethodCall *)call result:(FlutterResult)result {
-    NSNumber *scene = call.arguments[ARGUMENT_KEY_SCENE];
+    NSNumber *scene = call.arguments[@"scene"];
     if (scene.intValue == SCENE_QZONE) {
-        NSString *summary = call.arguments[ARGUMENT_KEY_SUMMARY];
-        NSArray *imageUris = call.arguments[ARGUMENT_KEY_IMAGEURIS];
-        NSString *videoUri = call.arguments[ARGUMENT_KEY_VIDEOURI];
+        NSString *summary = call.arguments[@"summary"];
+        NSArray *imageUris = call.arguments[@"imageUris"];
+        NSString *videoUri = call.arguments[@"videoUri"];
 
         if (videoUri == nil || videoUri.length == 0) {
             NSMutableArray *imageDatas = [NSMutableArray array];
@@ -172,9 +135,9 @@ static NSString *const SCHEME_FILE = @"file";
 }
 
 - (void)shareText:(FlutterMethodCall *)call result:(FlutterResult)result {
-    NSNumber *scene = call.arguments[ARGUMENT_KEY_SCENE];
+    NSNumber *scene = call.arguments[@"scene"];
     if (scene.intValue == SCENE_QQ) {
-        NSString *summary = call.arguments[ARGUMENT_KEY_SUMMARY];
+        NSString *summary = call.arguments[@"summary"];
         QQApiTextObject *object = [QQApiTextObject objectWithText:summary];
         SendMessageToQQReq *req = [SendMessageToQQReq reqWithContent:object];
         [QQApiInterface sendReq:req];
@@ -183,11 +146,11 @@ static NSString *const SCHEME_FILE = @"file";
 }
 
 - (void)shareImage:(FlutterMethodCall *)call result:(FlutterResult)result {
-    NSNumber *scene = call.arguments[ARGUMENT_KEY_SCENE];
+    NSNumber *scene = call.arguments[@"scene"];
     if (scene.intValue == SCENE_QQ) {
-        NSString *imageUri = call.arguments[ARGUMENT_KEY_IMAGEURI];
-        // NSString *appName = call.arguments[ARGUMENT_KEY_APPNAME];
-        // NSNumber *extInt = call.arguments[ARGUMENT_KEY_EXTINT];
+        NSString *imageUri = call.arguments[@"imageUri"];
+        // NSString *appName = call.arguments[@"appName"];
+        // NSNumber *extInt = call.arguments[@"extInt"];
 
         NSURL *imageUrl = [NSURL URLWithString:imageUri];
         NSData *imageData = [NSData dataWithContentsOfFile:imageUrl.path];
@@ -202,18 +165,18 @@ static NSString *const SCHEME_FILE = @"file";
 }
 
 - (void)shareMusic:(FlutterMethodCall *)call result:(FlutterResult)result {
-    NSNumber *scene = call.arguments[ARGUMENT_KEY_SCENE];
-    NSString *title = call.arguments[ARGUMENT_KEY_TITLE];
-    NSString *summary = call.arguments[ARGUMENT_KEY_SUMMARY];
-    NSString *imageUri = call.arguments[ARGUMENT_KEY_IMAGEURI];
-    NSString *musicUrl = call.arguments[ARGUMENT_KEY_MUSICURL];
-    NSString *targetUrl = call.arguments[ARGUMENT_KEY_TARGETURL];
-    // NSString *appName = call.arguments[ARGUMENT_KEY_APPNAME];
-    // NSNumber *extInt = call.arguments[ARGUMENT_KEY_EXTINT];
+    NSNumber *scene = call.arguments[@"scene"];
+    NSString *title = call.arguments[@"title"];
+    NSString *summary = call.arguments[@"summary"];
+    NSString *imageUri = call.arguments[@"imageUri"];
+    NSString *musicUrl = call.arguments[@"musicUrl"];
+    NSString *targetUrl = call.arguments[@"targetUrl"];
+    // NSString *appName = call.arguments[@"appName"];
+    // NSNumber *extInt = call.arguments[@"extInt"];
     if (scene.intValue == SCENE_QQ) {
         QQApiAudioObject *object = nil;
         NSURL *imageUrl = [NSURL URLWithString:imageUri];
-        if ([SCHEME_FILE isEqualToString:imageUrl.scheme]) {
+        if ([@"file" isEqualToString:imageUrl.scheme]) {
             NSData *imageData = [NSData dataWithContentsOfFile:imageUrl.path];
             object = [QQApiAudioObject objectWithURL:[NSURL URLWithString:targetUrl]
                                                title:title
@@ -233,17 +196,17 @@ static NSString *const SCHEME_FILE = @"file";
 }
 
 - (void)shareWebpage:(FlutterMethodCall *)call result:(FlutterResult)result {
-    NSNumber *scene = call.arguments[ARGUMENT_KEY_SCENE];
-    NSString *title = call.arguments[ARGUMENT_KEY_TITLE];
-    NSString *summary = call.arguments[ARGUMENT_KEY_SUMMARY];
-    NSString *imageUri = call.arguments[ARGUMENT_KEY_IMAGEURI];
-    NSString *targetUrl = call.arguments[ARGUMENT_KEY_TARGETURL];
-    // NSString *appName = call.arguments[ARGUMENT_KEY_APPNAME];
-    // NSNumber *extInt = call.arguments[ARGUMENT_KEY_EXTINT];
+    NSNumber *scene = call.arguments[@"scene"];
+    NSString *title = call.arguments[@"title"];
+    NSString *summary = call.arguments[@"summary"];
+    NSString *imageUri = call.arguments[@"imageUri"];
+    NSString *targetUrl = call.arguments[@"targetUrl"];
+    // NSString *appName = call.arguments[@"appName"];
+    // NSNumber *extInt = call.arguments[@"extInt"];
 
     QQApiNewsObject *object = nil;
     NSURL *imageUrl = [NSURL URLWithString:imageUri];
-    if ([SCHEME_FILE isEqualToString:imageUrl.scheme]) {
+    if ([@"file" isEqualToString:imageUrl.scheme]) {
         NSData *imageData = [NSData dataWithContentsOfFile:imageUrl.path];
         object = [QQApiNewsObject objectWithURL:[NSURL URLWithString:targetUrl]
                                           title:title
@@ -319,19 +282,19 @@ static NSString *const SCHEME_FILE = @"file";
             ceil(_oauth.expirationDate.timeIntervalSinceNow); // 向上取整
         long long createAt = [[NSDate date] timeIntervalSince1970] * 1000.0;
         [dictionary setValue:[NSNumber numberWithInt:RET_SUCCESS]
-                      forKey:ARGUMENT_KEY_RESULT_RET];
-        [dictionary setValue:openId forKey:ARGUMENT_KEY_RESULT_OPENID];
-        [dictionary setValue:accessToken forKey:ARGUMENT_KEY_RESULT_ACCESS_TOKEN];
+                      forKey:@"ret"];
+        [dictionary setValue:openId forKey:@"openid"];
+        [dictionary setValue:accessToken forKey:@"access_token"];
         [dictionary setValue:[NSNumber numberWithLongLong:expiresIn]
-                      forKey:ARGUMENT_KEY_RESULT_EXPIRES_IN];
+                      forKey:@"expires_in"];
         [dictionary setValue:[NSNumber numberWithLongLong:createAt]
-                      forKey:ARGUMENT_KEY_RESULT_CREATE_AT];
+                      forKey:@"create_at"];
     } else {
         // 登录失败
         [dictionary setValue:[NSNumber numberWithInt:RET_COMMON]
-                      forKey:ARGUMENT_KEY_RESULT_RET];
+                      forKey:@"ret"];
     }
-    [_channel invokeMethod:METHOD_ONLOGINRESP arguments:dictionary];
+    [_channel invokeMethod:@"onLoginResp" arguments:dictionary];
 }
 
 - (void)tencentDidNotLogin:(BOOL)cancelled {
@@ -339,21 +302,21 @@ static NSString *const SCHEME_FILE = @"file";
     if (cancelled) {
         // 取消登录
         [dictionary setValue:[NSNumber numberWithInt:RET_USERCANCEL]
-                      forKey:ARGUMENT_KEY_RESULT_RET];
+                      forKey:@"ret"];
     } else {
         // 登录失败
         [dictionary setValue:[NSNumber numberWithInt:RET_COMMON]
-                      forKey:ARGUMENT_KEY_RESULT_RET];
+                      forKey:@"ret"];
     }
-    [_channel invokeMethod:METHOD_ONLOGINRESP arguments:dictionary];
+    [_channel invokeMethod:@"onLoginResp" arguments:dictionary];
 }
 
 - (void)tencentDidNotNetWork {
     // 登录失败
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     [dictionary setValue:[NSNumber numberWithInt:RET_COMMON]
-                  forKey:ARGUMENT_KEY_RESULT_RET];
-    [_channel invokeMethod:METHOD_ONLOGINRESP arguments:dictionary];
+                  forKey:@"ret"];
+    [_channel invokeMethod:@"onLoginResp" arguments:dictionary];
 }
 
 #pragma mark - QQApiInterfaceDelegate
@@ -368,23 +331,23 @@ static NSString *const SCHEME_FILE = @"file";
             case 0:
                 // 分享成功
                 [dictionary setValue:[NSNumber numberWithInt:RET_SUCCESS]
-                              forKey:ARGUMENT_KEY_RESULT_RET];
+                              forKey:@"ret"];
                 break;
             case -4:
                 // 用户取消
                 [dictionary setValue:[NSNumber numberWithInt:RET_USERCANCEL]
-                              forKey:ARGUMENT_KEY_RESULT_RET];
+                              forKey:@"ret"];
                 break;
             default:
                 [dictionary setValue:[NSNumber numberWithInt:RET_COMMON]
-                              forKey:ARGUMENT_KEY_RESULT_RET];
+                              forKey:@"ret"];
                 NSString *errorMsg =
                     [NSString stringWithFormat:@"result: %@, description: %@.",
                                                resp.result, resp.errorDescription];
-                [dictionary setValue:errorMsg forKey:ARGUMENT_KEY_RESULT_MSG];
+                [dictionary setValue:errorMsg forKey:@"msg"];
                 break;
         }
-        [_channel invokeMethod:METHOD_ONSHARERESP arguments:dictionary];
+        [_channel invokeMethod:@"onShareResp" arguments:dictionary];
     }
 }
 

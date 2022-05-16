@@ -1,6 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="io.github.v7lin.tencent_kit">
-
+  package="io.github.v7lin.tencent_kit">
     <application>
         <provider
             android:name=".TencentKitFileProvider"

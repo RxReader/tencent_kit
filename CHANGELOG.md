@@ -1,3 +1,9 @@
+## 4.0.0
+
+* 升级 Flutter 3.0
+* 升级 Android/iOS SDK
+* break change: 官方标准化插件
+
 ## 3.1.0
 
 * 升级 Android/iOS SDK

@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.tencent.connect.common.Constants;
 import com.tencent.connect.share.QQShare;
@@ -57,45 +58,6 @@ public class TencentKitPlugin implements FlutterPlugin, ActivityAware, ActivityR
         static final int RET_COMMON = -1;
         static final int RET_USERCANCEL = -2;
     }
-
-    //
-
-    private static final String METHOD_REGISTERAPP = "registerApp";
-    private static final String METHOD_ISQQINSTALLED = "isQQInstalled";
-    private static final String METHOD_ISTIMINSTALLED = "isTIMInstalled";
-    private static final String METHOD_LOGIN = "login";
-    private static final String METHOD_LOGOUT = "logout";
-    private static final String METHOD_SHAREMOOD = "shareMood";
-    private static final String METHOD_SHARETEXT = "shareText";
-    private static final String METHOD_SHAREIMAGE = "shareImage";
-    private static final String METHOD_SHAREMUSIC = "shareMusic";
-    private static final String METHOD_SHAREWEBPAGE = "shareWebpage";
-
-    private static final String METHOD_ONLOGINRESP = "onLoginResp";
-    private static final String METHOD_ONSHARERESP = "onShareResp";
-
-    private static final String ARGUMENT_KEY_APPID = "appId";
-    //    private static final String ARGUMENT_KEY_UNIVERSALLINK = "universalLink";
-    private static final String ARGUMENT_KEY_SCOPE = "scope";
-    private static final String ARGUMENT_KEY_SCENE = "scene";
-    private static final String ARGUMENT_KEY_TITLE = "title";
-    private static final String ARGUMENT_KEY_SUMMARY = "summary";
-    private static final String ARGUMENT_KEY_IMAGEURI = "imageUri";
-    private static final String ARGUMENT_KEY_IMAGEURIS = "imageUris";
-    private static final String ARGUMENT_KEY_VIDEOURI = "videoUri";
-    private static final String ARGUMENT_KEY_MUSICURL = "musicUrl";
-    private static final String ARGUMENT_KEY_TARGETURL = "targetUrl";
-    private static final String ARGUMENT_KEY_APPNAME = "appName";
-    private static final String ARGUMENT_KEY_EXTINT = "extInt";
-
-    private static final String ARGUMENT_KEY_RESULT_RET = "ret";
-    private static final String ARGUMENT_KEY_RESULT_MSG = "msg";
-    private static final String ARGUMENT_KEY_RESULT_OPENID = "openid";
-    private static final String ARGUMENT_KEY_RESULT_ACCESS_TOKEN = "access_token";
-    private static final String ARGUMENT_KEY_RESULT_EXPIRES_IN = "expires_in";
-    private static final String ARGUMENT_KEY_RESULT_CREATE_AT = "create_at";
-
-    private static final String SCHEME_FILE = "file";
 
     /// The MethodChannel that will the communication between Flutter and native Android
     ///
@@ -150,7 +112,7 @@ public class TencentKitPlugin implements FlutterPlugin, ActivityAware, ActivityR
     // --- ActivityResultListener
 
     @Override
-    public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
+    public boolean onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         switch (requestCode) {
             case Constants.REQUEST_LOGIN:
                 return Tencent.onActivityResultData(requestCode, resultCode, data, loginListener);
@@ -176,9 +138,9 @@ public class TencentKitPlugin implements FlutterPlugin, ActivityAware, ActivityR
                 Tencent.setIsPermissionGranted(granted);
             }
             result.success(null);
-        } else if (METHOD_REGISTERAPP.equals(call.method)) {
-            final String appId = call.argument(ARGUMENT_KEY_APPID);
-//            final String universalLink = call.argument(ARGUMENT_KEY_UNIVERSALLINK);
+        } else if ("registerApp".equals(call.method)) {
+            final String appId = call.argument("appId");
+//            final String universalLink = call.argument("universalLink");
             String authority = null;
             try {
                 ProviderInfo providerInfo = applicationContext.getPackageManager().getProviderInfo(new ComponentName(applicationContext, TencentKitFileProvider.class), PackageManager.MATCH_DEFAULT_ONLY);
@@ -192,23 +154,23 @@ public class TencentKitPlugin implements FlutterPlugin, ActivityAware, ActivityR
                 tencent = Tencent.createInstance(appId, applicationContext);
             }
             result.success(null);
-        } else if (METHOD_ISQQINSTALLED.equals(call.method)) {
+        } else if ("isQQInstalled".equals(call.method)) {
             result.success(isAppInstalled(applicationContext, "com.tencent.mobileqq"));
-        } else if (METHOD_ISTIMINSTALLED.equals(call.method)) {
+        } else if ("isTIMInstalled".equals(call.method)) {
             result.success(isAppInstalled(applicationContext, "com.tencent.tim"));
-        } else if (METHOD_LOGIN.equals(call.method)) {
+        } else if ("login".equals(call.method)) {
             login(call, result);
-        } else if (METHOD_LOGOUT.equals(call.method)) {
+        } else if ("logout".equals(call.method)) {
             logout(call, result);
-        } else if (METHOD_SHAREMOOD.equals(call.method)) {
+        } else if ("shareMood".equals(call.method)) {
             shareMood(call, result);
-        } else if (METHOD_SHARETEXT.equals(call.method)) {
+        } else if ("shareText".equals(call.method)) {
             shareText(call, result);
-        } else if (METHOD_SHAREIMAGE.equals(call.method)) {
+        } else if ("shareImage".equals(call.method)) {
             shareImage(call, result);
-        } else if (METHOD_SHAREMUSIC.equals(call.method)) {
+        } else if ("shareMusic".equals(call.method)) {
             shareMusic(call, result);
-        } else if (METHOD_SHAREWEBPAGE.equals(call.method)) {
+        } else if ("shareWebpage".equals(call.method)) {
             shareWebpage(call, result);
         } else {
             result.notImplemented();
@@ -216,7 +178,7 @@ public class TencentKitPlugin implements FlutterPlugin, ActivityAware, ActivityR
     }
 
     private void login(@NonNull MethodCall call, @NonNull Result result) {
-        String scope = call.argument(ARGUMENT_KEY_SCOPE);
+        final String scope = call.argument("scope");
         if (tencent != null) {
             tencent.login(activityPluginBinding.getActivity(), scope, loginListener);
         }
@@ -226,59 +188,59 @@ public class TencentKitPlugin implements FlutterPlugin, ActivityAware, ActivityR
     private IUiListener loginListener = new IUiListener() {
         @Override
         public void onComplete(Object o) {
-            Map<String, Object> map = new HashMap<>();
+            final Map<String, Object> map = new HashMap<>();
             try {
                 if (o != null && o instanceof JSONObject) {
-                    JSONObject object = (JSONObject) o;
-                    int ret = !object.isNull(ARGUMENT_KEY_RESULT_RET) ? object.getInt(ARGUMENT_KEY_RESULT_RET) : TencentRetCode.RET_FAILED;
-                    String msg = !object.isNull(ARGUMENT_KEY_RESULT_MSG) ? object.getString(ARGUMENT_KEY_RESULT_MSG) : null;
+                    final JSONObject object = (JSONObject) o;
+                    final int ret = !object.isNull("ret") ? object.getInt("ret") : TencentRetCode.RET_FAILED;
+                    final String msg = !object.isNull("msg") ? object.getString("msg") : null;
                     if (ret == TencentRetCode.RET_SUCCESS) {
-                        String openId = !object.isNull(ARGUMENT_KEY_RESULT_OPENID) ? object.getString(ARGUMENT_KEY_RESULT_OPENID) : null;
-                        String accessToken = !object.isNull(ARGUMENT_KEY_RESULT_ACCESS_TOKEN) ? object.getString(ARGUMENT_KEY_RESULT_ACCESS_TOKEN) : null;
-                        int expiresIn = !object.isNull(ARGUMENT_KEY_RESULT_EXPIRES_IN) ? object.getInt(ARGUMENT_KEY_RESULT_EXPIRES_IN) : 0;
-                        long createAt = System.currentTimeMillis();
+                        final String openId = !object.isNull("openid") ? object.getString("openid") : null;
+                        final String accessToken = !object.isNull("access_token") ? object.getString("access_token") : null;
+                        final int expiresIn = !object.isNull("expires_in") ? object.getInt("expires_in") : 0;
+                        final long createAt = System.currentTimeMillis();
                         if (!TextUtils.isEmpty(openId) && !TextUtils.isEmpty(accessToken)) {
-                            map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_SUCCESS);
-                            map.put(ARGUMENT_KEY_RESULT_OPENID, openId);
-                            map.put(ARGUMENT_KEY_RESULT_ACCESS_TOKEN, accessToken);
-                            map.put(ARGUMENT_KEY_RESULT_EXPIRES_IN, expiresIn);
-                            map.put(ARGUMENT_KEY_RESULT_CREATE_AT, createAt);
+                            map.put("ret", TencentRetCode.RET_SUCCESS);
+                            map.put("openid", openId);
+                            map.put("access_token", accessToken);
+                            map.put("expires_in", expiresIn);
+                            map.put("create_at", createAt);
                         } else {
-                            map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_COMMON);
-                            map.put(ARGUMENT_KEY_RESULT_MSG, "openId or accessToken is null.");
+                            map.put("ret", TencentRetCode.RET_COMMON);
+                            map.put("msg", "openId or accessToken is null.");
                         }
                     } else {
-                        map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_COMMON);
-                        map.put(ARGUMENT_KEY_RESULT_MSG, msg);
+                        map.put("ret", TencentRetCode.RET_COMMON);
+                        map.put("msg", msg);
                     }
                 }
             } catch (JSONException e) {
-                map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_COMMON);
-                map.put(ARGUMENT_KEY_RESULT_MSG, e.getMessage());
+                map.put("ret", TencentRetCode.RET_COMMON);
+                map.put("msg", e.getMessage());
             }
             if (channel != null) {
-                channel.invokeMethod(METHOD_ONLOGINRESP, map);
+                channel.invokeMethod("onLoginResp", map);
             }
         }
 
         @Override
         public void onError(UiError uiError) {
             // 登录失败
-            Map<String, Object> map = new HashMap<>();
-            map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_COMMON);
-            map.put(ARGUMENT_KEY_RESULT_MSG, uiError.errorMessage);
+            final Map<String, Object> map = new HashMap<>();
+            map.put("ret", TencentRetCode.RET_COMMON);
+            map.put("msg", uiError.errorMessage);
             if (channel != null) {
-                channel.invokeMethod(METHOD_ONLOGINRESP, map);
+                channel.invokeMethod("onLoginResp", map);
             }
         }
 
         @Override
         public void onCancel() {
             // 取消登录
-            Map<String, Object> map = new HashMap<>();
-            map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_USERCANCEL);
+            final Map<String, Object> map = new HashMap<>();
+            map.put("ret", TencentRetCode.RET_USERCANCEL);
             if (channel != null) {
-                channel.invokeMethod(METHOD_ONLOGINRESP, map);
+                channel.invokeMethod("onLoginResp", map);
             }
         }
 
@@ -295,25 +257,25 @@ public class TencentKitPlugin implements FlutterPlugin, ActivityAware, ActivityR
     }
 
     private void shareMood(@NonNull MethodCall call, @NonNull Result result) {
-        int scene = call.argument(ARGUMENT_KEY_SCENE);
+        final int scene = call.argument("scene");
         if (scene == TencentScene.SCENE_QZONE) {
-            String summary = call.argument(ARGUMENT_KEY_SUMMARY);
-            List<String> imageUris = call.argument(ARGUMENT_KEY_IMAGEURIS);
-            String videoUri = call.argument(ARGUMENT_KEY_VIDEOURI);
+            final String summary = call.argument("summary");
+            final List<String> imageUris = call.argument("imageUris");
+            final String videoUri = call.argument("videoUri");
 
-            Bundle params = new Bundle();
+            final Bundle params = new Bundle();
             if (!TextUtils.isEmpty(summary)) {
                 params.putString(QzonePublish.PUBLISH_TO_QZONE_SUMMARY, summary);
             }
             if (imageUris != null && !imageUris.isEmpty()) {
-                ArrayList<String> uris = new ArrayList<>();
+                final ArrayList<String> uris = new ArrayList<>();
                 for (String imageUri : imageUris) {
                     uris.add(Uri.parse(imageUri).getPath());
                 }
                 params.putStringArrayList(QzonePublish.PUBLISH_TO_QZONE_IMAGE_URL, uris);
             }
             if (!TextUtils.isEmpty(videoUri)) {
-                String videoPath = Uri.parse(videoUri).getPath();
+                final String videoPath = Uri.parse(videoUri).getPath();
                 params.putString(QzonePublish.PUBLISH_TO_QZONE_VIDEO_PATH, videoPath);
                 params.putInt(QzonePublish.PUBLISH_TO_QZONE_KEY_TYPE, QzonePublish.PUBLISH_TO_QZONE_TYPE_PUBLISHVIDEO);
             } else {
@@ -327,16 +289,16 @@ public class TencentKitPlugin implements FlutterPlugin, ActivityAware, ActivityR
     }
 
     private void shareText(@NonNull MethodCall call, @NonNull Result result) {
-        int scene = call.argument(ARGUMENT_KEY_SCENE);
+        final int scene = call.argument("scene");
         if (scene == TencentScene.SCENE_QQ) {
-            String summary = call.argument(ARGUMENT_KEY_SUMMARY);
-            Intent sendIntent = new Intent();
+            final String summary = call.argument("summary");
+            final Intent sendIntent = new Intent();
             sendIntent.setAction(Intent.ACTION_SEND);
             sendIntent.putExtra(Intent.EXTRA_TEXT, summary);
             sendIntent.setType("text/*");
             // 普通大众版 > 办公简洁版 > 急速轻聊版
-            PackageManager packageManager = applicationContext.getPackageManager();
-            List<PackageInfo> infos = packageManager.getInstalledPackages(0);
+            final PackageManager packageManager = applicationContext.getPackageManager();
+            final List<PackageInfo> infos = packageManager.getInstalledPackages(0);
             if (infos != null && !infos.isEmpty()) {
                 for (String packageName : Arrays.asList("com.tencent.mobileqq", "com.tencent.tim", "com.tencent.qqlite")) {
                     for (PackageInfo info : infos) {
@@ -356,13 +318,13 @@ public class TencentKitPlugin implements FlutterPlugin, ActivityAware, ActivityR
     }
 
     private void shareImage(@NonNull MethodCall call, @NonNull Result result) {
-        int scene = call.argument(ARGUMENT_KEY_SCENE);
+        final int scene = call.argument("scene");
         if (scene == TencentScene.SCENE_QQ) {
-            String imageUri = call.argument(ARGUMENT_KEY_IMAGEURI);
-            String appName = call.argument(ARGUMENT_KEY_APPNAME);
-            int extInt = call.argument(ARGUMENT_KEY_EXTINT);
+            final String imageUri = call.argument("imageUri");
+            final String appName = call.argument("appName");
+            final int extInt = call.argument("extInt");
 
-            Bundle params = new Bundle();
+            final Bundle params = new Bundle();
             params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_IMAGE);
             params.putString(QQShare.SHARE_TO_QQ_IMAGE_LOCAL_URL, Uri.parse(imageUri).getPath());
             if (!TextUtils.isEmpty(appName)) {
@@ -377,15 +339,15 @@ public class TencentKitPlugin implements FlutterPlugin, ActivityAware, ActivityR
     }
 
     private void shareMusic(@NonNull MethodCall call, @NonNull Result result) {
-        int scene = call.argument(ARGUMENT_KEY_SCENE);
+        final int scene = call.argument("scene");
         if (scene == TencentScene.SCENE_QQ) {
-            String title = call.argument(ARGUMENT_KEY_TITLE);
-            String summary = call.argument(ARGUMENT_KEY_SUMMARY);
-            String imageUri = call.argument(ARGUMENT_KEY_IMAGEURI);
-            String musicUrl = call.argument(ARGUMENT_KEY_MUSICURL);
-            String targetUrl = call.argument(ARGUMENT_KEY_TARGETURL);
-            String appName = call.argument(ARGUMENT_KEY_APPNAME);
-            int extInt = call.argument(ARGUMENT_KEY_EXTINT);
+            final String title = call.argument("title");
+            final String summary = call.argument("summary");
+            final String imageUri = call.argument("imageUri");
+            final String musicUrl = call.argument("musicUrl");
+            final String targetUrl = call.argument("targetUrl");
+            final String appName = call.argument("appName");
+            final int extInt = call.argument("extInt");
 
             Bundle params = new Bundle();
             params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_AUDIO);
@@ -395,7 +357,7 @@ public class TencentKitPlugin implements FlutterPlugin, ActivityAware, ActivityR
             }
             if (!TextUtils.isEmpty(imageUri)) {
                 Uri uri = Uri.parse(imageUri);
-                if (TextUtils.equals(SCHEME_FILE, uri.getScheme())) {
+                if (TextUtils.equals("file", uri.getScheme())) {
                     params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, uri.getPath());
                 } else {
                     params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, imageUri);
@@ -415,15 +377,15 @@ public class TencentKitPlugin implements FlutterPlugin, ActivityAware, ActivityR
     }
 
     private void shareWebpage(@NonNull MethodCall call, @NonNull Result result) {
-        int scene = call.argument(ARGUMENT_KEY_SCENE);
-        String title = call.argument(ARGUMENT_KEY_TITLE);
-        String summary = call.argument(ARGUMENT_KEY_SUMMARY);
-        String imageUri = call.argument(ARGUMENT_KEY_IMAGEURI);
-        String targetUrl = call.argument(ARGUMENT_KEY_TARGETURL);
-        String appName = call.argument(ARGUMENT_KEY_APPNAME);
-        int extInt = call.argument(ARGUMENT_KEY_EXTINT);
+        final int scene = call.argument("scene");
+        final String title = call.argument("title");
+        final String summary = call.argument("summary");
+        final String imageUri = call.argument("imageUri");
+        final String targetUrl = call.argument("targetUrl");
+        final String appName = call.argument("appName");
+        final int extInt = call.argument("extInt");
 
-        Bundle params = new Bundle();
+        final Bundle params = new Bundle();
         switch (scene) {
             case TencentScene.SCENE_QQ:
                 params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
@@ -432,8 +394,8 @@ public class TencentKitPlugin implements FlutterPlugin, ActivityAware, ActivityR
                     params.putString(QQShare.SHARE_TO_QQ_SUMMARY, summary);
                 }
                 if (!TextUtils.isEmpty(imageUri)) {
-                    Uri uri = Uri.parse(imageUri);
-                    if (TextUtils.equals(SCHEME_FILE, uri.getScheme())) {
+                    final Uri uri = Uri.parse(imageUri);
+                    if (TextUtils.equals("file", uri.getScheme())) {
                         params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, uri.getPath());
                     } else {
                         params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, imageUri);
@@ -455,9 +417,9 @@ public class TencentKitPlugin implements FlutterPlugin, ActivityAware, ActivityR
                     params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY, summary);
                 }
                 if (!TextUtils.isEmpty(imageUri)) {
-                    ArrayList<String> uris = new ArrayList<>();
-                    Uri uri = Uri.parse(imageUri);
-                    if (TextUtils.equals(SCHEME_FILE, uri.getScheme())) {
+                    final ArrayList<String> uris = new ArrayList<>();
+                    final Uri uri = Uri.parse(imageUri);
+                    if (TextUtils.equals("file", uri.getScheme())) {
                         uris.add(uri.getPath());
                     } else {
                         uris.add(imageUri);
@@ -478,44 +440,44 @@ public class TencentKitPlugin implements FlutterPlugin, ActivityAware, ActivityR
     private IUiListener shareListener = new IUiListener() {
         @Override
         public void onComplete(Object o) {
-            Map<String, Object> map = new HashMap<>();
+            final Map<String, Object> map = new HashMap<>();
             try {
                 if (o != null && o instanceof JSONObject) {
-                    JSONObject object = (JSONObject) o;
-                    int ret = !object.isNull(ARGUMENT_KEY_RESULT_RET) ? object.getInt(ARGUMENT_KEY_RESULT_RET) : TencentRetCode.RET_FAILED;
-                    String msg = !object.isNull(ARGUMENT_KEY_RESULT_MSG) ? object.getString(ARGUMENT_KEY_RESULT_MSG) : null;
+                    final JSONObject object = (JSONObject) o;
+                    final int ret = !object.isNull("ret") ? object.getInt("ret") : TencentRetCode.RET_FAILED;
+                    final String msg = !object.isNull("msg") ? object.getString("msg") : null;
                     if (ret == TencentRetCode.RET_SUCCESS) {
-                        map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_SUCCESS);
+                        map.put("ret", TencentRetCode.RET_SUCCESS);
                     } else {
-                        map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_COMMON);
-                        map.put(ARGUMENT_KEY_RESULT_MSG, msg);
+                        map.put("ret", TencentRetCode.RET_COMMON);
+                        map.put("msg", msg);
                     }
                 }
             } catch (JSONException e) {
-                map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_COMMON);
-                map.put(ARGUMENT_KEY_RESULT_MSG, e.getMessage());
+                map.put("ret", TencentRetCode.RET_COMMON);
+                map.put("msg", e.getMessage());
             }
             if (channel != null) {
-                channel.invokeMethod(METHOD_ONSHARERESP, map);
+                channel.invokeMethod("onShareResp", map);
             }
         }
 
         @Override
         public void onError(UiError error) {
-            Map<String, Object> map = new HashMap<>();
-            map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_COMMON);
-            map.put(ARGUMENT_KEY_RESULT_MSG, error.errorMessage);
+            final Map<String, Object> map = new HashMap<>();
+            map.put("ret", TencentRetCode.RET_COMMON);
+            map.put("msg", error.errorMessage);
             if (channel != null) {
-                channel.invokeMethod(METHOD_ONSHARERESP, map);
+                channel.invokeMethod("onShareResp", map);
             }
         }
 
         @Override
         public void onCancel() {
-            Map<String, Object> map = new HashMap<>();
-            map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_USERCANCEL);
+            final Map<String, Object> map = new HashMap<>();
+            map.put("ret", TencentRetCode.RET_USERCANCEL);
             if (channel != null) {
-                channel.invokeMethod(METHOD_ONSHARERESP, map);
+                channel.invokeMethod("onShareResp", map);
             }
         }
 

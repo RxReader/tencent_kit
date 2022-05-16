@@ -1,192 +1,103 @@
-import 'dart:async';
-
-import 'package:flutter/services.dart';
 import 'package:tencent_kit/src/model/resp.dart';
 import 'package:tencent_kit/src/tencent_constant.dart';
 
-///
+import 'tencent_kit_platform_interface.dart';
+
 class Tencent {
-  ///
   Tencent._();
 
-  static Tencent get instance => _instance;
-
-  static final Tencent _instance = Tencent._();
-
-  static const String _METHOD_REGISTERAPP = 'registerApp';
-  static const String _METHOD_ISQQINSTALLED = 'isQQInstalled';
-  static const String _METHOD_ISTIMINSTALLED = 'isTIMInstalled';
-  static const String _METHOD_LOGIN = 'login';
-  static const String _METHOD_LOGOUT = 'logout';
-  static const String _METHOD_SHAREMOOD = 'shareMood';
-  static const String _METHOD_SHARETEXT = 'shareText';
-  static const String _METHOD_SHAREIMAGE = 'shareImage';
-  static const String _METHOD_SHAREMUSIC = 'shareMusic';
-  static const String _METHOD_SHAREWEBPAGE = 'shareWebpage';
-
-  static const String _METHOD_ONLOGINRESP = 'onLoginResp';
-  static const String _METHOD_ONSHARERESP = 'onShareResp';
-
-  static const String _ARGUMENT_KEY_APPID = 'appId';
-  static const String _ARGUMENT_KEY_UNIVERSALLINK = 'universalLink';
-  static const String _ARGUMENT_KEY_SCOPE = 'scope';
-  static const String _ARGUMENT_KEY_SCENE = 'scene';
-  static const String _ARGUMENT_KEY_TITLE = 'title';
-  static const String _ARGUMENT_KEY_SUMMARY = 'summary';
-  static const String _ARGUMENT_KEY_IMAGEURI = 'imageUri';
-  static const String _ARGUMENT_KEY_IMAGEURIS = 'imageUris';
-  static const String _ARGUMENT_KEY_VIDEOURI = 'videoUri';
-  static const String _ARGUMENT_KEY_MUSICURL = 'musicUrl';
-  static const String _ARGUMENT_KEY_TARGETURL = 'targetUrl';
-  static const String _ARGUMENT_KEY_APPNAME = 'appName';
-  static const String _ARGUMENT_KEY_EXTINT = 'extInt';
-
-  static const String _SCHEME_FILE = 'file';
-
-  late final MethodChannel _channel =
-      const MethodChannel('v7lin.github.io/tencent_kit')
-        ..setMethodCallHandler(_handleMethod);
-
-  final StreamController<BaseResp> _respStreamController =
-      StreamController<BaseResp>.broadcast();
-
-  Future<dynamic> _handleMethod(MethodCall call) async {
-    switch (call.method) {
-      case _METHOD_ONLOGINRESP:
-        _respStreamController.add(LoginResp.fromJson(
-            (call.arguments as Map<dynamic, dynamic>).cast<String, dynamic>()));
-        break;
-      case _METHOD_ONSHARERESP:
-        _respStreamController.add(ShareMsgResp.fromJson(
-            (call.arguments as Map<dynamic, dynamic>).cast<String, dynamic>()));
-        break;
-    }
-  }
-
   /// 设置是否已授权获取设备信息/是否同意隐私协议
-  Future<void> setIsPermissionGranted({
+  static Future<void> setIsPermissionGranted({
     required bool granted,
     String? buildModel /* android.os.Build.MODEL */,
   }) {
-    return _channel.invokeMethod(
-      'setIsPermissionGranted',
-      <String, dynamic>{
-        'granted': granted,
-        if (buildModel?.isNotEmpty ?? false) 'build_model': buildModel,
-      },
+    return TencentKitPlatform.instance.setIsPermissionGranted(
+      granted: granted,
+      buildModel: buildModel,
     );
   }
 
   /// 向 Open_SDK 注册
-  Future<void> registerApp({
+  static Future<void> registerApp({
     required String appId,
     String? universalLink,
   }) {
-    return _channel.invokeMethod<void>(
-      _METHOD_REGISTERAPP,
-      <String, dynamic>{
-        _ARGUMENT_KEY_APPID: appId,
-        if (universalLink?.isNotEmpty ?? false)
-          _ARGUMENT_KEY_UNIVERSALLINK: universalLink,
-      },
+    return TencentKitPlatform.instance.registerApp(
+      appId: appId,
+      universalLink: universalLink,
     );
+  }
+
+  /// 检查QQ是否已安装
+  static Future<bool> isQQInstalled() {
+    return TencentKitPlatform.instance.isQQInstalled();
+  }
+
+  /// 检查QQ是否已安装
+  static Future<bool> isTIMInstalled() {
+    return TencentKitPlatform.instance.isTIMInstalled();
   }
 
   ///
-  Stream<BaseResp> respStream() {
-    return _respStreamController.stream;
-  }
-
-  /// 检查QQ是否已安装
-  Future<bool> isQQInstalled() async {
-    return await _channel.invokeMethod<bool>(_METHOD_ISQQINSTALLED) ?? false;
-  }
-
-  /// 检查QQ是否已安装
-  Future<bool> isTIMInstalled() async {
-    return await _channel.invokeMethod<bool>(_METHOD_ISTIMINSTALLED) ?? false;
+  static Stream<BaseResp> respStream() {
+    return TencentKitPlatform.instance.respStream();
   }
 
   /// 登录
-  Future<void> login({
+  static Future<void> login({
     required List<String> scope,
   }) {
-    return _channel.invokeMethod<void>(
-      _METHOD_LOGIN,
-      <String, dynamic>{
-        _ARGUMENT_KEY_SCOPE: scope.join(','),
-      },
-    );
+    return TencentKitPlatform.instance.login(scope: scope);
   }
 
   /// 登出
-  Future<void> logout() {
-    return _channel.invokeMethod<void>(_METHOD_LOGOUT);
+  static Future<void> logout() {
+    return TencentKitPlatform.instance.logout();
   }
 
   /// 分享 - 说说
-  Future<void> shareMood({
+  static Future<void> shareMood({
     required int scene,
     String? summary,
     List<Uri>? imageUris,
     Uri? videoUri,
   }) {
-    assert(scene == TencentScene.SCENE_QZONE);
-    assert((summary?.isNotEmpty ?? false) ||
-        ((imageUris?.isNotEmpty ?? false) &&
-            imageUris!
-                .every((Uri element) => element.isScheme(_SCHEME_FILE))) ||
-        (videoUri != null && videoUri.isScheme(_SCHEME_FILE)));
-    return _channel.invokeMethod<void>(
-      _METHOD_SHAREMOOD,
-      <String, dynamic>{
-        _ARGUMENT_KEY_SCENE: scene,
-        if (summary?.isNotEmpty ?? false) _ARGUMENT_KEY_SUMMARY: summary,
-        if (imageUris?.isNotEmpty ?? false)
-          _ARGUMENT_KEY_IMAGEURIS:
-              imageUris!.map((Uri imageUri) => imageUri.toString()).toList(),
-        if (videoUri != null) _ARGUMENT_KEY_VIDEOURI: videoUri.toString(),
-      },
+    return TencentKitPlatform.instance.shareMood(
+      scene: scene,
+      summary: summary,
+      imageUris: imageUris,
+      videoUri: videoUri,
     );
   }
 
   /// 分享 - 文本（Android调用的是系统API，故而不会有回调）
-  Future<void> shareText({
+  static Future<void> shareText({
     required int scene,
     required String summary,
   }) {
-    assert(scene == TencentScene.SCENE_QQ);
-    return _channel.invokeMethod<void>(
-      _METHOD_SHARETEXT,
-      <String, dynamic>{
-        _ARGUMENT_KEY_SCENE: scene,
-        _ARGUMENT_KEY_SUMMARY: summary,
-      },
+    return TencentKitPlatform.instance.shareText(
+      scene: scene,
+      summary: summary,
     );
   }
 
   /// 分享 - 图片
-  Future<void> shareImage({
+  static Future<void> shareImage({
     required int scene,
     required Uri imageUri,
     String? appName,
     int extInt = TencentQZoneFlag.DEFAULT,
   }) {
-    assert(scene == TencentScene.SCENE_QQ);
-    assert(imageUri.isScheme(_SCHEME_FILE));
-    return _channel.invokeMethod<void>(
-      _METHOD_SHAREIMAGE,
-      <String, dynamic>{
-        _ARGUMENT_KEY_SCENE: scene,
-        _ARGUMENT_KEY_IMAGEURI: imageUri.toString(),
-        if (appName?.isNotEmpty ?? false) _ARGUMENT_KEY_APPNAME: appName,
-        _ARGUMENT_KEY_EXTINT: extInt,
-      },
+    return TencentKitPlatform.instance.shareImage(
+      scene: scene,
+      imageUri: imageUri,
+      appName: appName,
+      extInt: extInt,
     );
   }
 
   /// 分享 - 音乐
-  Future<void> shareMusic({
+  static Future<void> shareMusic({
     required int scene,
     required String title,
     String? summary,
@@ -196,24 +107,20 @@ class Tencent {
     String? appName,
     int extInt = TencentQZoneFlag.DEFAULT,
   }) {
-    assert(scene == TencentScene.SCENE_QQ);
-    return _channel.invokeMethod<void>(
-      _METHOD_SHAREMUSIC,
-      <String, dynamic>{
-        _ARGUMENT_KEY_SCENE: scene,
-        _ARGUMENT_KEY_TITLE: title,
-        if (summary?.isNotEmpty ?? false) _ARGUMENT_KEY_SUMMARY: summary,
-        if (imageUri != null) _ARGUMENT_KEY_IMAGEURI: imageUri.toString(),
-        _ARGUMENT_KEY_MUSICURL: musicUrl,
-        _ARGUMENT_KEY_TARGETURL: targetUrl,
-        if (appName?.isNotEmpty ?? false) _ARGUMENT_KEY_APPNAME: appName,
-        _ARGUMENT_KEY_EXTINT: extInt,
-      },
+    return TencentKitPlatform.instance.shareMusic(
+      scene: scene,
+      title: title,
+      summary: summary,
+      imageUri: imageUri,
+      musicUrl: musicUrl,
+      targetUrl: targetUrl,
+      appName: appName,
+      extInt: extInt,
     );
   }
 
   /// 分享 - 网页
-  Future<void> shareWebpage({
+  static Future<void> shareWebpage({
     required int scene,
     required String title,
     String? summary,
@@ -222,17 +129,14 @@ class Tencent {
     String? appName,
     int extInt = TencentQZoneFlag.DEFAULT,
   }) {
-    return _channel.invokeMethod<void>(
-      _METHOD_SHAREWEBPAGE,
-      <String, dynamic>{
-        _ARGUMENT_KEY_SCENE: scene,
-        _ARGUMENT_KEY_TITLE: title,
-        if (summary?.isNotEmpty ?? false) _ARGUMENT_KEY_SUMMARY: summary,
-        if (imageUri != null) _ARGUMENT_KEY_IMAGEURI: imageUri.toString(),
-        _ARGUMENT_KEY_TARGETURL: targetUrl,
-        if (appName?.isNotEmpty ?? false) _ARGUMENT_KEY_APPNAME: appName,
-        _ARGUMENT_KEY_EXTINT: extInt,
-      },
+    return TencentKitPlatform.instance.shareWebpage(
+      scene: scene,
+      title: title,
+      summary: summary,
+      imageUri: imageUri,
+      targetUrl: targetUrl,
+      appName: appName,
+      extInt: extInt,
     );
   }
 }
