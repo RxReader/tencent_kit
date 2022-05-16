@@ -29,14 +29,16 @@ abstract class TencentKitPlatform extends PlatformInterface {
     required bool granted,
     String? buildModel /* android.os.Build.MODEL */,
   }) {
-    throw UnimplementedError('setIsPermissionGranted({required granted, buildModel}) has not been implemented.');
+    throw UnimplementedError(
+        'setIsPermissionGranted({required granted, buildModel}) has not been implemented.');
   }
 
   Future<void> registerApp({
     required String appId,
     String? universalLink,
   }) {
-    throw UnimplementedError('registerApp({required appId, universalLink}) has not been implemented.');
+    throw UnimplementedError(
+        'registerApp({required appId, universalLink}) has not been implemented.');
   }
 
   Future<bool> isQQInstalled() {
@@ -54,7 +56,8 @@ abstract class TencentKitPlatform extends PlatformInterface {
   Future<void> login({
     required List<String> scope,
   }) {
-    throw UnimplementedError('login({required scope}) has not been implemented.');
+    throw UnimplementedError(
+        'login({required scope}) has not been implemented.');
   }
 
   Future<void> logout() {
@@ -67,14 +70,16 @@ abstract class TencentKitPlatform extends PlatformInterface {
     List<Uri>? imageUris,
     Uri? videoUri,
   }) {
-    throw UnimplementedError('shareMood({required scene, summary, imageUris, videoUri}) has not been implemented.');
+    throw UnimplementedError(
+        'shareMood({required scene, summary, imageUris, videoUri}) has not been implemented.');
   }
 
   Future<void> shareText({
     required int scene,
     required String summary,
   }) {
-    throw UnimplementedError('shareText({required scene, required summary}) has not been implemented.');
+    throw UnimplementedError(
+        'shareText({required scene, required summary}) has not been implemented.');
   }
 
   Future<void> shareImage({
@@ -83,7 +88,8 @@ abstract class TencentKitPlatform extends PlatformInterface {
     String? appName,
     int extInt = TencentQZoneFlag.DEFAULT,
   }) {
-    throw UnimplementedError('shareImage({required scene, required imageUri, appName, extInt}) has not been implemented.');
+    throw UnimplementedError(
+        'shareImage({required scene, required imageUri, appName, extInt}) has not been implemented.');
   }
 
   Future<void> shareMusic({
@@ -96,7 +102,8 @@ abstract class TencentKitPlatform extends PlatformInterface {
     String? appName,
     int extInt = TencentQZoneFlag.DEFAULT,
   }) {
-    throw UnimplementedError('shareMusic({required scene, required title, summary, imageUri, required musicUrl, required targetUrl, appName, extInt}) has not been implemented.');
+    throw UnimplementedError(
+        'shareMusic({required scene, required title, summary, imageUri, required musicUrl, required targetUrl, appName, extInt}) has not been implemented.');
   }
 
   Future<void> shareWebpage({
@@ -108,6 +115,7 @@ abstract class TencentKitPlatform extends PlatformInterface {
     String? appName,
     int extInt = TencentQZoneFlag.DEFAULT,
   }) {
-    throw UnimplementedError('shareWebpage({required scene, required title, summary, imageUri, required targetUrl, appName, extInt}) has not been implemented.');
+    throw UnimplementedError(
+        'shareWebpage({required scene, required title, summary, imageUri, required targetUrl, appName, extInt}) has not been implemented.');
   }
 }

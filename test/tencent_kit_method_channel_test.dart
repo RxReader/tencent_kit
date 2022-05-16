@@ -10,7 +10,7 @@ void main() {
 
   setUp(() {
     channel.setMockMethodCallHandler((MethodCall methodCall) async {
-      switch(methodCall.method) {
+      switch (methodCall.method) {
         case 'isQQInstalled':
           return true;
       }

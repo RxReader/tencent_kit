@@ -7,7 +7,9 @@ import 'package:tencent_kit/src/tencent_kit_method_channel.dart';
 import 'package:tencent_kit/src/tencent_kit_platform_interface.dart';
 import 'package:tencent_kit/tencent_kit.dart';
 
-class MockTencentKitPlatform with MockPlatformInterfaceMixin implements TencentKitPlatform {
+class MockTencentKitPlatform
+    with MockPlatformInterfaceMixin
+    implements TencentKitPlatform {
   @override
   Future<void> setIsPermissionGranted({
     required bool granted,

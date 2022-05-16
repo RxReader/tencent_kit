@@ -11,17 +11,22 @@ import 'tencent_kit_platform_interface.dart';
 class MethodChannelTencentKit extends TencentKitPlatform {
   /// The method channel used to interact with the native platform.
   @visibleForTesting
-  late final MethodChannel methodChannel = const MethodChannel('v7lin.github.io/tencent_kit')..setMethodCallHandler(_handleMethod);
+  late final MethodChannel methodChannel =
+      const MethodChannel('v7lin.github.io/tencent_kit')
+        ..setMethodCallHandler(_handleMethod);
 
-  final StreamController<BaseResp> _respStreamController = StreamController<BaseResp>.broadcast();
+  final StreamController<BaseResp> _respStreamController =
+      StreamController<BaseResp>.broadcast();
 
   Future<dynamic> _handleMethod(MethodCall call) async {
     switch (call.method) {
       case 'onLoginResp':
-        _respStreamController.add(LoginResp.fromJson((call.arguments as Map<dynamic, dynamic>).cast<String, dynamic>()));
+        _respStreamController.add(LoginResp.fromJson(
+            (call.arguments as Map<dynamic, dynamic>).cast<String, dynamic>()));
         break;
       case 'onShareResp':
-        _respStreamController.add(ShareMsgResp.fromJson((call.arguments as Map<dynamic, dynamic>).cast<String, dynamic>()));
+        _respStreamController.add(ShareMsgResp.fromJson(
+            (call.arguments as Map<dynamic, dynamic>).cast<String, dynamic>()));
         break;
     }
   }
@@ -49,8 +54,7 @@ class MethodChannelTencentKit extends TencentKitPlatform {
       'registerApp',
       <String, dynamic>{
         'appId': appId,
-        if (universalLink?.isNotEmpty ?? false)
-          'universalLink': universalLink,
+        if (universalLink?.isNotEmpty ?? false) 'universalLink': universalLink,
       },
     );
   }
@@ -97,8 +101,7 @@ class MethodChannelTencentKit extends TencentKitPlatform {
     assert(scene == TencentScene.SCENE_QZONE);
     assert((summary?.isNotEmpty ?? false) ||
         ((imageUris?.isNotEmpty ?? false) &&
-            imageUris!
-                .every((Uri element) => element.isScheme('file'))) ||
+            imageUris!.every((Uri element) => element.isScheme('file'))) ||
         (videoUri != null && videoUri.isScheme('file')));
     return methodChannel.invokeMethod<void>(
       'shareMood',
@@ -107,7 +110,7 @@ class MethodChannelTencentKit extends TencentKitPlatform {
         if (summary?.isNotEmpty ?? false) 'summary': summary,
         if (imageUris?.isNotEmpty ?? false)
           'imageUris':
-          imageUris!.map((Uri imageUri) => imageUri.toString()).toList(),
+              imageUris!.map((Uri imageUri) => imageUri.toString()).toList(),
         if (videoUri != null) 'videoUri': videoUri.toString(),
       },
     );

@@ -15,16 +15,22 @@ class TencentApi {
     required String openid,
     required String accessToken,
   }) {
-    return HttpClient().getUrl(Uri.parse('https://graph.qq.com/user/get_user_info?access_token=$accessToken&oauth_consumer_key=$appId&openid=$openid')).then((HttpClientRequest request) {
+    return HttpClient()
+        .getUrl(Uri.parse(
+            'https://graph.qq.com/user/get_user_info?access_token=$accessToken&oauth_consumer_key=$appId&openid=$openid'))
+        .then((HttpClientRequest request) {
       return request.close();
     }).then((HttpClientResponse response) async {
       if (response.statusCode == HttpStatus.ok) {
         final ContentType? contentType = response.headers.contentType;
-        final Encoding encoding = Encoding.getByName(contentType?.charset) ?? utf8;
+        final Encoding encoding =
+            Encoding.getByName(contentType?.charset) ?? utf8;
         final String content = await encoding.decodeStream(response);
-        return TencentUserInfoResp.fromJson(json.decode(content) as Map<String, dynamic>);
+        return TencentUserInfoResp.fromJson(
+            json.decode(content) as Map<String, dynamic>);
       }
-      throw HttpException('HttpResponse statusCode: ${response.statusCode}, reasonPhrase: ${response.reasonPhrase}.');
+      throw HttpException(
+          'HttpResponse statusCode: ${response.statusCode}, reasonPhrase: ${response.reasonPhrase}.');
     });
   }
 
@@ -34,12 +40,16 @@ class TencentApi {
     required String accessToken,
     String unionid = '1',
   }) {
-    return HttpClient().getUrl(Uri.parse('https://graph.qq.com/oauth2.0/me?access_token=$accessToken&unionid=$unionid')).then((HttpClientRequest request) {
+    return HttpClient()
+        .getUrl(Uri.parse(
+            'https://graph.qq.com/oauth2.0/me?access_token=$accessToken&unionid=$unionid'))
+        .then((HttpClientRequest request) {
       return request.close();
     }).then((HttpClientResponse response) async {
       if (response.statusCode == HttpStatus.ok) {
         final ContentType? contentType = response.headers.contentType;
-        final Encoding encoding = Encoding.getByName(contentType?.charset) ?? utf8;
+        final Encoding encoding =
+            Encoding.getByName(contentType?.charset) ?? utf8;
         final String callback = await encoding.decodeStream(response);
         // 腾讯有毒 callback( $json );
         final RegExp exp = RegExp(r'callback\( (.*) \)\;');
@@ -47,11 +57,13 @@ class TencentApi {
         if (match?.groupCount == 1) {
           final String? content = match!.group(1);
           if (content != null) {
-            return TencentUnionidResp.fromJson(json.decode(content) as Map<String, dynamic>);
+            return TencentUnionidResp.fromJson(
+                json.decode(content) as Map<String, dynamic>);
           }
         }
       }
-      throw HttpException('HttpResponse statusCode: ${response.statusCode}, reasonPhrase: ${response.reasonPhrase}.');
+      throw HttpException(
+          'HttpResponse statusCode: ${response.statusCode}, reasonPhrase: ${response.reasonPhrase}.');
     });
   }
 }
