@@ -2,10 +2,11 @@ import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import 'package:tencent_kit/src/model/resp.dart';
+import 'package:tencent_kit/src/tencent.dart';
 import 'package:tencent_kit/src/tencent_constant.dart';
 import 'package:tencent_kit/src/tencent_kit_method_channel.dart';
 import 'package:tencent_kit/src/tencent_kit_platform_interface.dart';
-import 'package:tencent_kit/tencent_kit.dart';
 
 class MockTencentKitPlatform
     with MockPlatformInterfaceMixin
