@@ -1,7 +1,6 @@
 import 'package:tencent_kit/src/model/resp.dart';
 import 'package:tencent_kit/src/tencent_constant.dart';
-
-import 'tencent_kit_platform_interface.dart';
+import 'package:tencent_kit/src/tencent_kit_platform_interface.dart';
 
 class Tencent {
   Tencent._();
