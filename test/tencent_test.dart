@@ -117,7 +117,7 @@ void main() {
     expect(initialPlatform, isInstanceOf<MethodChannelTencentKit>());
   });
 
-  test('getPlatformVersion', () async {
+  test('isQQInstalled', () async {
     final MockTencentKitPlatform fakePlatform = MockTencentKitPlatform();
     TencentKitPlatform.instance = fakePlatform;
 
