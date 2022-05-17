@@ -1,4 +1,4 @@
 #import <Flutter/Flutter.h>
 
-@interface TencentKitPlugin : NSObject<FlutterPlugin>
+@interface TencentKitPlugin : NSObject <FlutterPlugin>
 @end

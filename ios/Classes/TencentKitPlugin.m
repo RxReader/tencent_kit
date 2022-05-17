@@ -48,7 +48,7 @@ enum TencentRetCode {
                   result:(FlutterResult)result {
     if ([@"setIsPermissionGranted" isEqualToString:call.method]) {
         NSNumber *granted = call.arguments[@"granted"];
-        [TencentOAuth setIsUserAgreedAuthorization: [granted boolValue]];
+        [TencentOAuth setIsUserAgreedAuthorization:[granted boolValue]];
         result(nil);
     } else if ([@"registerApp" isEqualToString:call.method]) {
         NSString *appId = call.arguments[@"appId"];
