@@ -91,7 +91,8 @@ class _HomeState extends State<Home> {
           ListTile(
             title: Text('环境检查'),
             onTap: () async {
-              final String content = 'QQ install: ${await Tencent.isQQInstalled()}\nTIM install: ${await Tencent.isTIMInstalled()}';
+              final String content =
+                  'QQ install: ${await Tencent.isQQInstalled()}\nTIM install: ${await Tencent.isTIMInstalled()}';
               _showTips('环境检查', content);
             },
           ),
@@ -106,14 +107,17 @@ class _HomeState extends State<Home> {
           ListTile(
             title: Text('获取用户信息'),
             onTap: () async {
-              if ((_loginResp?.isSuccessful ?? false) && !(_loginResp!.isExpired ?? true)) {
-                final TencentUserInfoResp userInfo = await TencentApi.getUserInfo(
+              if ((_loginResp?.isSuccessful ?? false) &&
+                  !(_loginResp!.isExpired ?? true)) {
+                final TencentUserInfoResp userInfo =
+                    await TencentApi.getUserInfo(
                   appId: _TENCENT_APPID,
                   openid: _loginResp!.openid!,
                   accessToken: _loginResp!.accessToken!,
                 );
                 if (userInfo.isSuccessful) {
-                  _showTips('用户信息', '${userInfo.nickname} - ${userInfo.gender} - ${userInfo.genderType}');
+                  _showTips('用户信息',
+                      '${userInfo.nickname} - ${userInfo.gender} - ${userInfo.genderType}');
                 } else {
                   _showTips('用户信息', '${userInfo.ret} - ${userInfo.msg}');
                 }
@@ -123,14 +127,17 @@ class _HomeState extends State<Home> {
           ListTile(
             title: Text('获取UnionID'),
             onTap: () async {
-              if ((_loginResp?.isSuccessful ?? false) && !(_loginResp!.isExpired ?? true)) {
+              if ((_loginResp?.isSuccessful ?? false) &&
+                  !(_loginResp!.isExpired ?? true)) {
                 final TencentUnionidResp unionid = await TencentApi.getUnionId(
                   accessToken: _loginResp!.accessToken!,
                 );
                 if (unionid.isSuccessful) {
-                  _showTips('UnionID', '${unionid.clientId} - ${unionid.openid} - ${unionid.unionid}');
+                  _showTips('UnionID',
+                      '${unionid.clientId} - ${unionid.openid} - ${unionid.unionid}');
                 } else {
-                  _showTips('UnionID', '${unionid.error} - ${unionid.errorDescription}');
+                  _showTips('UnionID',
+                      '${unionid.error} - ${unionid.errorDescription}');
                 }
               }
             },
@@ -156,7 +163,8 @@ class _HomeState extends State<Home> {
           ListTile(
             title: Text('图片分享'),
             onTap: () async {
-              final File file = await DefaultCacheManager().getSingleFile('https://www.baidu.com/img/bd_logo1.png?where=super');
+              final File file = await DefaultCacheManager().getSingleFile(
+                  'https://www.baidu.com/img/bd_logo1.png?where=super');
               await Tencent.shareImage(
                 scene: TencentScene.SCENE_QQ,
                 imageUri: Uri.file(file.path),
