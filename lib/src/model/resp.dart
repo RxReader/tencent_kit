@@ -43,13 +43,13 @@ abstract class BaseResp {
 )
 class LoginResp extends BaseResp {
   const LoginResp({
-    required int ret,
-    String? msg,
+    required super.ret,
+    super.msg,
     this.openid,
     this.accessToken,
     this.expiresIn,
     this.createAt,
-  }) : super(ret: ret, msg: msg);
+  });
 
   factory LoginResp.fromJson(Map<String, dynamic> json) =>
       _$LoginRespFromJson(json);
@@ -73,12 +73,9 @@ class LoginResp extends BaseResp {
 )
 class ShareMsgResp extends BaseResp {
   const ShareMsgResp({
-    required int ret,
-    String? msg,
-  }) : super(
-          ret: ret,
-          msg: msg,
-        );
+    required super.ret,
+    super.msg,
+  });
 
   factory ShareMsgResp.fromJson(Map<String, dynamic> json) =>
       _$ShareMsgRespFromJson(json);

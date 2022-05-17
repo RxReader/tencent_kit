@@ -34,8 +34,8 @@ abstract class TencentApiResp {
 )
 class TencentUserInfoResp extends TencentApiResp {
   const TencentUserInfoResp({
-    required int ret,
-    String? msg,
+    required super.ret,
+    super.msg,
     this.isLost,
     this.nickname,
     this.gender,
@@ -56,7 +56,7 @@ class TencentUserInfoResp extends TencentApiResp {
     this.yellowVipLevel,
     this.level,
     this.isYellowYearVip,
-  }) : super(ret: ret, msg: msg);
+  });
 
   factory TencentUserInfoResp.fromJson(Map<String, dynamic> json) =>
       _$TencentUserInfoRespFromJson(json);
