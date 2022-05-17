@@ -21,7 +21,7 @@ void main() {
     channel.setMockMethodCallHandler(null);
   });
 
-  test('getPlatformVersion', () async {
+  test('isQQInstalled', () async {
     expect(await platform.isQQInstalled(), true);
   });
 }
