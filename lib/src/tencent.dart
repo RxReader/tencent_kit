@@ -3,7 +3,7 @@ import 'package:tencent_kit/src/tencent_constant.dart';
 import 'package:tencent_kit/src/tencent_kit_platform_interface.dart';
 
 class Tencent {
-  Tencent._();
+  const Tencent._();
 
   /// 设置是否已授权获取设备信息/是否同意隐私协议
   static Future<void> setIsPermissionGranted({
