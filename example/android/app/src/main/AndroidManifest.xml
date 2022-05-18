@@ -2,6 +2,7 @@
     package="io.github.v7lin.tencent_kit_example">
    <application
         android:label="tencent_kit_example"
+        android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
