@@ -24,6 +24,7 @@ abstract class TencentKitPlatform extends PlatformInterface {
     _instance = instance;
   }
 
+  /// 设置是否已授权获取设备信息/是否同意隐私协议
   Future<void> setIsPermissionGranted({
     required bool granted,
     String? buildModel /* android.os.Build.MODEL */,
@@ -32,6 +33,7 @@ abstract class TencentKitPlatform extends PlatformInterface {
         'setIsPermissionGranted({required granted, buildModel}) has not been implemented.');
   }
 
+  /// 向 Open_SDK 注册
   Future<void> registerApp({
     required String appId,
     String? universalLink,
@@ -40,18 +42,22 @@ abstract class TencentKitPlatform extends PlatformInterface {
         'registerApp({required appId, universalLink}) has not been implemented.');
   }
 
-  Future<bool> isQQInstalled() {
-    throw UnimplementedError('isQQInstalled() has not been implemented.');
-  }
-
-  Future<bool> isTIMInstalled() {
-    throw UnimplementedError('isTIMInstalled() has not been implemented.');
-  }
-
+  ///
   Stream<BaseResp> respStream() {
     throw UnimplementedError('respStream() has not been implemented.');
   }
 
+  /// 检查QQ是否已安装
+  Future<bool> isQQInstalled() {
+    throw UnimplementedError('isQQInstalled() has not been implemented.');
+  }
+
+  /// 检查QQ是否已安装
+  Future<bool> isTIMInstalled() {
+    throw UnimplementedError('isTIMInstalled() has not been implemented.');
+  }
+
+  /// 登录
   Future<void> login({
     required List<String> scope,
   }) {
@@ -59,10 +65,12 @@ abstract class TencentKitPlatform extends PlatformInterface {
         'login({required scope}) has not been implemented.');
   }
 
+  /// 登出
   Future<void> logout() {
     throw UnimplementedError('logout() has not been implemented.');
   }
 
+  /// 分享 - 说说
   Future<void> shareMood({
     required int scene,
     String? summary,
@@ -73,6 +81,7 @@ abstract class TencentKitPlatform extends PlatformInterface {
         'shareMood({required scene, summary, imageUris, videoUri}) has not been implemented.');
   }
 
+  /// 分享 - 文本（Android调用的是系统API，故而不会有回调）
   Future<void> shareText({
     required int scene,
     required String summary,
@@ -81,6 +90,7 @@ abstract class TencentKitPlatform extends PlatformInterface {
         'shareText({required scene, required summary}) has not been implemented.');
   }
 
+  /// 分享 - 图片
   Future<void> shareImage({
     required int scene,
     required Uri imageUri,
@@ -91,6 +101,7 @@ abstract class TencentKitPlatform extends PlatformInterface {
         'shareImage({required scene, required imageUri, appName, extInt}) has not been implemented.');
   }
 
+  /// 分享 - 音乐
   Future<void> shareMusic({
     required int scene,
     required String title,
@@ -105,6 +116,7 @@ abstract class TencentKitPlatform extends PlatformInterface {
         'shareMusic({required scene, required title, summary, imageUri, required musicUrl, required targetUrl, appName, extInt}) has not been implemented.');
   }
 
+  /// 分享 - 网页
   Future<void> shareWebpage({
     required int scene,
     required String title,

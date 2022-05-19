@@ -59,6 +59,11 @@ class MethodChannelTencentKit extends TencentKitPlatform {
   }
 
   @override
+  Stream<BaseResp> respStream() {
+    return _respStreamController.stream;
+  }
+
+  @override
   Future<bool> isQQInstalled() async {
     return await methodChannel.invokeMethod<bool>('isQQInstalled') ?? false;
   }
@@ -66,11 +71,6 @@ class MethodChannelTencentKit extends TencentKitPlatform {
   @override
   Future<bool> isTIMInstalled() async {
     return await methodChannel.invokeMethod<bool>('isTIMInstalled') ?? false;
-  }
-
-  @override
-  Stream<BaseResp> respStream() {
-    return _respStreamController.stream;
   }
 
   @override

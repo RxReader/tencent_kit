@@ -121,6 +121,6 @@ void main() {
     final MockTencentKitPlatform fakePlatform = MockTencentKitPlatform();
     TencentKitPlatform.instance = fakePlatform;
 
-    expect(await Tencent.isQQInstalled(), true);
+    expect(await Tencent.instance.isQQInstalled(), true);
   });
 }

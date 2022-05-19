@@ -46,7 +46,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    _respSubs = Tencent.respStream().listen(_listenLogin);
+    _respSubs = Tencent.instance.respStream().listen(_listenLogin);
   }
 
   void _listenLogin(BaseResp resp) {
@@ -77,14 +77,14 @@ class _HomeState extends State<Home> {
           ListTile(
             title: Text('3.1.0 之后的版本请先获取权限'),
             onTap: () async {
-              await Tencent.setIsPermissionGranted(granted: true);
+              await Tencent.instance.setIsPermissionGranted(granted: true);
               _showTips('授权', '已授权获取设备信息/同意隐私协议');
             },
           ),
           ListTile(
             title: Text('注册APP'),
             onTap: () async {
-              await Tencent.registerApp(appId: _TENCENT_APPID);
+              await Tencent.instance.registerApp(appId: _TENCENT_APPID);
               _showTips('注册APP', '注册成功');
             },
           ),
@@ -92,14 +92,14 @@ class _HomeState extends State<Home> {
             title: Text('环境检查'),
             onTap: () async {
               final String content =
-                  'QQ install: ${await Tencent.isQQInstalled()}\nTIM install: ${await Tencent.isTIMInstalled()}';
+                  'QQ install: ${await Tencent.instance.isQQInstalled()}\nTIM install: ${await Tencent.instance.isTIMInstalled()}';
               _showTips('环境检查', content);
             },
           ),
           ListTile(
             title: Text('登录'),
             onTap: () {
-              Tencent.login(
+              Tencent.instance.login(
                 scope: <String>[TencentScope.GET_SIMPLE_USERINFO],
               );
             },
@@ -145,7 +145,7 @@ class _HomeState extends State<Home> {
           ListTile(
             title: Text('分享说说'),
             onTap: () {
-              Tencent.shareMood(
+              Tencent.instance.shareMood(
                 scene: TencentScene.SCENE_QZONE,
                 summary: '分享测试',
               );
@@ -154,7 +154,7 @@ class _HomeState extends State<Home> {
           ListTile(
             title: Text('文本分享'),
             onTap: () {
-              Tencent.shareText(
+              Tencent.instance.shareText(
                 scene: TencentScene.SCENE_QQ,
                 summary: '分享测试',
               );
@@ -165,7 +165,7 @@ class _HomeState extends State<Home> {
             onTap: () async {
               final File file = await DefaultCacheManager().getSingleFile(
                   'https://www.baidu.com/img/bd_logo1.png?where=super');
-              await Tencent.shareImage(
+              await Tencent.instance.shareImage(
                 scene: TencentScene.SCENE_QQ,
                 imageUri: Uri.file(file.path),
               );
@@ -174,7 +174,7 @@ class _HomeState extends State<Home> {
           ListTile(
             title: Text('网页分享'),
             onTap: () {
-              Tencent.shareWebpage(
+              Tencent.instance.shareWebpage(
                 scene: TencentScene.SCENE_QQ,
                 title: 'title',
                 targetUrl: 'https://www.baidu.com/',
