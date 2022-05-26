@@ -1,7 +1,7 @@
 # tencent_kit
 
 [![Pub Package](https://img.shields.io/pub/v/tencent_kit.svg)](https://pub.dev/packages/tencent_kit)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/RxReader/tencent_kit/blob/master/LICENSE)
+[![License](https://img.shields.io/github/license/RxReader/tencent_kit)](https://github.com/RxReader/tencent_kit/blob/master/LICENSE)
 
 flutter版腾讯(QQ)SDK
 
