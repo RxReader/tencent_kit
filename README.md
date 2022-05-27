@@ -5,7 +5,7 @@
 
 flutter版腾讯(QQ)SDK
 
-## flutter toolkit
+## 相关工具
 
 * [flutter版微信SDK](https://github.com/rxreader/wechat_kit)
 * [flutter版腾讯(QQ)SDK](https://github.com/rxreader/tencent_kit)
