@@ -44,9 +44,9 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
 
-        addManifestPlaceholders([
+        manifestPlaceholders += [
                 TENCENT_APP_ID: "your tencent appId"
-        ])
+        ]
     }
 
     buildTypes {

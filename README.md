@@ -28,9 +28,9 @@ flutter版腾讯(QQ)SDK
 ```groovy
 android {
     defaultConfig{
-        addManifestPlaceholders([
+        manifestPlaceholders += [
                 TENCENT_APP_ID: "your tencent appId"
-        ])
+        ]
     }
 }
 ```
