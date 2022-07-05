@@ -112,6 +112,8 @@ Capabilities -> Associated Domain -> Domain -> applinks:${your applinks}
 |QQ|不支持|不支持|支持|支持|不支持|支持|
 |QZone|支持|不支持|不支持|不支持|不支持|支持|
 
+* ⚠️ registerApp 前必须先调用 setIsPermissionGranted [issues/60](https://github.com/RxReader/tencent_kit/issues/60) [issues/79](https://github.com/RxReader/tencent_kit/issues/79)
+
 * break change
   * 4.0.0: 按标准插件书写重构
   * 3.1.0: 新增 setIsPermissionGranted 函数，设置是否已授权获取设备信息/是否同意隐私协议
