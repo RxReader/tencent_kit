@@ -17,13 +17,19 @@ flutter版腾讯(QQ)SDK
 
 * [simple_pub_server](https://github.com/rxreader/simple_pub_server)
 
-## docs
+## 相关文档
 
 * [腾讯开放平台](https://open.tencent.com/)
 * [QQ互联](http://wiki.connect.qq.com/)
 * [Universal Links](https://developer.apple.com/library/archive/documentation/General/Conceptual/AppSearch/UniversalLinks.html)
 
-## android
+## FEATURE
+
+* 5.x.y 通过配置 pubspec.yaml 和 cli 抹平 Android/iOS 平台的复杂配置
+
+## 开始使用
+
+### android
 
 ```groovy
 android {
@@ -39,7 +45,7 @@ android {
 # 混淆已打入 Library，随 Library 引用，自动添加到 apk 打包混淆
 ```
 
-## ios
+### ios
 
 ```
 出于插件的基本需求，将 SDK 的 module.modulemap 内容修改
@@ -105,7 +111,7 @@ Universal Links
 Capabilities -> Associated Domain -> Domain -> applinks:${your applinks}
 ```
 
-## flutter
+### flutter
 
 |分享类型|说说(图/文/视频)|文本|图片|音乐|视频|网页|
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
