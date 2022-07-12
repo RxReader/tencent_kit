@@ -21,7 +21,8 @@ flutter版腾讯(QQ)SDK
 
 * [腾讯开放平台](https://open.tencent.com/)
 * [QQ互联](http://wiki.connect.qq.com/)
-* [Universal Links](https://developer.apple.com/library/archive/documentation/General/Conceptual/AppSearch/UniversalLinks.html)
+* [QQ 创建、填写及校验UniversalLinks](https://wiki.connect.qq.com/%E5%A1%AB%E5%86%99%E5%8F%8A%E6%A0%A1%E9%AA%8Cuniversallinks)
+* [Apple Universal Links](https://developer.apple.com/library/archive/documentation/General/Conceptual/AppSearch/UniversalLinks.html)
 
 ## FEATURE
 
