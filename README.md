@@ -33,6 +33,8 @@ flutter版腾讯(QQ)SDK
 
 ### android
 
+* 接入
+
 ```groovy
 android {
     defaultConfig{
@@ -49,6 +51,8 @@ android {
 
 ### ios
 
+* 申明
+
 ```
 出于插件的基本需求，将 SDK 的 module.modulemap 内容修改
 
@@ -64,6 +68,8 @@ framework module TencentOpenApi{
     export *
 }
 ```
+
+* 接入
 
 ```
 在Xcode中，选择你的工程设置项，选中“TARGETS”一栏，在“info”标签栏的“URL type“添加“URL scheme”为你所注册的应用程序id
@@ -120,7 +126,7 @@ Capabilities -> Associated Domain -> Domain -> applinks:${your applinks}
 |QQ|不支持|不支持|支持|支持|不支持|支持|
 |QZone|支持|不支持|不支持|不支持|不支持|支持|
 
-* ⚠️ registerApp 前必须先调用 setIsPermissionGranted [issues/60](https://github.com/RxReader/tencent_kit/issues/60) [issues/79](https://github.com/RxReader/tencent_kit/issues/79)
+* ⚠️⚠️⚠️ registerApp 前必须先调用 setIsPermissionGranted [issues/60](https://github.com/RxReader/tencent_kit/issues/60) [issues/79](https://github.com/RxReader/tencent_kit/issues/79)
 
 * break change
   * 4.0.0: 按标准插件书写重构
