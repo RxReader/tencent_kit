@@ -13,7 +13,7 @@ options_dict = {}
 
 # Parse command line arguments into options_dict
 OptionParser.new do |options|
-    options.banner = "Setup the QQ to an Xcode target."
+    options.banner = "Setup the Tencent to an Xcode target."
 
     options.on("-p", "--projectDirectory=DIRECTORY", String, "Directory of the Xcode project") do |dir|
         options_dict[:project_dir] = dir
@@ -23,11 +23,11 @@ OptionParser.new do |options|
         options_dict[:project_name] = name
     end
 
-    options.on("-a", "--appId=APPID", String, "App ID for QQ") do |opts|
+    options.on("-a", "--appId=APPID", String, "App ID for Tencent") do |opts|
         options_dict[:app_id] = opts
     end
 
-    options.on("-u", "--universalLink=UNIVERSALLINK", String, "Universal Link for QQ") do |opts|
+    options.on("-u", "--universalLink=UNIVERSALLINK", String, "Universal Link for Tencent") do |opts|
         options_dict[:universal_link] = opts
     end
 end.parse!
@@ -125,6 +125,10 @@ project.targets.each do |target|
             end
             if (security["NSAllowsArbitraryLoads"] != true)
                 security["NSAllowsArbitraryLoads"] = true
+                File.write(infoplistFile, Plist::Emit.dump(result))
+            end
+            if (security["NSAllowsArbitraryLoadsInWebContent"] != true)
+                security["NSAllowsArbitraryLoadsInWebContent"] = true
                 File.write(infoplistFile, Plist::Emit.dump(result))
             end
         end
