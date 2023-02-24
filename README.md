@@ -101,7 +101,7 @@ dependencies:
   tencent_kit: ^${latestTag}
 #  tencent_kit:
 #    git:
-#      url: https://github.com/rxreader/tencent_kit.git
+#      url: https://github.com/RxReader/tencent_kit.git
 
 tencent_kit:
   app_id: ${your tencent app id}
