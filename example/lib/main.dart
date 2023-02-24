@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:tencent_kit/tencent_kit.dart';
-import 'package:tencent_kit/tencent_kit_platform_interface.dart';
 import 'package:tencent_kit_example/api/model/tencent_api_resp.dart';
 import 'package:tencent_kit_example/api/model/tencent_unionid_resp.dart';
 import 'package:tencent_kit_example/api/tencent_api.dart';

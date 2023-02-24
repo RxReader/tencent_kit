@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:tencent_kit/src/constant.dart';
 import 'package:tencent_kit/src/model/resp.dart';
-import 'package:tencent_kit/src/tencent_constant.dart';
 import 'package:tencent_kit/src/tencent_kit_platform_interface.dart';
 
 /// An implementation of [TencentKitPlatform] that uses method channels.

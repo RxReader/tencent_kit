@@ -1,6 +1,6 @@
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import 'package:tencent_kit/src/constant.dart';
 import 'package:tencent_kit/src/model/resp.dart';
-import 'package:tencent_kit/src/tencent_constant.dart';
 import 'package:tencent_kit/src/tencent_kit_method_channel.dart';
 
 abstract class TencentKitPlatform extends PlatformInterface {
