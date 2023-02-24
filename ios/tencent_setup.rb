@@ -109,7 +109,7 @@ project.targets.each do |target|
                 "mqqthirdappgroup",
                 "mqqopensdkminiapp",
             ]
-            if tencentSchemes.any? { |scheme| !(queriesSchemes.include? scheme)}
+            if tencentSchemes.any? { |scheme| !(queriesSchemes.include? scheme) }
                 tencentSchemes.each do |scheme|
                     if !(queriesSchemes.include? scheme)
                         queriesSchemes << scheme
