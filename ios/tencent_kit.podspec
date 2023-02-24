@@ -6,14 +6,23 @@
 pubspec = YAML.load_file(File.join('..', 'pubspec.yaml'))
 library_version = pubspec['version'].gsub('+', '-')
 
+current_dir = Dir.pwd
+calling_dir = File.dirname(__FILE__)
+project_dir = calling_dir.slice(0..(calling_dir.index('/.symlinks')))
+root_project_dir = calling_dir.slice(0..(calling_dir.index('/ios/.symlinks')))
+cfg = YAML.load_file(File.join(root_project_dir, 'pubspec.yaml'))
+if cfg['tencent_kit'] && (cfg['tencent_kit']['app_id'] && cfg['tencent_kit']['universal_link'])
+    app_id = cfg['tencent_kit']['app_id']
+    universal_link = cfg['tencent_kit']['universal_link']
+    system("ruby #{current_dir}/tencent_setup.rb -a #{app_id} -u #{universal_link} -p #{project_dir} -n Runner.xcodeproj")
+end
+
 Pod::Spec.new do |s|
   s.name             = 'tencent_kit'
   s.version          = library_version
-  s.summary          = 'A powerful Flutter plugin allowing developers to auth/share with natvie Android & iOS Tencent SDKs.'
-  s.description      = <<-DESC
-A powerful Flutter plugin allowing developers to auth/share with natvie Android & iOS Tencent SDKs.
-                       DESC
-  s.homepage         = 'http://example.com'
+  s.summary          = pubspec['description']
+  s.description      = pubspec['description']
+  s.homepage         = pubspec['homepage']
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Your Company' => 'email@example.com' }
   s.source           = { :path => '.' }

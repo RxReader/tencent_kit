@@ -91,3 +91,7 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+tencent_kit:
+  app_id: 123456789
+  universal_link: https://www.yourdomain.com/universal_link/example_app/qq_conn/123456789/

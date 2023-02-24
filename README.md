@@ -14,9 +14,9 @@ flutter版腾讯(QQ)SDK
 * [Flutter版深度链接](https://github.com/RxReader/link_kit)
 * [Flutter版walle渠道打包工具](https://github.com/RxReader/walle_kit)
 
-## dart/flutter 私服
+## Dart/Flutter Pub 私服
 
-* [simple_pub_server](https://github.com/rxreader/simple_pub_server)
+* [simple_pub_server](https://github.com/RxReader/simple_pub_server)
 
 ## 相关文档
 
@@ -25,13 +25,9 @@ flutter版腾讯(QQ)SDK
 * [QQ 创建、填写及校验UniversalLinks](https://wiki.connect.qq.com/%E5%A1%AB%E5%86%99%E5%8F%8A%E6%A0%A1%E9%AA%8Cuniversallinks)
 * [Apple Universal Links](https://developer.apple.com/library/archive/documentation/General/Conceptual/AppSearch/UniversalLinks.html)
 
-## FEATURE
-
-* 5.x.y 通过配置 pubspec.yaml 和 cli 抹平 Android/iOS 平台的复杂配置
-
 ## 开始使用
 
-### android
+### Android
 
 * 接入
 
@@ -49,93 +45,52 @@ android {
 # 混淆已打入 Library，随 Library 引用，自动添加到 apk 打包混淆
 ```
 
-### ios
-
-* 申明
+### iOS
 
 ```
-出于插件的基本需求，将 SDK 的 module.modulemap 内容修改
+# 不需要做任何额外接入工作
+# 配置已集成到脚本里
+```
 
-改前
-module TencentOpenApi{
-    umbrella header "TencentOpenApiUmbrellaHeader.h"
-    export *
+* Universal Links
+
+apple-app-site-association - 通过 https://${your applinks domain}/.well-known/apple-app-site-association 链接可访问
+
+示例:
+
+https://${your applinks domain}/universal_link/${example_app}/qq_conn/${appId}
+
+```json
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "${your team id}.${your app bundle id}",
+        "paths": [
+          "/universal_link/${example_app}/qq_conn/${your tencent app id}/*"
+        ]
+      }
+    ]
+  }
 }
-
-改后
-framework module TencentOpenApi{
-    umbrella header "TencentOpenApiUmbrellaHeader.h"
-    export *
-}
 ```
 
-* 接入
+> ⚠️ 很多 SDK 都会用到 universal_link，可为不同 SDK 分配不同的 path 以作区分
 
-```
-在Xcode中，选择你的工程设置项，选中“TARGETS”一栏，在“info”标签栏的“URL type“添加“URL scheme”为你所注册的应用程序id
-
-URL Types
-tencent: identifier=tencent schemes=tencent${appId}
-```
-
-```
-iOS 9系统策略更新，限制了http协议的访问，此外应用需要在“Info.plist”中将要使用的URL Schemes列为白名单，才可正常检查其他应用是否安装。
-
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-		<string>tim</string>
-		<string>mqq</string>
-		<string>mqqapi</string>
-		<string>mqqbrowser</string>
-		<string>mttbrowser</string>
-		<string>mqqOpensdkSSoLogin</string>
-		<string>mqqopensdkapiV2</string>
-		<string>mqqopensdkapiV4</string>
-		<string>mqzone</string>
-		<string>mqzoneopensdk</string>
-		<string>mqzoneopensdkapi</string>
-		<string>mqzoneopensdkapi19</string>
-		<string>mqzoneopensdkapiV2</string>
-		<string>mqqapiwallet</string>
-		<string>mqqopensdkfriend</string>
-		<string>mqqopensdkavatar</string>
-		<string>mqqopensdkminiapp</string>
-		<string>mqqopensdkdataline</string>
-		<string>mqqgamebindinggroup</string>
-		<string>mqqopensdkgrouptribeshare</string>
-		<string>tencentapi.qq.reqContent</string>
-		<string>tencentapi.qzone.reqContent</string>
-		<string>mqqthirdappgroup</string>
-		<string>mqqopensdklaunchminiapp</string>
-		<string>mqqopensdkproxylogin</string>
-		<string>mqqopensdknopasteboard</string>
-		<string>mqqopensdkcheckauth</string>
-	</array>
-```
-
-```
-Universal Links
-
-Capabilities -> Associated Domain -> Domain -> applinks:${your applinks}
-```
-
-### flutter
+### Flutter
 
 |分享类型|说说(图/文/视频)|文本|图片|音乐|视频|网页|
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 |QQ|不支持|不支持|支持|支持|不支持|支持|
 |QZone|支持|不支持|不支持|不支持|不支持|支持|
 
-* ⚠️⚠️⚠️ registerApp 前必须先调用 setIsPermissionGranted [issues/60](https://github.com/RxReader/tencent_kit/issues/60) [issues/79](https://github.com/RxReader/tencent_kit/issues/79)
+* 注意
 
-* break change
-  * 4.0.0: 按标准插件书写重构
-  * 3.1.0: 新增 setIsPermissionGranted 函数，设置是否已授权获取设备信息/是否同意隐私协议
-  * 3.0.0: 重构
-  * 2.1.0: nullsafety & 不再支持 Android embedding v1 & Tencent 单例
+⚠️⚠️⚠️ registerApp 前必须先调用 setIsPermissionGranted [issues/60](https://github.com/RxReader/tencent_kit/issues/60) [issues/79](https://github.com/RxReader/tencent_kit/issues/79)
 
-* compat
-  * flutter 2.5 兼容问题 [issues/54](https://github.com/RxReader/tencent_kit/issues/54)
+* 兼容
+  flutter 2.5 兼容问题 [issues/54](https://github.com/RxReader/tencent_kit/issues/54)
   ```
   post_install do |installer|
     installer.pods_project.targets.each do |target|
@@ -149,23 +104,21 @@ Capabilities -> Associated Domain -> Domain -> applinks:${your applinks}
   end
   ```
 
-* snapshot
+* 配置
 
-```
-dependencies:
-  tencent_kit:
-    git:
-      url: https://github.com/rxreader/tencent_kit.git
-```
-
-* release
-
-```
+```yaml
 dependencies:
   tencent_kit: ^${latestTag}
+#  tencent_kit:
+#    git:
+#      url: https://github.com/rxreader/tencent_kit.git
+
+tencent_kit:
+  app_id: ${your tencent app id}
+  universal_link: https://${your applinks domain}/universal_link/${example_app}/qq_conn/${your tencent app id}/
 ```
 
-* example
+## 示例
 
 [示例](./example/lib/main.dart)
 
