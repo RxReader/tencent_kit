@@ -8,8 +8,8 @@ import 'package:tencent_kit_example/api/model/tencent_api_resp.dart';
 import 'package:tencent_kit_example/api/model/tencent_unionid_resp.dart';
 import 'package:tencent_kit_example/api/tencent_api.dart';
 
-const String _TENCENT_APPID = 'your tencent app id';
-const String _UNIVERSAL_LINK = 'your tencent universal link';
+const String _kTencentAppID = 'your tencent app id';
+const String _kUniversalLink = 'your tencent universal link'; // 可选项目
 
 void main() {
   runApp(MyApp());
@@ -85,7 +85,7 @@ class _HomeState extends State<Home> {
           ListTile(
             title: Text('注册APP'),
             onTap: () async {
-              await TencentKitPlatform.instance.registerApp(appId: _TENCENT_APPID, universalLink: _UNIVERSAL_LINK);
+              await TencentKitPlatform.instance.registerApp(appId: _kTencentAppID, universalLink: _kUniversalLink);
               _showTips('注册APP', '注册成功');
             },
           ),
@@ -112,7 +112,7 @@ class _HomeState extends State<Home> {
                   !(_loginResp!.isExpired ?? true)) {
                 final TencentUserInfoResp userInfo =
                     await TencentApi.getUserInfo(
-                  appId: _TENCENT_APPID,
+                  appId: _kTencentAppID,
                   openid: _loginResp!.openid!,
                   accessToken: _loginResp!.accessToken!,
                 );

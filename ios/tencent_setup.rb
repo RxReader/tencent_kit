@@ -50,7 +50,6 @@ project.targets.each do |target|
     if (target.name == "Runner")
         app_id = options_dict[:app_id]
         universal_link = options_dict[:universal_link]
-        applinks = "applinks:#{URI.parse(universal_link).host}"
 
         sectionObject = {}
         project.objects.each do |object|
@@ -132,37 +131,40 @@ project.targets.each do |target|
                 File.write(infoplistFile, Plist::Emit.dump(result))
             end
         end
-        sectionObject.build_configurations.each do |config|
-            codeSignEntitlements = config.build_settings["CODE_SIGN_ENTITLEMENTS"]
-            if (!codeSignEntitlements)
-                codeSignEntitlements = "Runner/Runner.entitlements"
-                config.build_settings["CODE_SIGN_ENTITLEMENTS"] = codeSignEntitlements
-                project.save()
-            end
-            codeSignEntitlementsFile = File.join(options_dict[:project_dir], codeSignEntitlements)
-            if !File.exist?(codeSignEntitlementsFile)
-                content = Plist::Emit.dump({})
-                File.write(codeSignEntitlementsFile, content)
-            end
-            runnerTargetMainGroup = project.main_group.find_subpath('Runner', false)
-            isRefExist = runnerTargetMainGroup.files.any? { |file| file.path.include? File.basename(codeSignEntitlementsFile) }
-            if !isRefExist
-                runnerTargetMainGroup.new_reference(File.basename(codeSignEntitlementsFile))
-                project.save()
-            end
-            result = Plist.parse_xml(codeSignEntitlementsFile, marshal: false)
-            if (!result)
-                result = {}
-            end
-            domains = result["com.apple.developer.associated-domains"]
-            if (!domains)
-                domains = []
-                result["com.apple.developer.associated-domains"] = domains
-            end
-            isApplinksExist = domains.include? applinks
-            if (!isApplinksExist)
-                domains << applinks
-                File.write(codeSignEntitlementsFile, Plist::Emit.dump(result))
+        if (universal_link)
+            applinks = "applinks:#{URI.parse(universal_link).host}"
+            sectionObject.build_configurations.each do |config|
+                codeSignEntitlements = config.build_settings["CODE_SIGN_ENTITLEMENTS"]
+                if (!codeSignEntitlements)
+                    codeSignEntitlements = "Runner/Runner.entitlements"
+                    config.build_settings["CODE_SIGN_ENTITLEMENTS"] = codeSignEntitlements
+                    project.save()
+                end
+                codeSignEntitlementsFile = File.join(options_dict[:project_dir], codeSignEntitlements)
+                if !File.exist?(codeSignEntitlementsFile)
+                    content = Plist::Emit.dump({})
+                    File.write(codeSignEntitlementsFile, content)
+                end
+                runnerTargetMainGroup = project.main_group.find_subpath('Runner', false)
+                isRefExist = runnerTargetMainGroup.files.any? { |file| file.path.include? File.basename(codeSignEntitlementsFile) }
+                if !isRefExist
+                    runnerTargetMainGroup.new_reference(File.basename(codeSignEntitlementsFile))
+                    project.save()
+                end
+                result = Plist.parse_xml(codeSignEntitlementsFile, marshal: false)
+                if (!result)
+                    result = {}
+                end
+                domains = result["com.apple.developer.associated-domains"]
+                if (!domains)
+                    domains = []
+                    result["com.apple.developer.associated-domains"] = domains
+                end
+                isApplinksExist = domains.include? applinks
+                if (!isApplinksExist)
+                    domains << applinks
+                    File.write(codeSignEntitlementsFile, Plist::Emit.dump(result))
+                end
             end
         end
     end

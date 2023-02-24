@@ -94,4 +94,4 @@ flutter:
 
 tencent_kit:
   app_id: 123456789
-  universal_link: https://www.yourdomain.com/universal_link/example_app/qq_conn/123456789/
+  universal_link: https://www.yourdomain.com/universal_link/example_app/qq_conn/123456789/ # 可选项目

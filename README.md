@@ -115,7 +115,7 @@ dependencies:
 
 tencent_kit:
   app_id: ${your tencent app id}
-  universal_link: https://${your applinks domain}/universal_link/${example_app}/qq_conn/${your tencent app id}/
+  universal_link: https://${your applinks domain}/universal_link/${example_app}/qq_conn/${your tencent app id}/ # 可选项目
 ```
 
 ## 示例
