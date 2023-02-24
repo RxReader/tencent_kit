@@ -78,14 +78,16 @@ class _HomeState extends State<Home> {
           ListTile(
             title: Text('3.1.0 之后的版本请先获取权限'),
             onTap: () async {
-              await TencentKitPlatform.instance.setIsPermissionGranted(granted: true);
+              await TencentKitPlatform.instance
+                  .setIsPermissionGranted(granted: true);
               _showTips('授权', '已授权获取设备信息/同意隐私协议');
             },
           ),
           ListTile(
             title: Text('注册APP'),
             onTap: () async {
-              await TencentKitPlatform.instance.registerApp(appId: _kTencentAppID, universalLink: _kUniversalLink);
+              await TencentKitPlatform.instance.registerApp(
+                  appId: _kTencentAppID, universalLink: _kUniversalLink);
               _showTips('注册APP', '注册成功');
             },
           ),
