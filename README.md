@@ -80,19 +80,20 @@ https://${your applinks domain}/universal_link/${example_app}/qq_conn/${appId}
 ⚠️⚠️⚠️ registerApp 前必须先调用 setIsPermissionGranted [issues/60](https://github.com/RxReader/tencent_kit/issues/60) [issues/79](https://github.com/RxReader/tencent_kit/issues/79)
 
 * 兼容
-  flutter 2.5 兼容问题 [issues/54](https://github.com/RxReader/tencent_kit/issues/54)
-  ```
-  post_install do |installer|
-    installer.pods_project.targets.each do |target|
-      flutter_additional_ios_build_settings(target)
-      # 兼容 Flutter 2.5
-      target.build_configurations.each do |config|
-  #       config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '9.0'
-        config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'i386 arm64'
-      end
+
+flutter 2.5 兼容问题 [issues/54](https://github.com/RxReader/tencent_kit/issues/54)
+```
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    flutter_additional_ios_build_settings(target)
+    # 兼容 Flutter 2.5
+    target.build_configurations.each do |config|
+      # config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '11.0'
+      config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'i386 arm64'
     end
   end
-  ```
+end
+```
 
 * 配置
 
