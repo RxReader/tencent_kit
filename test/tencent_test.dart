@@ -58,7 +58,7 @@ class MockTencentKitPlatform
     required int scene,
     required Uri imageUri,
     String? appName,
-    int extInt = TencentQZoneFlag.DEFAULT,
+    int extInt = TencentQZoneFlag.kDefault,
   }) {
     throw UnimplementedError();
   }
@@ -82,7 +82,7 @@ class MockTencentKitPlatform
     required String musicUrl,
     required String targetUrl,
     String? appName,
-    int extInt = TencentQZoneFlag.DEFAULT,
+    int extInt = TencentQZoneFlag.kDefault,
   }) {
     throw UnimplementedError();
   }
@@ -103,7 +103,7 @@ class MockTencentKitPlatform
     Uri? imageUri,
     required String targetUrl,
     String? appName,
-    int extInt = TencentQZoneFlag.DEFAULT,
+    int extInt = TencentQZoneFlag.kDefault,
   }) {
     throw UnimplementedError();
   }

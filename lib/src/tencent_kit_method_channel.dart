@@ -97,7 +97,7 @@ class MethodChannelTencentKit extends TencentKitPlatform {
     List<Uri>? imageUris,
     Uri? videoUri,
   }) {
-    assert(scene == TencentScene.SCENE_QZONE);
+    assert(scene == TencentScene.kScene_QZone);
     assert((summary?.isNotEmpty ?? false) ||
         ((imageUris?.isNotEmpty ?? false) &&
             imageUris!.every((Uri element) => element.isScheme('file'))) ||
@@ -120,7 +120,7 @@ class MethodChannelTencentKit extends TencentKitPlatform {
     required int scene,
     required String summary,
   }) {
-    assert(scene == TencentScene.SCENE_QQ);
+    assert(scene == TencentScene.kScene_QQ);
     return methodChannel.invokeMethod<void>(
       'shareText',
       <String, dynamic>{
@@ -135,9 +135,9 @@ class MethodChannelTencentKit extends TencentKitPlatform {
     required int scene,
     required Uri imageUri,
     String? appName,
-    int extInt = TencentQZoneFlag.DEFAULT,
+    int extInt = TencentQZoneFlag.kDefault,
   }) {
-    assert(scene == TencentScene.SCENE_QQ);
+    assert(scene == TencentScene.kScene_QQ);
     assert(imageUri.isScheme('file'));
     return methodChannel.invokeMethod<void>(
       'shareImage',
@@ -159,9 +159,9 @@ class MethodChannelTencentKit extends TencentKitPlatform {
     required String musicUrl,
     required String targetUrl,
     String? appName,
-    int extInt = TencentQZoneFlag.DEFAULT,
+    int extInt = TencentQZoneFlag.kDefault,
   }) {
-    assert(scene == TencentScene.SCENE_QQ);
+    assert(scene == TencentScene.kScene_QQ);
     return methodChannel.invokeMethod<void>(
       'shareMusic',
       <String, dynamic>{
@@ -185,7 +185,7 @@ class MethodChannelTencentKit extends TencentKitPlatform {
     Uri? imageUri,
     required String targetUrl,
     String? appName,
-    int extInt = TencentQZoneFlag.DEFAULT,
+    int extInt = TencentQZoneFlag.kDefault,
   }) {
     return methodChannel.invokeMethod<void>(
       'shareWebpage',

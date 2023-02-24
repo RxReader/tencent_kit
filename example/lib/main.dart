@@ -101,7 +101,7 @@ class _HomeState extends State<Home> {
             title: Text('登录'),
             onTap: () {
               TencentKitPlatform.instance.login(
-                scope: <String>[TencentScope.GET_SIMPLE_USERINFO],
+                scope: <String>[TencentScope.kGetSimpleUserInfo],
               );
             },
           ),
@@ -147,7 +147,7 @@ class _HomeState extends State<Home> {
             title: Text('分享说说'),
             onTap: () {
               TencentKitPlatform.instance.shareMood(
-                scene: TencentScene.SCENE_QZONE,
+                scene: TencentScene.kScene_QZone,
                 summary: '分享测试',
               );
             },
@@ -156,7 +156,7 @@ class _HomeState extends State<Home> {
             title: Text('文本分享'),
             onTap: () {
               TencentKitPlatform.instance.shareText(
-                scene: TencentScene.SCENE_QQ,
+                scene: TencentScene.kScene_QQ,
                 summary: '分享测试',
               );
             },
@@ -167,7 +167,7 @@ class _HomeState extends State<Home> {
               final File file = await DefaultCacheManager().getSingleFile(
                   'https://www.baidu.com/img/bd_logo1.png?where=super');
               await TencentKitPlatform.instance.shareImage(
-                scene: TencentScene.SCENE_QQ,
+                scene: TencentScene.kScene_QQ,
                 imageUri: Uri.file(file.path),
               );
             },
@@ -176,7 +176,7 @@ class _HomeState extends State<Home> {
             title: Text('网页分享'),
             onTap: () {
               TencentKitPlatform.instance.shareWebpage(
-                scene: TencentScene.SCENE_QQ,
+                scene: TencentScene.kScene_QQ,
                 title: 'title',
                 targetUrl: 'https://www.baidu.com/',
               );

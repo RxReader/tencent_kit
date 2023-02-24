@@ -95,7 +95,7 @@ abstract class TencentKitPlatform extends PlatformInterface {
     required int scene,
     required Uri imageUri,
     String? appName,
-    int extInt = TencentQZoneFlag.DEFAULT,
+    int extInt = TencentQZoneFlag.kDefault,
   }) {
     throw UnimplementedError(
         'shareImage({required scene, required imageUri, appName, extInt}) has not been implemented.');
@@ -110,7 +110,7 @@ abstract class TencentKitPlatform extends PlatformInterface {
     required String musicUrl,
     required String targetUrl,
     String? appName,
-    int extInt = TencentQZoneFlag.DEFAULT,
+    int extInt = TencentQZoneFlag.kDefault,
   }) {
     throw UnimplementedError(
         'shareMusic({required scene, required title, summary, imageUri, required musicUrl, required targetUrl, appName, extInt}) has not been implemented.');
@@ -124,7 +124,7 @@ abstract class TencentKitPlatform extends PlatformInterface {
     Uri? imageUri,
     required String targetUrl,
     String? appName,
-    int extInt = TencentQZoneFlag.DEFAULT,
+    int extInt = TencentQZoneFlag.kDefault,
   }) {
     throw UnimplementedError(
         'shareWebpage({required scene, required title, summary, imageUri, required targetUrl, appName, extInt}) has not been implemented.');
