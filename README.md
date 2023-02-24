@@ -3,7 +3,7 @@
 [![Pub Package](https://img.shields.io/pub/v/tencent_kit.svg)](https://pub.dev/packages/tencent_kit)
 [![License](https://img.shields.io/github/license/RxReader/tencent_kit)](https://github.com/RxReader/tencent_kit/blob/master/LICENSE)
 
-flutter版腾讯(QQ)SDK
+Flutter 版腾讯(QQ)SDK
 
 ## 相关工具
 
@@ -29,19 +29,9 @@ flutter版腾讯(QQ)SDK
 
 ### Android
 
-* 接入
-
-```groovy
-android {
-    defaultConfig{
-        manifestPlaceholders += [
-                TENCENT_APP_ID: "your tencent appId"
-        ]
-    }
-}
 ```
-
-```
+# 不需要做任何额外接入工作
+# 配置已集成到脚本里
 # 混淆已打入 Library，随 Library 引用，自动添加到 apk 打包混淆
 ```
 
