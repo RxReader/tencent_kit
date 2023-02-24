@@ -24,6 +24,7 @@ if (flutterVersionName == null) {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+apply from: "${project(":tencent_kit").projectDir}/tencent-setup.gradle"
 
 android {
     compileSdkVersion flutter.compileSdkVersion
@@ -43,10 +44,6 @@ android {
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-
-        manifestPlaceholders += [
-                TENCENT_APP_ID: "your tencent appId"
-        ]
     }
 
     buildTypes {

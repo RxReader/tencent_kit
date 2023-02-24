@@ -1,0 +1,36 @@
+//
+//使用方法
+//
+//apply from: 'tencent-setup.gradle'
+//
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.1.2'
+        classpath 'com.squareup.okio:okio:1.17.2'
+    }
+}
+
+android {
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+apply plugin: TencentSetupPlugin
+
+class TencentSetupPlugin implements Plugin<Project> {
+    @Override
+    void apply(Project target) {
+        target.plugins.withId('com.android.application') {
+            target.android.defaultConfig.manifestPlaceholders += [
+                    TENCENT_APP_ID: "your tencent appId"
+            ]
+        }
+    }
+}
