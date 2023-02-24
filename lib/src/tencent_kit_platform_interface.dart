@@ -43,7 +43,7 @@ abstract class TencentKitPlatform extends PlatformInterface {
   }
 
   ///
-  Stream<BaseResp> respStream() {
+  Stream<TencentResp> respStream() {
     throw UnimplementedError('respStream() has not been implemented.');
   }
 

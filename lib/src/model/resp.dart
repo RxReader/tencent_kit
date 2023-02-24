@@ -4,8 +4,8 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'resp.g.dart';
 
-abstract class BaseResp {
-  const BaseResp({
+abstract class TencentResp {
+  const TencentResp({
     required this.ret,
     this.msg,
   });
@@ -41,8 +41,8 @@ abstract class BaseResp {
   explicitToJson: true,
   fieldRename: FieldRename.snake,
 )
-class LoginResp extends BaseResp {
-  const LoginResp({
+class TencentLoginResp extends TencentResp {
+  const TencentLoginResp({
     required super.ret,
     super.msg,
     this.openid,
@@ -51,8 +51,8 @@ class LoginResp extends BaseResp {
     this.createAt,
   });
 
-  factory LoginResp.fromJson(Map<String, dynamic> json) =>
-      _$LoginRespFromJson(json);
+  factory TencentLoginResp.fromJson(Map<String, dynamic> json) =>
+      _$TencentLoginRespFromJson(json);
 
   final String? openid;
   final String? accessToken;
@@ -64,22 +64,22 @@ class LoginResp extends BaseResp {
       : null;
 
   @override
-  Map<String, dynamic> toJson() => _$LoginRespToJson(this);
+  Map<String, dynamic> toJson() => _$TencentLoginRespToJson(this);
 }
 
 @JsonSerializable(
   explicitToJson: true,
   fieldRename: FieldRename.snake,
 )
-class ShareMsgResp extends BaseResp {
-  const ShareMsgResp({
+class TencentShareMsgResp extends TencentResp {
+  const TencentShareMsgResp({
     required super.ret,
     super.msg,
   });
 
-  factory ShareMsgResp.fromJson(Map<String, dynamic> json) =>
-      _$ShareMsgRespFromJson(json);
+  factory TencentShareMsgResp.fromJson(Map<String, dynamic> json) =>
+      _$TencentShareMsgRespFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$ShareMsgRespToJson(this);
+  Map<String, dynamic> toJson() => _$TencentShareMsgRespToJson(this);
 }

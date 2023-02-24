@@ -37,7 +37,7 @@ class MockTencentKitPlatform
   }
 
   @override
-  Stream<BaseResp> respStream() {
+  Stream<TencentResp> respStream() {
     throw UnimplementedError();
   }
 

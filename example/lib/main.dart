@@ -40,9 +40,9 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  late final StreamSubscription<BaseResp> _respSubs;
+  late final StreamSubscription<TencentResp> _respSubs;
 
-  LoginResp? _loginResp;
+  TencentLoginResp? _loginResp;
 
   @override
   void initState() {
@@ -50,12 +50,12 @@ class _HomeState extends State<Home> {
     _respSubs = TencentKitPlatform.instance.respStream().listen(_listenLogin);
   }
 
-  void _listenLogin(BaseResp resp) {
-    if (resp is LoginResp) {
+  void _listenLogin(TencentResp resp) {
+    if (resp is TencentLoginResp) {
       _loginResp = resp;
       final String content = 'login: ${resp.openid} - ${resp.accessToken}';
       _showTips('登录', content);
-    } else if (resp is ShareMsgResp) {
+    } else if (resp is TencentShareMsgResp) {
       final String content = 'share: ${resp.ret} - ${resp.msg}';
       _showTips('分享', content);
     }

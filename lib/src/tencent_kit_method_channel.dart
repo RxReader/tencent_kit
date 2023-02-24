@@ -14,17 +14,17 @@ class MethodChannelTencentKit extends TencentKitPlatform {
       const MethodChannel('v7lin.github.io/tencent_kit')
         ..setMethodCallHandler(_handleMethod);
 
-  final StreamController<BaseResp> _respStreamController =
-      StreamController<BaseResp>.broadcast();
+  final StreamController<TencentResp> _respStreamController =
+      StreamController<TencentResp>.broadcast();
 
   Future<dynamic> _handleMethod(MethodCall call) async {
     switch (call.method) {
       case 'onLoginResp':
-        _respStreamController.add(LoginResp.fromJson(
+        _respStreamController.add(TencentLoginResp.fromJson(
             (call.arguments as Map<dynamic, dynamic>).cast<String, dynamic>()));
         break;
       case 'onShareResp':
-        _respStreamController.add(ShareMsgResp.fromJson(
+        _respStreamController.add(TencentShareMsgResp.fromJson(
             (call.arguments as Map<dynamic, dynamic>).cast<String, dynamic>()));
         break;
     }
@@ -59,7 +59,7 @@ class MethodChannelTencentKit extends TencentKitPlatform {
   }
 
   @override
-  Stream<BaseResp> respStream() {
+  Stream<TencentResp> respStream() {
     return _respStreamController.stream;
   }
 
