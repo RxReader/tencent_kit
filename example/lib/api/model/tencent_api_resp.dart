@@ -12,15 +12,15 @@ abstract class TencentApiResp {
 
   /// 网络请求成功发送至服务器，并且服务器返回数据格式正确
   /// 这里包括所请求业务操作失败的情况，例如没有授权等原因导致
-  static const int RET_SUCCESS = 0;
+  static const int kRetSuccess = 0;
 
   @JsonKey(
-    defaultValue: RET_SUCCESS,
+    defaultValue: kRetSuccess,
   )
   final int ret;
   final String? msg;
 
-  bool get isSuccessful => ret == RET_SUCCESS;
+  bool get isSuccessful => ret == kRetSuccess;
 
   Map<String, dynamic> toJson();
 

@@ -21,7 +21,7 @@ class TencentUnionidResp {
       _$TencentUnionidRespFromJson(json);
 
   @JsonKey(
-    defaultValue: ERROR_SUCCESS,
+    defaultValue: kErrorSuccess,
   )
   final int error;
   final String? errorDescription;
@@ -29,9 +29,9 @@ class TencentUnionidResp {
   final String? openid;
   final String? unionid;
 
-  static const int ERROR_SUCCESS = 0;
+  static const int kErrorSuccess = 0;
 
-  bool get isSuccessful => error == ERROR_SUCCESS;
+  bool get isSuccessful => error == kErrorSuccess;
 
   Map<String, dynamic> toJson() => _$TencentUnionidRespToJson(this);
 
