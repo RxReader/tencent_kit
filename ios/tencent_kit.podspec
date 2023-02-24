@@ -11,7 +11,7 @@ calling_dir = File.dirname(__FILE__)
 project_dir = calling_dir.slice(0..(calling_dir.index('/.symlinks')))
 flutter_project_dir = calling_dir.slice(0..(calling_dir.index('/ios/.symlinks')))
 cfg = YAML.load_file(File.join(flutter_project_dir, 'pubspec.yaml'))
-if cfg['tencent_kit'] && (cfg['tencent_kit']['app_id'] || cfg['tencent_kit']['universal_link'])
+if cfg['tencent_kit'] && cfg['tencent_kit']['app_id']
     app_id = cfg['tencent_kit']['app_id']
     universal_link = cfg['tencent_kit']['universal_link']
     options = ""
