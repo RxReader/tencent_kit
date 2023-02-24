@@ -47,8 +47,8 @@ android {
         // library 混淆 -> 随 library 引用，自动添加到 apk 打包混淆
         consumerProguardFiles 'consumer-rules.pro'
 
-        File root_project_dir = rootProject.projectDir.parentFile
-        def cfg = new org.yaml.snakeyaml.Yaml().load(new File(root_project_dir, 'pubspec.yaml').text)
+        File flutter_project_dir = rootProject.projectDir.parentFile
+        def cfg = new org.yaml.snakeyaml.Yaml().load(new File(flutter_project_dir, 'pubspec.yaml').text)
         manifestPlaceholders += [
                 TENCENT_APP_ID: cfg.tencent_kit?.app_id
         ]
