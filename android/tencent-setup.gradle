@@ -11,7 +11,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.1.2'
-        classpath 'com.squareup.okio:okio:1.17.2'
+        classpath 'org.yaml:snakeyaml:1.17'
     }
 }
 
@@ -28,8 +28,11 @@ class TencentSetupPlugin implements Plugin<Project> {
     @Override
     void apply(Project target) {
         target.plugins.withId('com.android.application') {
+            File root_project_dir = target.rootProject.projectDir.parentFile
+            File pubspec = new File(root_project_dir, 'pubspec.yaml')
+            def cfg = new org.yaml.snakeyaml.Yaml().load(pubspec.text)
             target.android.defaultConfig.manifestPlaceholders += [
-                    TENCENT_APP_ID: "your tencent appId"
+                    TENCENT_APP_ID: cfg.tencent_kit?.app_id
             ]
         }
     }
