@@ -108,6 +108,17 @@ tencent_kit:
   universal_link: https://${your applinks domain}/universal_link/${example_app}/qq_conn/${your tencent app id}/ # 可选项目
 ```
 
+* 安装（仅iOS）
+
+```shell
+# step.1 安装必要依赖
+sudo gem install plist
+# step.2 切换工作目录，插件里为 example/ios/，普通项目为 ios/
+cd example/ios/
+# step.3 执行脚本
+pod install
+```
+
 ## 示例
 
 [示例](./example/lib/main.dart)
