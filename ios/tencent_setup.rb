@@ -92,7 +92,7 @@ project.targets.each do |target|
                 queriesSchemes = []
                 result["LSApplicationQueriesSchemes"] = queriesSchemes
             end
-            tencentSchemes = [
+            tencentQueriesSchemes = [
                 "mqq",
                 "mqqapi",
                 "tim",
@@ -109,10 +109,10 @@ project.targets.each do |target|
                 "mqqthirdappgroup",
                 "mqqopensdkminiapp",
             ]
-            if tencentSchemes.any? { |scheme| !(queriesSchemes.include? scheme) }
-                tencentSchemes.each do |scheme|
-                    if !(queriesSchemes.include? scheme)
-                        queriesSchemes << scheme
+            if tencentQueriesSchemes.any? { |queriesScheme| !(queriesSchemes.include? queriesScheme) }
+                tencentQueriesSchemes.each do |queriesScheme|
+                    if !(queriesSchemes.include? queriesScheme)
+                        queriesSchemes << queriesScheme
                     end
                 end
                 File.write(infoplistFile, Plist::Emit.dump(result))
