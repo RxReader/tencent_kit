@@ -7,23 +7,25 @@ flutter版腾讯(QQ)SDK
 
 ## 相关工具
 
-* [flutter版微信SDK](https://github.com/rxreader/wechat_kit)
-* [flutter版腾讯(QQ)SDK](https://github.com/rxreader/tencent_kit)
-* [flutter版新浪微博SDK](https://github.com/rxreader/weibo_kit)
-* [flutter版支付宝SDK](https://github.com/rxreader/alipay_kit)
-* [flutter版walle渠道打包工具](https://github.com/rxreader/walle_kit)
+* [flutter版微信SDK](https://github.com/RxReader/wechat_kit)
+* [flutter版腾讯(QQ)SDK](https://github.com/RxReader/tencent_kit)
+* [flutter版新浪微博SDK](https://github.com/RxReader/weibo_kit)
+* [flutter版支付宝SDK](https://github.com/RxReader/alipay_kit)
+* [flutter版walle渠道打包工具](https://github.com/RxReader/walle_kit)
 
-## dart/flutter 私服
+## Dart/Flutter Pub 私服
 
-* [simple_pub_server](https://github.com/rxreader/simple_pub_server)
+* [simple_pub_server](https://github.com/RxReader/simple_pub_server)
 
-## docs
+## 相关文档
 
 * [腾讯开放平台](https://open.tencent.com/)
 * [QQ互联](http://wiki.connect.qq.com/)
 * [Universal Links](https://developer.apple.com/library/archive/documentation/General/Conceptual/AppSearch/UniversalLinks.html)
 
-## android
+## 开始使用
+
+### Android
 
 ```groovy
 android {
@@ -39,7 +41,7 @@ android {
 # 混淆已打入 Library，随 Library 引用，自动添加到 apk 打包混淆
 ```
 
-## ios
+### iOS
 
 ```
 出于插件的基本需求，将 SDK 的 module.modulemap 内容修改
@@ -105,7 +107,7 @@ Universal Links
 Capabilities -> Associated Domain -> Domain -> applinks:${your applinks}
 ```
 
-## flutter
+### Flutter
 
 |分享类型|说说(图/文/视频)|文本|图片|音乐|视频|网页|
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
@@ -133,23 +135,17 @@ Capabilities -> Associated Domain -> Domain -> applinks:${your applinks}
   end
   ```
 
-* snapshot
+* 配置
 
-```
-dependencies:
-  tencent_kit:
-    git:
-      url: https://github.com/rxreader/tencent_kit.git
-```
-
-* release
-
-```
+```yaml
 dependencies:
   tencent_kit: ^${latestTag}
+#  tencent_kit:
+#    git:
+#      url: https://github.com/RxReader/tencent_kit.git
 ```
 
-* example
+## 示例
 
 [示例](./example/lib/main.dart)
 
