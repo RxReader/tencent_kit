@@ -118,6 +118,15 @@ project.targets.each do |target|
                 end
                 File.write(infoplistFile, Plist::Emit.dump(result))
             end
+            security = result["NSAppTransportSecurity"]
+            if (!security)
+                security = {}
+                result["NSAppTransportSecurity"] = security
+            end
+            if (security["NSAllowsArbitraryLoads"] != true)
+                security["NSAllowsArbitraryLoads"] = true
+                File.write(infoplistFile, Plist::Emit.dump(result))
+            end
         end
         sectionObject.build_configurations.each do |config|
             codeSignEntitlements = config.build_settings["CODE_SIGN_ENTITLEMENTS"]

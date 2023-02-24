@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -29,7 +31,7 @@
 			<string>tencent</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>tencent</string>
+				<string>tencent123456789</string>
 			</array>
 		</dict>
 	</array>
@@ -37,33 +39,21 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
-		<string>tim</string>
 		<string>mqq</string>
 		<string>mqqapi</string>
-		<string>mqqbrowser</string>
-		<string>mttbrowser</string>
-		<string>mqqOpensdkSSoLogin</string>
+		<string>tim</string>
+		<string>mqqopensdknopasteboard</string>
+		<string>mqqopensdknopasteboardios16</string>
 		<string>mqqopensdkapiV2</string>
-		<string>mqqopensdkapiV4</string>
-		<string>mqzone</string>
-		<string>mqzoneopensdk</string>
-		<string>mqzoneopensdkapi</string>
-		<string>mqzoneopensdkapi19</string>
-		<string>mqzoneopensdkapiV2</string>
-		<string>mqqapiwallet</string>
-		<string>mqqopensdkfriend</string>
-		<string>mqqopensdkavatar</string>
-		<string>mqqopensdkminiapp</string>
-		<string>mqqopensdkdataline</string>
 		<string>mqqgamebindinggroup</string>
-		<string>mqqopensdkgrouptribeshare</string>
+		<string>mqqopensdkavatar</string>
+		<string>mqqopensdkfriend</string>
+		<string>mqqopensdklaunchminiapp</string>
+		<string>mqzone</string>
 		<string>tencentapi.qq.reqContent</string>
 		<string>tencentapi.qzone.reqContent</string>
 		<string>mqqthirdappgroup</string>
-		<string>mqqopensdklaunchminiapp</string>
-		<string>mqqopensdkproxylogin</string>
-		<string>mqqopensdknopasteboard</string>
-		<string>mqqopensdkcheckauth</string>
+		<string>mqqopensdkminiapp</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
@@ -139,7 +129,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>CADisableMinimumFrameDurationOnPhone</key>
-	<true/>
 </dict>
 </plist>
