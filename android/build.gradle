@@ -5,6 +5,16 @@ java.util.regex.Matcher versionMatcher = java.util.regex.Pattern.compile("^versi
 versionMatcher.find()
 String library_version = versionMatcher.group(1).replaceAll("\\+", "-")
 
+File flutter_project_dir = rootProject.projectDir.parentFile
+def cfg = new org.yaml.snakeyaml.Yaml().load(new File(flutter_project_dir, 'pubspec.yaml').text)
+String app_id = cfg.tencent_kit?.app_id
+if (app_id == null) {
+    throw new IllegalArgumentException("tencent app id is null, add code in pubspec.yaml:\ntencent_kit:" +
+            "\n  app_id: \${your tencent app id}" +
+            "\n  universal_link: https://\${your applinks domain}/universal_link/\${example_app}/qq_conn/\${your tencent app id}/")
+}
+
+
 group 'io.github.v7lin.tencent_kit'
 version library_version
 
@@ -47,10 +57,9 @@ android {
         // library 混淆 -> 随 library 引用，自动添加到 apk 打包混淆
         consumerProguardFiles 'consumer-rules.pro'
 
-        File flutter_project_dir = rootProject.projectDir.parentFile
-        def cfg = new org.yaml.snakeyaml.Yaml().load(new File(flutter_project_dir, 'pubspec.yaml').text)
+
         manifestPlaceholders += [
-                TENCENT_APP_ID: cfg.tencent_kit?.app_id
+                TENCENT_APP_ID: app_id
         ]
     }
 
