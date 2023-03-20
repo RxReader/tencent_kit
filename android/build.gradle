@@ -11,7 +11,7 @@ String app_id = cfg.tencent_kit?.app_id
 if (app_id == null) {
     throw new IllegalArgumentException("tencent app id is null, add code in pubspec.yaml:\ntencent_kit:" +
             "\n  app_id: \${your tencent app id}" +
-            "\n  universal_link: https://\${your applinks domain}/universal_link/\${example_app}/qq_conn/\${your tencent app id}/")
+            "\n  universal_link: https://\${your applinks domain}/universal_link/\${example_app}/qq_conn/\${your tencent app id}/ # 可选项目")
 }
 
 

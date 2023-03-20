@@ -19,6 +19,8 @@ if cfg['tencent_kit'] && cfg['tencent_kit']['app_id']
         options = "-u #{universal_link}"
     end
     system("ruby #{current_dir}/tencent_setup.rb -a #{app_id} #{options} -p #{project_dir} -n Runner.xcodeproj")
+else
+    abort("tencent app_id/universal_link is null, add code in pubspec.yaml:\ntencent_kit:\n  app_id: ${your tencent app id}\n  universal_link: https://${your applinks domain}/universal_link/${example_app}/qq_conn/${your tencent app id}/ # 可选项目\n")
 end
 
 Pod::Spec.new do |s|
