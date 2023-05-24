@@ -23,7 +23,7 @@ jobs:
       - run: clang-format -style=file -i ios/Classes/*.h ios/Classes/*.m --dry-run --Werror
       - run: flutter --version
       - run: flutter pub get
-      - run: flutter format --dry-run --set-exit-if-changed .
+      - run: dart format --set-exit-if-changed .
       - run: flutter pub publish --dry-run
       - run: flutter analyze lib example/lib
       - run: cd example; flutter build ios --no-codesign
@@ -46,7 +46,7 @@ jobs:
           channel: 'stable'
       - run: flutter --version
       - run: flutter pub get
-      - run: flutter format --dry-run --set-exit-if-changed .
+      - run: dart format --set-exit-if-changed .
       - run: flutter pub publish --dry-run
       - run: flutter analyze lib example/lib
       - run: cd example; flutter build apk --debug
