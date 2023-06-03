@@ -1,3 +1,4 @@
+/// tencent_kit_platform_interface
 library tencent_kit_platform_interface;
 
 export 'src/constant.dart';

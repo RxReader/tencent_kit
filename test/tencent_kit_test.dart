@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:tencent_kit/src/constant.dart';
@@ -10,6 +8,7 @@ import 'package:tencent_kit/src/tencent_kit_platform_interface.dart';
 class MockTencentKitPlatform
     with MockPlatformInterfaceMixin
     implements TencentKitPlatform {
+
   @override
   Future<void> setIsPermissionGranted({
     required bool granted,

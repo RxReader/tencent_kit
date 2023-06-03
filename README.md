@@ -37,6 +37,8 @@ Flutter 版腾讯(QQ)SDK
 
 ### iOS
 
+> 暂不支持 SceneDelegate，详见文档 [iOS_SDK环境搭建](https://wiki.connect.qq.com/ios_sdk%e7%8e%af%e5%a2%83%e6%90%ad%e5%bb%ba)
+
 ```
 # 不需要做任何额外接入工作
 # 配置已集成到脚本里
