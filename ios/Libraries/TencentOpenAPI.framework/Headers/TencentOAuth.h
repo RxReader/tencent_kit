@@ -89,6 +89,9 @@ typedef NS_ENUM(NSUInteger, TencentAuthMode) {
 /** 第三方在授权登录/分享 时选择 QQ，还是TIM 。在授权前一定要指定其中一个类型*/
 @property(nonatomic, assign) TencentAuthShareType authShareType;
 
+/** SDK打开web登录页，支持自动填充账号  */
+@property (nonatomic, copy) NSString *defaultUin;
+
 /**
  * 获取上次登录得到的token
  *
