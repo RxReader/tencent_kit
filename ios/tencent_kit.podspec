@@ -18,7 +18,6 @@ else
     cfg = YAML.load_file(File.join(flutter_project_dir, 'pubspec.yaml'))
 end
 
-
 if cfg['tencent_kit'] && cfg['tencent_kit']['app_id']
     app_id = cfg['tencent_kit']['app_id']
     universal_link = cfg['tencent_kit']['universal_link']
@@ -43,7 +42,7 @@ Pod::Spec.new do |s|
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.platform = :ios, '9.0'
+  s.platform = :ios, '11.0'
 
   # v3.5.11
   s.subspec 'vendor' do |sp|
