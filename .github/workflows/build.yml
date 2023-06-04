@@ -1,6 +1,11 @@
 name: build
 
-on: [push, pull_request]
+on:
+  push:
+    paths-ignore:
+      - '.github/workflows/**'
+      - 'README.md'
+  pull_request:
 
 jobs:
   build_ios:
