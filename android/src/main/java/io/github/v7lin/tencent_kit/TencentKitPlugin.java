@@ -160,6 +160,8 @@ public class TencentKitPlugin implements FlutterPlugin, ActivityAware, ActivityR
             result.success(tencent != null && isAppInstalled(applicationContext, "com.tencent.tim"));
         } else if ("login".equals(call.method)) {
             login(call, result);
+        } else if ("loginServerSide".equals(call.method)) {
+            loginServerSide(call, result);
         } else if ("logout".equals(call.method)) {
             logout(call, result);
         } else if ("shareMood".equals(call.method)) {
@@ -181,6 +183,14 @@ public class TencentKitPlugin implements FlutterPlugin, ActivityAware, ActivityR
         final String scope = call.argument("scope");
         if (tencent != null) {
             tencent.login(activityPluginBinding.getActivity(), scope, loginListener);
+        }
+        result.success(null);
+    }
+
+    private void loginServerSide(@NonNull MethodCall call, @NonNull Result result) {
+        final String scope = call.argument("scope");
+        if (tencent != null) {
+            tencent.loginServerSide(activityPluginBinding.getActivity(), scope, loginListener);
         }
         result.success(null);
     }

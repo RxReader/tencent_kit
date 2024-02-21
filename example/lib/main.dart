@@ -108,6 +108,14 @@ class _HomeState extends State<Home> {
             },
           ),
           ListTile(
+            title: Text('登录(Server-Side)'),
+            onTap: () {
+              TencentKitPlatform.instance.loginServerSide(
+                scope: <String>[TencentScope.kGetUserInfo],
+              );
+            },
+          ),
+          ListTile(
             title: Text('获取用户信息'),
             onTap: () async {
               if ((_loginResp?.isSuccessful ?? false) &&
