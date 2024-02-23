@@ -74,11 +74,13 @@ class MethodChannelTencentKit extends TencentKitPlatform {
   @override
   Future<void> login({
     required List<String> scope,
+    bool qrcode = false,
   }) {
     return methodChannel.invokeMethod<void>(
       'login',
       <String, dynamic>{
         'scope': scope.join(','),
+        'qrcode': qrcode,
       },
     );
   }

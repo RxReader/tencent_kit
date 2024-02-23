@@ -58,8 +58,10 @@ abstract class TencentKitPlatform extends PlatformInterface {
   }
 
   /// 登录
+  /// qrcode 是否开启二维码登录，没有安装手Q时候使用二维码登录，一般用电视等设备。
   Future<void> login({
     required List<String> scope,
+    bool qrcode = false,
   }) {
     throw UnimplementedError(
         'login({required scope}) has not been implemented.');
