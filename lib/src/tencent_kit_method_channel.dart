@@ -84,6 +84,18 @@ class MethodChannelTencentKit extends TencentKitPlatform {
   }
 
   @override
+  Future<void> loginServerSide({
+    required List<String> scope,
+  }) {
+    return methodChannel.invokeMethod<void>(
+      'loginServerSide',
+      <String, dynamic>{
+        'scope': scope.join(','),
+      },
+    );
+  }
+
+  @override
   Future<void> logout() {
     return methodChannel.invokeMethod<void>('logout');
   }

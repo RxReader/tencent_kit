@@ -67,6 +67,8 @@ enum TencentRetCode {
         result([NSNumber numberWithBool:[TencentOAuth iphoneTIMInstalled]]);
     } else if ([@"login" isEqualToString:call.method]) {
         [self login:call result:result];
+    } else if ([@"loginServerSide" isEqualToString:call.method]) {
+        [self loginServerSide:call result:result];
     } else if ([@"logout" isEqualToString:call.method]) {
         [self logout:call result:result];
     } else if ([@"shareMood" isEqualToString:call.method]) {
@@ -88,6 +90,17 @@ enum TencentRetCode {
     if (_oauth != nil) {
         NSString *scope = call.arguments[@"scope"];
         NSArray *permissions = [scope componentsSeparatedByString:@","];
+        _oauth.authMode = kAuthModeClientSideToken;
+        [_oauth authorize:permissions];
+    }
+    result(nil);
+}
+
+- (void)loginServerSide:(FlutterMethodCall *)call result:(FlutterResult)result {
+    if (_oauth != nil) {
+        NSString *scope = call.arguments[@"scope"];
+        NSArray *permissions = [scope componentsSeparatedByString:@","];
+        _oauth.authMode = kAuthModeServerSideCode;
         [_oauth authorize:permissions];
     }
     result(nil);
@@ -278,6 +291,11 @@ enum TencentRetCode {
     if (_oauth.accessToken != nil && _oauth.accessToken.length > 0) {
         NSString *openId = _oauth.openId;
         NSString *accessToken = _oauth.accessToken;
+        if (_oauth.authMode == kAuthModeServerSideCode) {
+            // 将 code 的值赋给 accessToken, 避免字段功能混淆
+            // 同时官方文档也有说明通过此接口获取的 code 实际上就是 accessToken
+            accessToken = [_oauth getServerSideCode];
+        }
         long long expiresIn =
             ceil(_oauth.expirationDate.timeIntervalSinceNow); // 向上取整
         long long createAt = [[NSDate date] timeIntervalSince1970] * 1000.0;

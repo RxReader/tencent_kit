@@ -65,6 +65,14 @@ abstract class TencentKitPlatform extends PlatformInterface {
         'login({required scope}) has not been implemented.');
   }
 
+  /// 登录（Server-Side）
+  Future<void> loginServerSide({
+    required List<String> scope,
+  }) {
+    throw UnimplementedError(
+        'loginServerSide({required scope}) has not been implemented.');
+  }
+
   /// 登出
   Future<void> logout() {
     throw UnimplementedError('logout() has not been implemented.');

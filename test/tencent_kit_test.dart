@@ -47,6 +47,13 @@ class MockTencentKitPlatform
   }
 
   @override
+  Future<void> loginServerSide({
+    required List<String> scope,
+  }) {
+    throw UnimplementedError();
+  }
+
+  @override
   Future<void> logout() {
     throw UnimplementedError();
   }
