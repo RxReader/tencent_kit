@@ -181,16 +181,18 @@ public class TencentKitPlugin implements FlutterPlugin, ActivityAware, ActivityR
 
     private void login(@NonNull MethodCall call, @NonNull Result result) {
         final String scope = call.argument("scope");
+        final boolean qrcode = call.argument("qrcode");
         if (tencent != null) {
-            tencent.login(activityPluginBinding.getActivity(), scope, loginListener);
+            tencent.login(activityPluginBinding.getActivity(), scope, loginListener, qrcode);
         }
         result.success(null);
     }
 
     private void loginServerSide(@NonNull MethodCall call, @NonNull Result result) {
         final String scope = call.argument("scope");
+        final boolean qrcode = call.argument("qrcode");
         if (tencent != null) {
-            tencent.loginServerSide(activityPluginBinding.getActivity(), scope, loginListener);
+            tencent.loginServerSide(activityPluginBinding.getActivity(), scope, loginListener, qrcode);
         }
         result.success(null);
     }

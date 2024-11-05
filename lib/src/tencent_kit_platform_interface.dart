@@ -60,6 +60,7 @@ abstract class TencentKitPlatform extends PlatformInterface {
   /// 登录
   Future<void> login({
     required List<String> scope,
+    bool qrcode = false,
   }) {
     throw UnimplementedError(
         'login({required scope}) has not been implemented.');
@@ -68,6 +69,7 @@ abstract class TencentKitPlatform extends PlatformInterface {
   /// 登录（Server-Side）
   Future<void> loginServerSide({
     required List<String> scope,
+    bool qrcode = false,
   }) {
     throw UnimplementedError(
         'loginServerSide({required scope}) has not been implemented.');

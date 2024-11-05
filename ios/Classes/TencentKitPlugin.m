@@ -24,6 +24,7 @@ enum TencentRetCode {
 @implementation TencentKitPlugin {
     FlutterMethodChannel *_channel;
     TencentOAuth *_oauth;
+    BOOL _forceWebLogin;
 }
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
@@ -41,6 +42,7 @@ enum TencentRetCode {
     if (self) {
         _channel = channel;
     }
+    _forceWebLogin = NO;
     return self;
 }
 
@@ -90,8 +92,15 @@ enum TencentRetCode {
     if (_oauth != nil) {
         NSString *scope = call.arguments[@"scope"];
         NSArray *permissions = [scope componentsSeparatedByString:@","];
+        NSNumber *qrcode = call.arguments[@"qrcode"];
         _oauth.authMode = kAuthModeClientSideToken;
-        [_oauth authorize:permissions];
+        if ([qrcode boolValue]) {
+            _forceWebLogin = YES;
+            [_oauth authorizeWithQRlogin:permissions];
+        } else {
+            _forceWebLogin = NO;
+            [_oauth authorize:permissions];
+        }
     }
     result(nil);
 }
@@ -100,8 +109,15 @@ enum TencentRetCode {
     if (_oauth != nil) {
         NSString *scope = call.arguments[@"scope"];
         NSArray *permissions = [scope componentsSeparatedByString:@","];
+        NSNumber *qrcode = call.arguments[@"qrcode"];
         _oauth.authMode = kAuthModeServerSideCode;
-        [_oauth authorize:permissions];
+        if ([qrcode boolValue]) {
+            _forceWebLogin = YES;
+            [_oauth authorizeWithQRlogin:permissions];
+        } else {
+            _forceWebLogin = NO;
+            [_oauth authorize:permissions];
+        }
     }
     result(nil);
 }
@@ -285,6 +301,10 @@ enum TencentRetCode {
 }
 
 #pragma mark - TencentSessionDelegate
+
+- (BOOL)forceWebLogin {
+    return _forceWebLogin;
+}
 
 - (void)tencentDidLogin {
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
