@@ -46,6 +46,8 @@ flutter:
         pluginClass: TencentKitPlugin
       ios:
         pluginClass: TencentKitPlugin
+      ohos:
+        pluginClass: TencentKitPlugin
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:
