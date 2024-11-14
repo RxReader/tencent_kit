@@ -29,7 +29,7 @@ Flutter 版腾讯(QQ)SDK
 
 ### Android
 
-```
+```txt
 # 不需要做任何额外接入工作
 # 配置已集成到脚本里
 # 混淆已打入 Library，随 Library 引用，自动添加到 apk 打包混淆
@@ -39,7 +39,7 @@ Flutter 版腾讯(QQ)SDK
 
 > 暂不支持 SceneDelegate，详见文档 [iOS_SDK环境搭建](https://wiki.connect.qq.com/ios_sdk%e7%8e%af%e5%a2%83%e6%90%ad%e5%bb%ba)
 
-```
+```txt
 # 不需要做任何额外接入工作
 # 配置已集成到脚本里
 ```
@@ -70,6 +70,44 @@ https://${your applinks domain}/universal_link/${example_app}/qq_conn/${appId}
 
 > ⚠️ 很多 SDK 都会用到 universal_link，可为不同 SDK 分配不同的 path 以作区分
 
+### HarmonyOS
+
+> 当前在 `HarmonyOS` 平台, 仅支持 `setIsPermissionGranted/registerApp/isQQInstalled/loginServerSide`
+>
+> 由于 SDK 限制，当前仅支持 Server-Side 模式登录，auth code 在 accessToken 字段，获取后可自行在后端使用
+
+项目中 module.json5 的 "module" 节点下配置 querySchemes
+
+```json5
+"querySchemes": [
+    "https",
+    "qqopenapi"
+]
+```
+
+在 Ability 的 skills 节点中配置 scheme
+
+```json5
+"skills": [
+ {
+    "entities": [
+      "entity.system.browsable"
+    ],
+    "actions": [
+      "ohos.want.action.viewData"
+    ],
+    "uris": [
+      {
+        "scheme": "qqopenapi", // 接收 QQ 回调数据
+        "host": "102061317", // 业务申请的互联 appId
+        "path": "auth",
+        "linkFeature": "Login",
+      }
+    ]
+  }
+]
+```
+
 ### Flutter
 
 |分享类型|说说(图/文/视频)|文本|图片|音乐|视频|网页|
@@ -84,7 +122,8 @@ https://${your applinks domain}/universal_link/${example_app}/qq_conn/${appId}
 * 兼容
 
 flutter 2.5 兼容问题 [issues/54](https://github.com/RxReader/tencent_kit/issues/54)
-```
+
+```ruby
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
