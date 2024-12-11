@@ -39,8 +39,7 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 android {
-    if (project.android.hasProperty('namespace') ||
-            getGradle().getGradleVersion().substring(0, 1).toInteger() >= 8) {
+    if (project.android.hasProperty('namespace')) {
         namespace 'io.github.v7lin.tencent_kit'
     }
     
