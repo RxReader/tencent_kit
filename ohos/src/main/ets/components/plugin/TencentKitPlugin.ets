@@ -57,7 +57,7 @@ export default class TencentKitPlugin implements FlutterPlugin, MethodCallHandle
   }
 
   onNewWant(want: Want, launchParams: AbilityConstant.LaunchParam): void {
-    this.tencent?.handleAuthResult(want)
+    this.tencent?.handleResult(want)
   }
 
   authListener: ApiCallback<AuthResponse> = {
@@ -141,6 +141,12 @@ export default class TencentKitPlugin implements FlutterPlugin, MethodCallHandle
   private login(call: MethodCall, result: MethodResult) {
     // this.modeServerSide = false; // 客户端授权
     // 当前 SDK 仅支持 ServerSide 授权，暂时不处理
+    this.tencent?.login({
+      scope: "all",
+      useQrCode: false,
+      networkTimeout: 0,
+      forceWebLogin: false
+    }, this.authListener);
     result.success(null);
   }
 
@@ -148,7 +154,7 @@ export default class TencentKitPlugin implements FlutterPlugin, MethodCallHandle
     this.modeServerSide = true; // 服务端授权
     const scope: string = call.argument("scope");
     const qrcode: boolean = call.argument("qrcode");
-    this.tencent?.login(this.getUIContext(), {
+    this.tencent?.login({
       scope: scope,
       useQrCode: qrcode,
       forceWebLogin: qrcode || !this.tencent!.isQQInstalled(), // H5 授权, 二维码登录或 QQ 未安装时强制启用
