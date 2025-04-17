@@ -66,7 +66,7 @@ export default class TencentKitPlugin implements FlutterPlugin, MethodCallHandle
       try {
         if (response.ret == TencentRetCode.RET_SUCCESS) {
           // 服务端模式时, access_token 设置为为 authCode, 当前 SDK 不支持客户端模式(因此 null)
-          const accessToken: string | null = this.modeServerSide ? response.authCode : null;
+          const accessToken: string = response.authCode;
           resp.set(KEY_RET_CODE, TencentRetCode.RET_SUCCESS);
           resp.set("openid", response.openId);
           resp.set("access_token", accessToken);
