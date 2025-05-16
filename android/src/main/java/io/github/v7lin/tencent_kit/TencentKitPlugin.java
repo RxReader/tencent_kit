@@ -211,7 +211,7 @@ public class TencentKitPlugin implements FlutterPlugin, ActivityAware, ActivityR
                         final String accessToken = !object.isNull("access_token") ? object.getString("access_token") : null;
                         final int expiresIn = !object.isNull("expires_in") ? object.getInt("expires_in") : 0;
                         final long createAt = System.currentTimeMillis();
-                        if (!TextUtils.isEmpty(openId) && !TextUtils.isEmpty(accessToken)) {
+                        if (!TextUtils.isEmpty(accessToken)) {
                             map.put("ret", TencentRetCode.RET_SUCCESS);
                             map.put("openid", openId);
                             map.put("access_token", accessToken);
