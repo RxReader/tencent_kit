@@ -2,7 +2,6 @@ import {
   AbilityAware,
   AbilityPluginBinding,
   Any,
-  FlutterManager,
   FlutterPlugin,
   FlutterPluginBinding,
   MethodCall,
@@ -11,7 +10,12 @@ import {
   MethodResult,
   NewWantListener,
 } from '@ohos/flutter_ohos';
-import { IQQOpenApi, QQOpenApiFactory, ApiCallback, AuthResponse } from '@tencent/qq-open-sdk'
+import {
+  IQQOpenApi,
+  QQOpenApiFactory,
+  ApiCallback,
+  AuthResponse,
+} from '@tencent/qq-open-sdk'
 import { AbilityConstant, Want } from '@kit.AbilityKit';
 
 enum TencentRetCode {
@@ -57,7 +61,7 @@ export default class TencentKitPlugin implements FlutterPlugin, MethodCallHandle
   }
 
   onNewWant(want: Want, launchParams: AbilityConstant.LaunchParam): void {
-    this.tencent?.handleAuthResult(want)
+    this.tencent?.handleResult(want)
   }
 
   authListener: ApiCallback<AuthResponse> = {
@@ -122,13 +126,6 @@ export default class TencentKitPlugin implements FlutterPlugin, MethodCallHandle
     }
   }
 
-  private getUIContext(): UIContext {
-    const uiAbility = this.binding!.getAbility();
-    const windowState = FlutterManager.getInstance().getWindowStage(uiAbility);
-    const window = windowState.getMainWindowSync();
-    return window.getUIContext();
-  }
-
   private registerApp(call: MethodCall, result: MethodResult) {
     const appId: number = parseInt(call.argument("appId") as string);
     this.tencent = QQOpenApiFactory.createApi(appId, {
@@ -148,7 +145,7 @@ export default class TencentKitPlugin implements FlutterPlugin, MethodCallHandle
     this.modeServerSide = true; // 服务端授权
     const scope: string = call.argument("scope");
     const qrcode: boolean = call.argument("qrcode");
-    this.tencent?.login(this.getUIContext(), {
+    this.tencent?.login({
       scope: scope,
       useQrCode: qrcode,
       forceWebLogin: qrcode || !this.tencent!.isQQInstalled(), // H5 授权, 二维码登录或 QQ 未安装时强制启用
