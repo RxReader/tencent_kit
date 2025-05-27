@@ -72,9 +72,11 @@ https://${your applinks domain}/universal_link/${example_app}/qq_conn/${appId}
 
 ### HarmonyOS
 
-> 当前在 `HarmonyOS` 平台, 仅支持 `setIsPermissionGranted/registerApp/isQQInstalled/loginServerSide`
->
-> 由于 SDK 限制，当前仅支持 Server-Side 模式登录，auth code 在 accessToken 字段，获取后可自行在后端使用
+* 当前在 `HarmonyOS` 平台, 仅支持 `setIsPermissionGranted/registerApp/isQQInstalled/loginServerSide`
+* 由于 SDK 限制，当前仅支持 Server-Side 模式登录，请调用 `loginServerSide` 方法登录, 支持拉起 App 授权或 H5 授权 (qrcode 为 true 即可)
+* 为了 API 统一, Server-Side 模式授权返回的 auth code 存储在 `TencentLoginResp.accessToken` (不要当成客户端的 token 使用)
+* 详情阅读官方文档: [harmonyos_sdk 环境搭建](https://wiki.connect.qq.com/harmonyos_sdk%e7%8e%af%e5%a2%83%e6%90%ad%e5%bb%ba), 并阅读最后的说明
+* 关于在后端使用 code 换取 access_token 的问题, 请参考官方文档: [通过Authorization Code获取Access Token](https://wiki.connect.qq.com/%E4%BD%BF%E7%94%A8authorization_code%E8%8E%B7%E5%8F%96access_token#:~:text=Step2%EF%BC%9A%E9%80%9A%E8%BF%87Authorization%20Code%E8%8E%B7%E5%8F%96Access%20Token) , `redirect_uri` 一般为 `auth://tauth.qq.com/`
 
 项目中 module.json5 的 "module" 节点下配置 querySchemes
 

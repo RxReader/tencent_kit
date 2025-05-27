@@ -1,6 +1,6 @@
 name: tencent_kit
-description: A powerful Flutter plugin allowing developers to auth/share with natvie Android & iOS Tencent SDKs.
-version: 6.1.0
+description: A powerful Flutter plugin allowing developers to auth/share with natvie Android & iOS & HarmonyOS Tencent SDKs.
+version: 6.2.0
 homepage: https://github.com/RxReader/tencent_kit
 repository: https://github.com/RxReader/tencent_kit.git
 issue_tracker: https://github.com/RxReader/tencent_kit/issues
