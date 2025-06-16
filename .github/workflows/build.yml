@@ -35,15 +35,6 @@ jobs:
         with:
           channel: "stable"
           cache: true
-      - name: Run llvm/clang-format@shell
-        if: matrix.os == 'macos-latest'
-        run: |
-          brew install clang-format
-      - name: Run ruby/plist@shell
-        if: matrix.os == 'macos-latest'
-        run: |
-          gem install plist
-      - run: clang-format -style=file -i ios/Classes/*.h ios/Classes/*.m --dry-run --Werror
       - name: Log Dart/Flutter versions
         run: |
           dart --version
@@ -84,6 +75,9 @@ jobs:
         if: matrix.os == 'macos-latest'
         run: |
           gem install plist
+      - name: Run clang-format
+        if: matrix.os == 'macos-latest'
+        run: clang-format -style=file -i ios/Classes/*.h ios/Classes/*.m --dry-run --Werror
       - run: flutter pub get
       - run: cd example; flutter test; flutter build ios --no-codesign
 
