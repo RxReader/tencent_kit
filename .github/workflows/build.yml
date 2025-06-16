@@ -36,9 +36,11 @@ jobs:
           channel: "stable"
           cache: true
       - name: Run llvm/clang-format@shell
+        if: matrix.os == 'macos-latest'
         run: |
           brew install clang-format
       - name: Run ruby/plist@shell
+        if: matrix.os == 'macos-latest'
         run: |
           gem install plist
       - run: clang-format -style=file -i ios/Classes/*.h ios/Classes/*.m --dry-run --Werror
@@ -73,6 +75,15 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+          cache: true
+      - name: Run llvm/clang-format@shell
+        if: matrix.os == 'macos-latest'
+        run: |
+          brew install clang-format
+      - name: Run ruby/plist@shell
+        if: matrix.os == 'macos-latest'
+        run: |
+          gem install plist
       - run: flutter pub get
       - run: cd example; flutter test; flutter build ios --no-codesign
 
