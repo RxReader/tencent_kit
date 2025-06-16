@@ -1,0 +1,11 @@
+targets:
+  $default:
+    builders:
+      json_serializable:
+        options:
+          any_map: true
+          explicit_to_json: true
+          field_rename: snake
+        generate_for:
+          exclude:
+            - lib/**/*.g.dart

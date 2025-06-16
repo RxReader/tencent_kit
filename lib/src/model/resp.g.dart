@@ -6,14 +6,13 @@ part of 'resp.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-TencentLoginResp _$TencentLoginRespFromJson(Map<String, dynamic> json) =>
-    TencentLoginResp(
-      ret: json['ret'] as int? ?? 0,
+TencentLoginResp _$TencentLoginRespFromJson(Map json) => TencentLoginResp(
+      ret: (json['ret'] as num?)?.toInt() ?? 0,
       msg: json['msg'] as String?,
       openid: json['openid'] as String?,
       accessToken: json['access_token'] as String?,
-      expiresIn: json['expires_in'] as int?,
-      createAt: json['create_at'] as int?,
+      expiresIn: (json['expires_in'] as num?)?.toInt(),
+      createAt: (json['create_at'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$TencentLoginRespToJson(TencentLoginResp instance) =>
@@ -26,9 +25,9 @@ Map<String, dynamic> _$TencentLoginRespToJson(TencentLoginResp instance) =>
       'create_at': instance.createAt,
     };
 
-TencentShareMsgResp _$TencentShareMsgRespFromJson(Map<String, dynamic> json) =>
+TencentShareMsgResp _$TencentShareMsgRespFromJson(Map json) =>
     TencentShareMsgResp(
-      ret: json['ret'] as int? ?? 0,
+      ret: (json['ret'] as num?)?.toInt() ?? 0,
       msg: json['msg'] as String?,
     );
 

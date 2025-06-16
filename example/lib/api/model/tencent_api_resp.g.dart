@@ -6,14 +6,14 @@ part of 'tencent_api_resp.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-TencentUserInfoResp _$TencentUserInfoRespFromJson(Map<String, dynamic> json) =>
+TencentUserInfoResp _$TencentUserInfoRespFromJson(Map json) =>
     TencentUserInfoResp(
-      ret: json['ret'] as int? ?? 0,
+      ret: (json['ret'] as num?)?.toInt() ?? 0,
       msg: json['msg'] as String?,
-      isLost: json['is_lost'] as int?,
+      isLost: (json['is_lost'] as num?)?.toInt(),
       nickname: json['nickname'] as String?,
       gender: json['gender'] as String?,
-      genderType: json['gender_type'] as int?,
+      genderType: (json['gender_type'] as num?)?.toInt(),
       province: json['province'] as String?,
       city: json['city'] as String?,
       year: json['year'] as String?,
