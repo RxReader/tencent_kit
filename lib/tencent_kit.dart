@@ -1,4 +1,5 @@
 /// tencent_kit
+// ignore: unnecessary_library_name
 library tencent_kit;
 
 export 'src/constant.dart';

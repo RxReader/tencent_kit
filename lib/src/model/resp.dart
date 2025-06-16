@@ -37,10 +37,7 @@ abstract class TencentResp {
   String toString() => const JsonEncoder.withIndent('  ').convert(toJson());
 }
 
-@JsonSerializable(
-  explicitToJson: true,
-  fieldRename: FieldRename.snake,
-)
+@JsonSerializable()
 class TencentLoginResp extends TencentResp {
   const TencentLoginResp({
     required super.ret,
@@ -67,10 +64,7 @@ class TencentLoginResp extends TencentResp {
   Map<String, dynamic> toJson() => _$TencentLoginRespToJson(this);
 }
 
-@JsonSerializable(
-  explicitToJson: true,
-  fieldRename: FieldRename.snake,
-)
+@JsonSerializable()
 class TencentShareMsgResp extends TencentResp {
   const TencentShareMsgResp({
     required super.ret,

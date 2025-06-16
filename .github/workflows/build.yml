@@ -1,14 +1,61 @@
 name: build
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   push:
+    branches:
+      - main
+      - master
     paths-ignore:
-      - '.github/workflows/**'
-      - 'README.md'
+      - '**.md'
   pull_request:
+    branches:
+      - main
+      - master
+    paths-ignore:
+      - '**.md'
 
 jobs:
+  analyze:
+    name: Analyze on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+      - name: Log Dart/Flutter versions
+        run: |
+          dart --version
+          flutter --version
+      - run: flutter doctor -v
+      - name: Prepare dependencies
+        run: flutter pub get
+      - name: Check Dart code formatting
+        run: dart format . -o none --set-exit-if-changed
+      - name: Analyze lib & test
+        run: flutter analyze lib test
+      - name: Analyze example
+        run: flutter analyze example
+      - name: Run tests
+        run: flutter test
+      - name: Dry run docs generate
+        run: dart doc --dry-run .
+        continue-on-error: true
+
   build_ios:
+    needs: analyze
     name: Build iOS on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -19,27 +66,29 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+          cache: true
       - name: Run llvm/clang-format@shell
+        if: matrix.os == 'macos-latest'
         run: |
           brew install clang-format
       - name: Run ruby/plist@shell
+        if: matrix.os == 'macos-latest'
         run: |
           gem install plist
-      - run: clang-format -style=file -i ios/Classes/*.h ios/Classes/*.m --dry-run --Werror
-      - run: flutter --version
+      - name: Run clang-format
+        if: matrix.os == 'macos-latest'
+        run: clang-format -style=file -i ios/Classes/*.h ios/Classes/*.m --dry-run --Werror
       - run: flutter pub get
-      - run: dart format --set-exit-if-changed .
-      - run: flutter pub publish --dry-run
-      - run: flutter analyze lib example/lib
-      - run: cd example; flutter build ios --no-codesign
+      - run: cd example; flutter test; flutter build ios --no-codesign
 
   build_android:
+    needs: analyze
     name: Build Android on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest]
+        os: [ubuntu-latest]
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-java@v2
@@ -49,9 +98,6 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-      - run: flutter --version
+          cache: true
       - run: flutter pub get
-      - run: dart format --set-exit-if-changed .
-      - run: flutter pub publish --dry-run
-      - run: flutter analyze lib example/lib
-      - run: cd example; flutter build apk --debug
+      - run: cd example; flutter test; flutter build apk --debug

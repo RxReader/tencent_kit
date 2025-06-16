@@ -42,6 +42,7 @@ class MockTencentKitPlatform
   @override
   Future<void> login({
     required List<String> scope,
+    bool qrcode = false,
   }) {
     throw UnimplementedError();
   }
@@ -49,6 +50,7 @@ class MockTencentKitPlatform
   @override
   Future<void> loginServerSide({
     required List<String> scope,
+    bool qrcode = false,
   }) {
     throw UnimplementedError();
   }
