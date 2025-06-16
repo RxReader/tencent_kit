@@ -12,7 +12,7 @@ const String _kTencentAppID = 'your tencent app id';
 const String _kUniversalLink = 'your tencent universal link'; // 可选项目
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: Home(),
     );
   }
@@ -71,12 +71,12 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tencent Kit Demo'),
+        title: const Text('Tencent Kit Demo'),
       ),
       body: ListView(
         children: <Widget>[
           ListTile(
-            title: Text('3.1.0 之后的版本请先获取权限'),
+            title: const Text('3.1.0 之后的版本请先获取权限'),
             onTap: () async {
               await TencentKitPlatform.instance
                   .setIsPermissionGranted(granted: true);
@@ -84,7 +84,7 @@ class _HomeState extends State<Home> {
             },
           ),
           ListTile(
-            title: Text('注册APP'),
+            title: const Text('注册APP'),
             onTap: () async {
               await TencentKitPlatform.instance.registerApp(
                   appId: _kTencentAppID, universalLink: _kUniversalLink);
@@ -92,7 +92,7 @@ class _HomeState extends State<Home> {
             },
           ),
           ListTile(
-            title: Text('环境检查'),
+            title: const Text('环境检查'),
             onTap: () async {
               final String content =
                   'QQ install: ${await TencentKitPlatform.instance.isQQInstalled()}\nTIM install: ${await TencentKitPlatform.instance.isTIMInstalled()}';
@@ -100,7 +100,7 @@ class _HomeState extends State<Home> {
             },
           ),
           ListTile(
-            title: Text('登录'),
+            title: const Text('登录'),
             onTap: () {
               TencentKitPlatform.instance.login(
                 scope: <String>[TencentScope.kGetSimpleUserInfo],
@@ -108,7 +108,7 @@ class _HomeState extends State<Home> {
             },
           ),
           ListTile(
-            title: Text('登录(Server-Side)'),
+            title: const Text('登录(Server-Side)'),
             onTap: () {
               TencentKitPlatform.instance.loginServerSide(
                 scope: <String>[TencentScope.kGetUserInfo],
@@ -116,7 +116,7 @@ class _HomeState extends State<Home> {
             },
           ),
           ListTile(
-            title: Text('获取用户信息'),
+            title: const Text('获取用户信息'),
             onTap: () async {
               if ((_loginResp?.isSuccessful ?? false) &&
                   !(_loginResp!.isExpired ?? true)) {
@@ -136,7 +136,7 @@ class _HomeState extends State<Home> {
             },
           ),
           ListTile(
-            title: Text('获取UnionID'),
+            title: const Text('获取UnionID'),
             onTap: () async {
               if ((_loginResp?.isSuccessful ?? false) &&
                   !(_loginResp!.isExpired ?? true)) {
@@ -154,7 +154,7 @@ class _HomeState extends State<Home> {
             },
           ),
           ListTile(
-            title: Text('分享说说'),
+            title: const Text('分享说说'),
             onTap: () {
               TencentKitPlatform.instance.shareMood(
                 scene: TencentScene.kScene_QZone,
@@ -163,7 +163,7 @@ class _HomeState extends State<Home> {
             },
           ),
           ListTile(
-            title: Text('文本分享'),
+            title: const Text('文本分享'),
             onTap: () {
               TencentKitPlatform.instance.shareText(
                 scene: TencentScene.kScene_QQ,
@@ -172,7 +172,7 @@ class _HomeState extends State<Home> {
             },
           ),
           ListTile(
-            title: Text('图片分享'),
+            title: const Text('图片分享'),
             onTap: () async {
               final File file = await DefaultCacheManager().getSingleFile(
                   'https://www.baidu.com/img/bd_logo1.png?where=super');
@@ -183,7 +183,7 @@ class _HomeState extends State<Home> {
             },
           ),
           ListTile(
-            title: Text('网页分享'),
+            title: const Text('网页分享'),
             onTap: () {
               TencentKitPlatform.instance.shareWebpage(
                 scene: TencentScene.kScene_QQ,

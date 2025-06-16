@@ -1,6 +1,4 @@
-class TencentScope {
-  const TencentScope._();
-
+abstract final class TencentScope {
   /// 发表一条说说到QQ空间(需要申请权限)
   static const String kAddTopic = 'add_topic';
 
@@ -44,19 +42,17 @@ class TencentScope {
   static const String kAll = 'all';
 }
 
-class TencentScene {
-  const TencentScene._();
-
+abstract final class TencentScene {
   /// QQ
+  // ignore: constant_identifier_names
   static const int kScene_QQ = 0;
 
   /// QZone
+  // ignore: constant_identifier_names
   static const int kScene_QZone = 1;
 }
 
-class TencentQZoneFlag {
-  const TencentQZoneFlag._();
-
+abstract final class TencentQZoneFlag {
   /// 默认是不隐藏分享到QZone按钮且不自动打开分享到QZone的对话框
   static const int kDefault = 0;
 
